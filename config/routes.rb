@@ -1,13 +1,13 @@
 Kickstarter::Application.routes.draw do
   root :to => 'users#new'
 
+  post "users", to: 'users#create'
   get "signup", to: 'users#new'
-  get "users/:id", to: 'users#show'
   get "users/:id/edit_profile", to: 'users#edit', as: :edit_user_profile
-  get "users/create"
-  get "users/update"
-  get "users/destroy"
-
+  get "users/:id", to: 'users#show', as: :user
+  patch "users/:id", to: 'users#update'
+  put "users/:id", to: 'users#update'
+  delete "users/:id", to: 'users#destroy'
 
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".
