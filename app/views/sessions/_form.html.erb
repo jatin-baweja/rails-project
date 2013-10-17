@@ -1,0 +1,20 @@
+<%= form_tag nil, :class => 'form-horizontal' do %>
+  <div class="control-group">
+    <%= label_tag :email, 'Email', :class => 'control-label' %>
+    <div class="controls">
+      <%= email_field_tag :email, params[:email], :class => 'text_field' %>
+    </div>
+  </div>
+  <div class="control-group">
+    <%= label_tag :password, 'Password', :class => 'control-label' %>
+    <div class="controls">
+      <%= password_field_tag :password, params[:password], :class => 'text_field' %>
+    </div>
+  </div>
+
+  <div class="form-actions">
+    <%= submit_tag "Login", :class => 'btn btn-primary' %>
+    <%= link_to t('.cancel', :default => t("helpers.links.cancel")),
+                root_path, :class => 'btn' %>
+  </div>
+<% end %>

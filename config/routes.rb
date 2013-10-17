@@ -1,5 +1,10 @@
 Kickstarter::Application.routes.draw do
-  root :to => 'users#new'
+  root :to => 'sessions#new'
+  controller :sessions do
+    get "login" => :new
+    post "login" => :create
+    get "logout" => :destroy
+  end 
 
   post "users", to: 'users#create'
   get "signup", to: 'users#new'
