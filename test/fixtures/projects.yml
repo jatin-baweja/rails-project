@@ -1,0 +1,21 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/Fixtures.html
+
+one:
+  title: MyString
+  image: MyString
+  category: MyString
+  blurb: MyString
+  location: MyString
+  duration: 10
+  deadline: 2013-01-01 23:04
+  goal: 2000
+
+two:
+  title: MyString
+  image: MyString
+  category: MyString
+  blurb: MyString
+  location: MyString
+  duration: 20
+  deadline: 2013-12-31 13:04
+  goal: 200
