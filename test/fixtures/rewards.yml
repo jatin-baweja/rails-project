@@ -1,0 +1,15 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/Fixtures.html
+
+one:
+  minimum: 1
+  description: MyText
+  estimated_delivery_on: 2013-10-19
+  shipping: MyString
+  limit: 1
+
+two:
+  minimum: 1
+  description: MyText
+  estimated_delivery_on: 2013-10-19
+  shipping: MyString
+  limit: 1
