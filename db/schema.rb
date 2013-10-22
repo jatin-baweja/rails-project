@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20131019101345) do
+ActiveRecord::Schema.define(version: 20131022123401) do
 
   create_table "projects", force: true do |t|
     t.string   "title"
@@ -37,7 +37,10 @@ ActiveRecord::Schema.define(version: 20131019101345) do
     t.integer  "limit"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.integer  "project_id"
   end
+
+  add_index "rewards", ["project_id"], name: "index_rewards_on_project_id", using: :btree
 
   create_table "stories", force: true do |t|
     t.string   "video"
@@ -45,7 +48,10 @@ ActiveRecord::Schema.define(version: 20131019101345) do
     t.text     "risks"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.integer  "project_id"
   end
+
+  add_index "stories", ["project_id"], name: "index_stories_on_project_id", using: :btree
 
   create_table "users", force: true do |t|
     t.string   "name"
