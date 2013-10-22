@@ -1,7 +1,7 @@
 class ProjectsController < ApplicationController
 
   def index
-    @projects = User.order(:title)
+    @projects = Project.order(:title)
   end
 
   def new
