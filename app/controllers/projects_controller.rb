@@ -6,6 +6,8 @@ class ProjectsController < ApplicationController
 
   def new
     @project = Project.new
+    @story = @project.build_story
+    @reward = @project.rewards.build
   end
 
   def show
