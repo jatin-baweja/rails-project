@@ -1,0 +1,1 @@
+Categories = ["Art", "Comics", "Dance", "Design", "Fashion", "Film & Video", "Food", "Games", "Music", "Photography", "Publishing", "Technology", "Theater"]
