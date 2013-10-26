@@ -46,12 +46,25 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </a>
-          <a class="brand" href="#">Kickstarter</a>
+          <%= link_to "Kickstarter", root_path, class: 'brand'  %>
           <div class="container-fluid nav-collapse">
-            <ul class="nav">
+            <ul class="nav pull-right">
+              <li><%= link_to "Discover Projects", projects_path  %></li>
+              <%= menu_divider %>
+            <% if !user_signed_in? %>
               <li><%= link_to "Signup", signup_path  %></li>
-              <li><%= link_to "Login", "/login"  %></li>
-              <li><%= link_to "Home", "/"  %></li>
+              <%= menu_divider %>
+              <li><%= link_to "Login", login_path  %></li>
+              <%= menu_divider %>
+            <% else %>
+              <li><%= link_to "My Projects", my_projects_path %></li>
+              <%= menu_divider %>
+              <li><%= link_to "Edit Profile", edit_user_profile_path(current_user) %></li>
+              <%= menu_divider %>
+              <li><%= link_to "New Project", new_project_path %></li>
+              <%= menu_divider %>
+              <li><%= link_to "Log Out", logout_path %></li>
+            <% end %>
             </ul>
           </div><!--/.nav-collapse -->
         </div>
@@ -60,23 +73,13 @@
 
     <div class="container-fluid">
       <div class="row-fluid">
-        <div class="span3">
-          <div class="well sidebar-nav">
-            <ul class="nav nav-list">
-              <li class="nav-header">Sidebar</li>
-              <li><%= link_to "Signup", signup_path  %></li>
-              <li><%= link_to "Login", "/login"  %></li>
-              <li><%= link_to "Home", "/"  %></li>
-            </ul>
-          </div><!--/.well -->
-        </div><!--/span-->
-        <div class="span9">
+        <div class="span10 offset1">
           <%= bootstrap_flash %>
-          <%= yield %>
+          <%= yield %> 
         </div>
       </div><!--/row-->
 
-      <footer>
+      <footer class="span3 offset1">
         <p>&copy; Company 2013</p>
       </footer>
 
