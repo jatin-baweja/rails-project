@@ -11,12 +11,14 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20131022123401) do
+ActiveRecord::Schema.define(version: 20131025051243) do
+
+  create_table "categories", force: true do |t|
+    t.string "name"
+  end
 
   create_table "projects", force: true do |t|
     t.string   "title"
-    t.string   "image"
-    t.string   "category"
     t.string   "blurb"
     t.string   "location_name"
     t.integer  "duration"
@@ -24,10 +26,22 @@ ActiveRecord::Schema.define(version: 20131022123401) do
     t.integer  "goal"
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.integer  "user_id"
+    t.integer  "owner_id"
+    t.integer  "category_id"
+    t.string   "image_file_name"
+    t.string   "image_content_type"
+    t.integer  "image_file_size"
+    t.datetime "image_updated_at"
   end
 
-  add_index "projects", ["user_id"], name: "index_projects_on_user_id", using: :btree
+  add_index "projects", ["owner_id"], name: "index_projects_on_owner_id", using: :btree
+
+  create_table "projects_users", id: false, force: true do |t|
+    t.integer "project_id", null: false
+    t.integer "user_id",    null: false
+  end
+
+  add_index "projects_users", ["user_id", "project_id"], name: "index_projects_users_on_user_id_and_project_id", unique: true, using: :btree
 
   create_table "rewards", force: true do |t|
     t.integer  "minimum"
@@ -43,12 +57,15 @@ ActiveRecord::Schema.define(version: 20131022123401) do
   add_index "rewards", ["project_id"], name: "index_rewards_on_project_id", using: :btree
 
   create_table "stories", force: true do |t|
-    t.string   "video"
     t.text     "description"
     t.text     "risks"
     t.datetime "created_at"
     t.datetime "updated_at"
     t.integer  "project_id"
+    t.string   "video_file_name"
+    t.string   "video_content_type"
+    t.integer  "video_file_size"
+    t.datetime "video_updated_at"
   end
 
   add_index "stories", ["project_id"], name: "index_stories_on_project_id", using: :btree
