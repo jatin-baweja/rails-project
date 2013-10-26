@@ -1,6 +1,6 @@
 class UsersController < ApplicationController
   before_action :set_user, only: [:show, :edit, :update, :destroy]
-  skip_before_action :authorize, only: [:new]
+  skip_before_action :authorize, only: [:new, :create]
 
   def new
     @user = User.new
@@ -10,6 +10,10 @@ class UsersController < ApplicationController
   end
 
   def edit
+  end
+
+  def my_projects
+    @projects = Project.where(owner_id: session[:user_id])
   end
 
   def create
