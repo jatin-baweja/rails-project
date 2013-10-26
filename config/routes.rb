@@ -1,16 +1,20 @@
 Kickstarter::Application.routes.draw do
-  resources :rewards
-  root :to => 'sessions#new'
+  root :to => 'projects#index'
   controller :sessions do
     get "login" => :new
     post "login" => :create
     get "logout" => :destroy
   end
+  resources :rewards
+  resources :stories
 
-  resources :projects
+  resources :projects do
+    get 'back', on: :member
+  end
   post "users", to: 'users#create'
   get "signup", to: 'users#new'
   get "users/:id/edit_profile", to: 'users#edit', as: :edit_user_profile
+  get "/my_projects", to: 'users#my_projects'
   get "users/:id", to: 'users#show', as: :user
   patch "users/:id", to: 'users#update'
   put "users/:id", to: 'users#update'
