@@ -1,0 +1,11 @@
+<%- model_class = Story -%>
+<dl class="dl-horizontal">
+  <dt><strong><%= model_class.human_attribute_name(:video) %>:</strong></dt>
+  <dd><%= story.video %></dd>
+  <dt><strong><%= model_class.human_attribute_name(:description) %>:</strong></dt>
+  <dd><%= story.description %></dd>
+  <dt><strong><%= model_class.human_attribute_name(:risks) %>:</strong></dt>
+  <dd><%= story.risks %></dd>
+  <dt><strong><%= model_class.human_attribute_name(:project_id) %>:</strong></dt>
+  <dd><%= story.project_id %></dd>
+</dl>
