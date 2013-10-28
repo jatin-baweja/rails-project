@@ -24,6 +24,9 @@ gem 'twitter-bootstrap-rails', :git => 'git://github.com/seyhunak/twitter-bootst
 # Use Paperclip
 gem "paperclip", "~> 3.0"
 
+# Use annotate for annotating Models
+gem 'annotate', ">=2.5.0"
+
 # Use jquery as the JavaScript library
 gem 'jquery-rails'
 
