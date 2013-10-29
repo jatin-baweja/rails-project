@@ -24,8 +24,8 @@ class Project < ActiveRecord::Base
   has_one :story
   belongs_to :user, foreign_key: "owner_id"
   has_and_belongs_to_many :backers, class_name: "User"
-  accepts_nested_attributes_for :rewards
-  accepts_nested_attributes_for :story
+  accepts_nested_attributes_for :rewards, update_only: true
+  accepts_nested_attributes_for :story, update_only: true
   belongs_to :category
   has_attached_file :image, :default_url => "/images/:style/missing.png"
 
