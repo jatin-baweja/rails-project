@@ -1,0 +1,2 @@
+var $projectRewards = $('.project-reward');
+$('<div class="project-reward"></div>').insertAfter($projectRewards.last()).html("<h5>Reward #" + ($projectRewards.length + 1) + "</h5><%= escape_javascript(render partial: 'rewards/project_fields') %>");

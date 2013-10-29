@@ -21,13 +21,23 @@
   <div class="highlight">
     <h4>Story</h4>
     <p><%= @story.description %></p>
-    <p><%= video_tag @story.video, size: '600x400', controls: true, autobuffer: true %></p> 
+    <% if !@story.video.nil? && @story.video.match(/youtube\.com/) %>
+      <p><iframe title="YouTube video player" class="youtube-player" type="text/html" width="640" height="390" src="<%= @story.video %>" frameborder="0" allowFullScreen></iframe></p>
+    <% end %>
   </div>
   <% end %>
-  <% if !@reward.nil? %> 
+  <% if !@rewards.nil? %> 
   <div class="highlight">
     <h4>Rewards</h4>
-    <%= render partial: 'rewards/show_fields', locals: { :reward => @reward } %>
+    <% counter = 0 %>
+    <% @rewards.each do |reward| %>
+      <div class="reward-info">
+        <h5>Reward #<%= counter = counter + 1 %></h5>
+        <div class="reward-details">
+          <%= render partial: 'rewards/show_fields', locals: { :reward => reward } %>
+        </div>
+      </div>
+    <% end %>
   </div>
   <% end %>
 </div>

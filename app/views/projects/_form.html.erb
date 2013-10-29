@@ -66,9 +66,16 @@
   </div>
   <div class="highlight">
     <h4>Rewards</h4>
-    <%= f.fields_for :rewards, @reward do |builder| %>
-      <%= render partial: 'rewards/fields', :locals => { :f => builder } %>
-    <% end %>
+    <% counter = 0 %>
+    <div class="project-reward">
+      <%= f.fields_for :rewards, @reward do |builder| %>
+      <h5>Reward #<%= counter = counter + 1 %></h5>
+        <%= render partial: 'rewards/fields', :locals => { :f => builder } %>
+      <% end %>
+    </div>
+    <div class="add-link">
+      <%= link_to "Add Reward", new_reward_projects_path, remote: true %>
+    </div>
   </div>
 
   <div class="form-actions">
