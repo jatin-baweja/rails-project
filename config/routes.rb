@@ -10,7 +10,9 @@ Kickstarter::Application.routes.draw do
 
   resources :projects do
     get 'back', on: :member
+    get 'new_reward', on: :collection
   end
+
   post "users", to: 'users#create'
   get "signup", to: 'users#new'
   get "users/:id/edit_profile", to: 'users#edit', as: :edit_user_profile
