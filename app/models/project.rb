@@ -27,6 +27,6 @@ class Project < ActiveRecord::Base
   accepts_nested_attributes_for :rewards, update_only: true
   accepts_nested_attributes_for :story, update_only: true
   belongs_to :category
-  has_attached_file :image, :default_url => "/images/:style/missing.png"
+  has_attached_file :image, :styles => { :medium => "300x300>", :thumb => "202x135>" },  :default_url => "/images/:style/missing.png"
 
 end
