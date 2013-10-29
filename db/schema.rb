@@ -62,10 +62,7 @@ ActiveRecord::Schema.define(version: 20131025051243) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.integer  "project_id"
-    t.string   "video_file_name"
-    t.string   "video_content_type"
-    t.integer  "video_file_size"
-    t.datetime "video_updated_at"
+    t.string   "video"
   end
 
   add_index "stories", ["project_id"], name: "index_stories_on_project_id", using: :btree
