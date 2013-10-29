@@ -11,11 +11,12 @@ class ProjectsController < ApplicationController
     @project = Project.new
     @story = @project.build_story
     @reward = @project.rewards.build
+    @count = 1
   end
 
   def show
     @story = @project.story
-    @reward = @project.rewards.take
+    @rewards = @project.rewards
     @user = @project.user
   end
 
@@ -32,6 +33,7 @@ class ProjectsController < ApplicationController
   def create
     @project = Project.new(project_params)
     @project.owner_id = session[:user_id]
+    @project.story.video = project_params[:story_attributes][:video].gsub(/(youtube.com\/)(.)*v=([\w\-_]+)(.)*/,'\1embed/\3')
 
     respond_to do |format|
       if @project.save
@@ -48,8 +50,11 @@ class ProjectsController < ApplicationController
   end
 
   def update
+    project_parameters = project_params
+    project_parameters[:story_attributes][:video].gsub!(/(youtube.com\/)(.)*v=([\w\-_]+)(.)*$/, '\1embed/\3')
+
     respond_to do |format|
-      if @project.update(project_params)
+      if @project.update(project_parameters)
         format.html { redirect_to project_url(@project),
           notice: "Project #{@project.title} was successfully updated." }
         format.json { head :no_content }
@@ -74,6 +79,12 @@ class ProjectsController < ApplicationController
     end
   end
 
+  def new_reward
+    respond_to do |format|
+      format.js {}
+    end
+  end
+
   private
 
     def set_project
@@ -89,7 +100,7 @@ class ProjectsController < ApplicationController
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def project_params
-      params.require(:project).permit(:title, :image, :category_id, :blurb, :location_name, :duration, :deadline, :goal, :story_attributes => [ :video, :description, :risks], :rewards_attributes => [:minimum, :estimated_delivery_on, :shipping, :limit])
+      params.require(:project).permit(:title, :image, :category_id, :blurb, :location_name, :duration, :deadline, :goal, :story_attributes => [:id, :video, :description, :risks], :rewards_attributes => [:id, :minimum, :description, :estimated_delivery_on, :shipping, :limit])
     end
 
 end
