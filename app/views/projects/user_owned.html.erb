@@ -1,0 +1,21 @@
+<%- model_class = Project -%>
+<div class="page-header">
+  <h1>Discover <%=t '.title', :default => model_class.model_name.human.pluralize.titleize %></h1>
+</div>
+<div class="container-fluid">
+  <div class="row-fluid">
+    <div class="span9">
+      <div class="container-fluid">
+        <h3>Projects Pending for Approval</h3>
+        <%= render partial: 'listing', locals: { :projects => @pending_projects } %>
+      </div>
+      <hr>
+      <div class="container-fluid">
+        <h3>Approved Projects</h3>
+        <%= render partial: 'listing', locals: { :projects => @approved_projects } %>
+      </div>
+    </div>
+    <div class="span3">
+    </div>
+  </div>
+</div>

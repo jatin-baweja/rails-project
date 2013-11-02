@@ -42,6 +42,10 @@
   <% end %>
 </div>
 <div class="span3">
-  <%= render partial: 'details', locals: { :project => @project } %>
-  <%= render partial: 'users/fields', locals: { :user => @user } %>
+  <% if admin_signed_in? %>
+    <%= render partial: 'admin/projects/details', locals: { :project => @project } %>
+  <% else %>
+    <%= render partial: 'details', locals: { :project => @project } %>
+    <%= render partial: 'users/fields', locals: { :user => @user } %>
+  <% end %>
 </div>
