@@ -51,12 +51,7 @@
             <ul class="nav pull-right">
               <li><%= link_to "Discover Projects", projects_path  %></li>
               <%= menu_divider %>
-            <% if !user_signed_in? %>
-              <li><%= link_to "Signup", signup_path  %></li>
-              <%= menu_divider %>
-              <li><%= link_to "Login", login_path  %></li>
-              <%= menu_divider %>
-            <% else %>
+            <% if user_signed_in? %>
               <li><%= link_to "My Projects", my_projects_path %></li>
               <%= menu_divider %>
               <li><%= link_to "Edit Profile", edit_user_profile_path(current_user) %></li>
@@ -64,6 +59,14 @@
               <li><%= link_to "New Project", new_project_path %></li>
               <%= menu_divider %>
               <li><%= link_to "Log Out", logout_path %></li>
+            <% elsif admin_signed_in? %>
+              <li><%= link_to "Pending Projects", admin_projects_pending_for_approval_path %></li>
+              <%= menu_divider %>
+              <li><%= link_to "Log Out", admin_logout_path %></li>
+            <% else %>
+              <li><%= link_to "Signup", signup_path  %></li>
+              <%= menu_divider %>
+              <li><%= link_to "Login", login_path  %></li>
             <% end %>
             </ul>
           </div><!--/.nav-collapse -->
