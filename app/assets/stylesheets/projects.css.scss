@@ -22,7 +22,6 @@
   border-radius: 4px 4px 4px 4px;
   display: block;
   padding-bottom: 14px;
-  padding-right: 10px;
   height: 90%;
   p {
     padding-left: 5px;
@@ -33,6 +32,7 @@
 .project-thumbnail {
   height: 50%;
   width:100%;
+  border-radius: 4px 4px 0px 0px;
 }
 
 
@@ -44,7 +44,7 @@
   text-align: center;
 }
 
-.high20 {
+.high300 {
   height: 300px;
 }
 
