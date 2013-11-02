@@ -12,10 +12,6 @@ class UsersController < ApplicationController
   def edit
   end
 
-  def my_projects
-    @projects = Project.where(owner_id: session[:user_id])
-  end
-
   def create
     @user = User.new(user_params)
 
