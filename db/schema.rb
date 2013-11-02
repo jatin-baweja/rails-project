@@ -11,7 +11,14 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20131025051243) do
+ActiveRecord::Schema.define(version: 20131030091254) do
+
+  create_table "admins", force: true do |t|
+    t.string   "email"
+    t.string   "password_digest"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
 
   create_table "categories", force: true do |t|
     t.string "name"
@@ -32,6 +39,7 @@ ActiveRecord::Schema.define(version: 20131025051243) do
     t.string   "image_content_type"
     t.integer  "image_file_size"
     t.datetime "image_updated_at"
+    t.boolean  "pending_approval",   default: true
   end
 
   add_index "projects", ["owner_id"], name: "index_projects_on_owner_id", using: :btree
