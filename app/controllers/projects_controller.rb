@@ -4,7 +4,7 @@ class ProjectsController < ApplicationController
   before_action :check_if_user_is_owner, only: [:edit, :update]
 
   def index
-    @projects = Project.order(:title)
+    @projects = Project.where(pending_approval: false).order(:title)
   end
 
   def new
@@ -18,6 +18,11 @@ class ProjectsController < ApplicationController
     @story = @project.story
     @rewards = @project.rewards
     @user = @project.user
+  end
+
+  def user_owned
+    @pending_projects = Project.where(owner_id: session[:user_id], pending_approval: true)
+    @approved_projects = Project.where(owner_id: session[:user_id], pending_approval: false)
   end
 
   def edit
