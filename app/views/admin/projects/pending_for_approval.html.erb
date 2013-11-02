@@ -1,0 +1,28 @@
+<%- model_class = Project -%>
+<div class="page-header">
+  <h1>Pending <%=t '.title', :default => model_class.model_name.human.pluralize.titleize %></h1>
+</div>
+<div class="container-fluid">
+  <div class="row-fluid">
+    <div class="span9">
+      <% counter = 0 %>
+      <% @projects.each do |project| %>
+        <% if counter%3 == 0 %>
+          <div class="row-fluid">
+        <% end %>
+        <div class="span4">
+          <%= render partial: 'projects/short_description', locals: { :project => project } %>
+        </div>
+        <% if counter%3 == 2 %>
+          </div>
+        <% end %>
+        <% counter = counter + 1 %>
+      <% end %>
+      <% if counter%3 != 0 %>
+        </div>
+      <% end %>
+    </div>
+    <div class="span3">
+    </div>
+  </div>
+</div>

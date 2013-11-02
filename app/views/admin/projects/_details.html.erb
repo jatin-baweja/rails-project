@@ -1,0 +1,11 @@
+<div class="highlight high300">
+  <% if project.pending_approval? %>
+    <div id="approve-button" class="large-button text-center">
+      <%= link_to "Approve Project", approve_admin_project_path(project), remote: true %>
+    </div>
+  <% else %>
+    <div id="approve-button" class="text-center">
+      Project Approved
+    </div>
+  <% end %>
+</div>
