@@ -12,11 +12,24 @@ Kickstarter::Application.routes.draw do
     get 'back', on: :member
     get 'new_reward', on: :collection
   end
+  get "my_projects", to: 'projects#user_owned'
+
+  namespace :admin do
+    root "projects#pending_for_approval"
+    get "projects/pending_for_approval"
+    resources :projects, except: :all do
+      get "approve", on: :member
+    end
+    controller :sessions do
+      get "login" => :new
+      post "login" => :create
+      get "logout" => :destroy
+    end
+  end
 
   post "users", to: 'users#create'
   get "signup", to: 'users#new'
   get "users/:id/edit_profile", to: 'users#edit', as: :edit_user_profile
-  get "/my_projects", to: 'users#my_projects'
   get "users/:id", to: 'users#show', as: :user
   patch "users/:id", to: 'users#update'
   put "users/:id", to: 'users#update'
