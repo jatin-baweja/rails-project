@@ -8,4 +8,8 @@ module ApplicationHelper
     session[:user_id] ? true : false
   end
 
+  def admin_signed_in?
+    session[:admin_id] ? true : false
+  end
+
 end
