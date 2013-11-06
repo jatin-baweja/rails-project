@@ -24,6 +24,9 @@ gem 'twitter-bootstrap-rails', :git => 'git://github.com/seyhunak/twitter-bootst
 # Use Paperclip
 gem "paperclip", "~> 3.0"
 
+# CK Editor for rich text editing
+gem "ckeditor"
+
 # Use annotate for annotating Models
 gem 'annotate', ">=2.5.0"
 

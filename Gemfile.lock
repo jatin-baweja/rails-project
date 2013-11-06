@@ -41,6 +41,9 @@ GEM
     atomic (1.1.14)
     bcrypt-ruby (3.0.1)
     builder (3.1.4)
+    ckeditor (4.0.6)
+      mime-types
+      orm_adapter
     climate_control (0.0.3)
       activesupport (>= 3.0)
     cocaine (0.5.3)
@@ -70,6 +73,7 @@ GEM
     minitest (4.7.5)
     multi_json (1.8.1)
     mysql2 (0.3.13)
+    orm_adapter (0.4.0)
     paperclip (3.5.2)
       activemodel (>= 3.0.0)
       activesupport (>= 3.0.0)
@@ -132,6 +136,7 @@ PLATFORMS
 DEPENDENCIES
   annotate (>= 2.5.0)
   bcrypt-ruby (~> 3.0.0)
+  ckeditor
   coffee-rails (~> 4.0.0)
   jbuilder (~> 1.2)
   jquery-rails
