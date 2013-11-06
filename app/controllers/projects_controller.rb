@@ -1,7 +1,7 @@
 class ProjectsController < ApplicationController
-  before_action :set_project, only: [:show, :edit, :update, :destroy, :back]
+  before_action :set_project, only: [:show, :edit, :update, :destroy, :back, :create_story, :create_rewards, :new_story, :new_rewards]
   skip_before_action :authorize, only: [:show, :index]
-  before_action :check_if_user_is_owner, only: [:edit, :update]
+  before_action :check_if_user_is_owner, only: [:new, :create, :edit, :update, :new_story, :new_rewards, :create_story, :create_rewards]
 
   def index
     @projects = Project.where(pending_approval: false).order(:title)
@@ -9,9 +9,6 @@ class ProjectsController < ApplicationController
 
   def new
     @project = Project.new
-    @story = @project.build_story
-    @reward = @project.rewards.build
-    @count = 1
   end
 
   def show
@@ -28,6 +25,51 @@ class ProjectsController < ApplicationController
   def edit
   end
 
+  def new_story
+    if @project.story.nil?
+      @story = @project.build_story
+    else
+      @story = @project.story
+    end
+  end
+
+  def create_story
+    project_parameters = project_params
+    project_parameters[:story_attributes][:video].gsub!(/(youtube.com\/)(.)*v=([\w\-_]+)(.)*$/, '\1embed/\3')
+    respond_to do |format|
+      if @project.update(project_parameters)
+        format.html { redirect_to new_rewards_project_url(@project) }
+        format.json { render action: 'show', status: :created, location: @project }
+      else
+        format.html { render action: 'new' }
+        format.json { render json: @project.errors, status: :unprocessable_entity }
+      end
+    end
+  end
+
+  def new_rewards
+    if @project.rewards.nil?
+      @reward = @project.rewards.build
+    else
+      @reward = @project.rewards
+    end
+  end
+
+  def create_rewards
+    respond_to do |format|
+      if @project.update(project_params)
+        format.html { redirect_to project_url(@project),
+          notice: "Project #{@project.title} was successfully created." }
+        format.json { render action: 'show',
+          status: :created, location: @project }
+      else
+        format.html { render action: 'new' }
+        format.json { render json: @project.errors,
+          status: :unprocessable_entity }
+      end
+    end
+  end
+
   def back
     @project.backers << User.find(session[:user_id])
     respond_to do |format|
@@ -38,12 +80,10 @@ class ProjectsController < ApplicationController
   def create
     @project = Project.new(project_params)
     @project.owner_id = session[:user_id]
-    @project.story.video = project_params[:story_attributes][:video].gsub(/(youtube.com\/)(.)*v=([\w\-_]+)(.)*/,'\1embed/\3')
 
     respond_to do |format|
       if @project.save
-        format.html { redirect_to project_url(@project),
-          notice: "Project #{@project.title} was successfully created." }
+        format.html { redirect_to new_story_project_url(@project) }
         format.json { render action: 'show',
           status: :created, location: @project }
       else
