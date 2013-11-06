@@ -1,4 +1,5 @@
 Kickstarter::Application.routes.draw do
+  mount Ckeditor::Engine => '/ckeditor'
   root :to => 'projects#index'
   controller :sessions do
     get "login" => :new
@@ -11,6 +12,10 @@ Kickstarter::Application.routes.draw do
   resources :projects do
     get 'back', on: :member
     get 'new_reward', on: :collection
+    get 'story', action: 'new_story', on: :member
+    get 'rewards', action: 'new_rewards', on: :member
+    post 'create_story', on: :member
+    post 'create_rewards', on: :member
   end
   get "my_projects", to: 'projects#user_owned'
 
