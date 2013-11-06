@@ -14,28 +14,32 @@
     <%= f.label :title, :class => 'control-label' %>
     <div class="controls">
       <%= f.text_field :title, :class => 'text_field' %>
+      <p class="help-block">Enter the title of your project</p>
     </div>
   </div>
   <div class="control-group">
     <%= f.label :image, :class => 'control-label' %>
     <div class="controls">
       <%= f.file_field :image, :class => 'text_field' %>
+      <p class="help-block">Select an image that best describes your project</p>
     </div>
   </div>
   <div class="control-group">
     <%= f.label :category_id, :class => 'control-label' %>
     <div class="controls">
       <%= f.collection_select :category_id, Category.all, :id, :name %>
+      <p class="help-block">Select category for your project</p>
     </div>
   </div>
   <div class="control-group">
     <%= f.label :blurb, :class => 'control-label' %>
     <div class="controls">
       <%= f.text_area :blurb, :class => 'text_field' %>
+      <p class="help-block">Enter a short description of how you would tweet about your project</p>
     </div>
   </div>
   <div class="control-group">
-    <%= f.label :location_name, :class => 'control-label' %>
+    <%= f.label :location_name, "Location", :class => 'control-label' %>
     <div class="controls">
       <%= f.text_field :location_name, :class => 'text_field' %>
     </div>
@@ -44,43 +48,26 @@
     <%= f.label :duration, :class => 'control-label' %>
     <div class="controls">
       <%= f.text_field :duration, :class => 'text_field' %>
+      <p class="help-block">Enter the duration to achieve your funding in days: 1-60</p>
     </div>
   </div>
   <div class="control-group">
     <%= f.label :deadline, :class => 'control-label' %>
     <div class="controls">
       <%= f.text_field :deadline, :class => 'text_field' %>
+      <p class="help-block">Enter a deadline for your project</p>
     </div>
   </div>
   <div class="control-group">
     <%= f.label :goal, :class => 'control-label' %>
     <div class="controls">
       <%= f.text_field :goal, :class => 'text_field' %>
-    </div>
-  </div>
-  <div class="highlight">
-    <h4>Story</h4>
-    <%= f.fields_for :story, @story do |builder| %>
-      <%= render partial: 'stories/fields', :locals => { :f => builder } %>
-    <% end %>
-  </div>
-  <div class="highlight">
-    <h4>Rewards</h4>
-    <% counter = 0 %>
-    <div class="project-reward">
-      <%= f.fields_for :rewards, @reward do |builder| %>
-      <h5>Reward #<%= counter = counter + 1 %></h5>
-        <%= render partial: 'rewards/fields', :locals => { :f => builder } %>
-      <% end %>
-    </div>
-    <div class="add-link">
-      <%= link_to "Add Reward", new_reward_projects_path, remote: true %>
+      <p class="help-block">Enter the funding amount of your project</p>
     </div>
   </div>
 
   <div class="form-actions">
-    <%= f.submit nil, :class => 'btn btn-primary' %>
-    <%= link_to t('.cancel', :default => t("helpers.links.cancel")),
-                projects_path, :class => 'btn' %>
+    <%= link_to t('.cancel', :default => t("helpers.links.cancel")), projects_path, :class => 'btn' %>
+    <%= f.submit "Next >", :class => 'btn btn-primary' %>
   </div>
 <% end %>

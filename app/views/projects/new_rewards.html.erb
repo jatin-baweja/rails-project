@@ -1,0 +1,30 @@
+<% if @project.errors.any? %>
+  <div id="error_explanation">
+    <h2><%= pluralize(@project.errors.count, "error") %> prohibited this project from being saved:</h2>
+
+    <ul>
+    <% @project.errors.full_messages.each do |msg| %>
+      <li><%= msg %></li>
+    <% end %>
+    </ul>
+  </div>
+<% end %>
+<%= form_for @project, url: create_rewards_project_path, :html => { :class => 'form-horizontal' } do |f| %>
+  <div class="highlight">
+    <h4>Rewards</h4>
+    <% counter = 0 %>
+    <div class="project-reward">
+      <%= f.fields_for :rewards, @reward do |builder| %>
+      <h5>Reward #<%= counter = counter + 1 %></h5>
+        <%= render partial: 'rewards/fields', :locals => { :f => builder } %>
+      <% end %>
+    </div>
+    <div class="add-link">
+      <%= link_to "Add Reward", new_reward_projects_path, remote: true %>
+    </div>
+  </div>
+  <div class="form-actions">
+    <%= link_to "< Prev", new_story_project_path(@project), :class => 'btn' %>
+    <%= f.submit "Submit Project", :class => 'btn btn-primary' %>
+  </div>
+<% end %>
