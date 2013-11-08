@@ -17,6 +17,7 @@
 #  image_content_type :string(255)
 #  image_file_size    :integer
 #  image_updated_at   :datetime
+#  pending_approval   :boolean          default(TRUE)
 #
 
 class Project < ActiveRecord::Base
@@ -28,5 +29,7 @@ class Project < ActiveRecord::Base
   accepts_nested_attributes_for :story, update_only: true
   belongs_to :category
   has_attached_file :image, :styles => { :medium => "300x300>", :thumb => "202x135>" },  :default_url => "/images/:style/missing.png"
+  has_many :project_conversations
+  accepts_nested_attributes_for :project_conversations
 
 end
