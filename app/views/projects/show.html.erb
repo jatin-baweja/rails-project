@@ -6,40 +6,21 @@
       <ul class="nav pull-right">
         <li><%= @project.location_name  %></li>
         <% if(@project.owner_id == session[:user_id]) %>
-        <li><%= link_to "Edit Project", edit_project_path(@project)  %></li>
+          <li><%= link_to "Edit Project", edit_project_path(@project)  %></li>
         <% end %>
+      </ul>
+      <ul class="nav pull-left">
+        <li><%= link_to "Description", description_project_path(@project), remote: true %></li>
+        <% if (admin_signed_in? || (@project.owner_id == session[:user_id]) ) %>
+          <li><%= link_to "Admin Conversation", admin_conversation_project_path(@project), remote: true  %></li>
+        <% end %>
+      </ul>
     </div>
   </div>
 
 
-<div class="span8">
-    <div class="image-container">
-      <%= image_tag @project.image %>
-    </div>
-
-  <% if !@story.nil? %> 
-  <div class="highlight">
-    <h4>Story</h4>
-    <p><%= @story.description %></p>
-    <% if !@story.video.nil? && @story.video.match(/youtube\.com/) %>
-      <p><iframe title="YouTube video player" class="youtube-player" type="text/html" width="640" height="390" src="<%= @story.video %>" frameborder="0" allowFullScreen></iframe></p>
-    <% end %>
-  </div>
-  <% end %>
-  <% if !@rewards.nil? %> 
-  <div class="highlight">
-    <h4>Rewards</h4>
-    <% counter = 0 %>
-    <% @rewards.each do |reward| %>
-      <div class="reward-info">
-        <h5>Reward #<%= counter = counter + 1 %></h5>
-        <div class="reward-details">
-          <%= render partial: 'rewards/show_fields', locals: { :reward => reward } %>
-        </div>
-      </div>
-    <% end %>
-  </div>
-  <% end %>
+<div class="span8" id="project-main">
+  <%= render partial: 'description' %>
 </div>
 <div class="span3">
   <% if admin_signed_in? %>
