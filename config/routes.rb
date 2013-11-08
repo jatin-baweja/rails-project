@@ -14,8 +14,11 @@ Kickstarter::Application.routes.draw do
     get 'new_reward', on: :collection
     get 'story', action: 'new_story', on: :member
     get 'rewards', action: 'new_rewards', on: :member
-    post 'create_story', on: :member
-    post 'create_rewards', on: :member
+    patch 'create_story', on: :member
+    patch 'create_rewards', on: :member
+    get 'admin_conversation', on: :member
+    patch 'create_admin_conversation', on: :member
+    get 'description', on: :member
   end
   get "my_projects", to: 'projects#user_owned'
 
