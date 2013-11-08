@@ -1,7 +1,8 @@
 class ProjectsController < ApplicationController
-  before_action :set_project, only: [:show, :edit, :update, :destroy, :back, :create_story, :create_rewards, :new_story, :new_rewards]
+  before_action :set_project, only: [:show, :edit, :update, :destroy, :back, :create_story, :create_rewards, :new_story, :new_rewards, :description, :admin_conversation, :create_admin_conversation]
   skip_before_action :authorize, only: [:show, :index]
-  before_action :check_if_user_is_owner, only: [:new, :create, :edit, :update, :new_story, :new_rewards, :create_story, :create_rewards]
+  before_action :check_if_user_is_owner, only: [:create, :edit, :update, :new_story, :new_rewards, :create_story, :create_rewards]
+  before_action :set_params_for_conversation, only: [:admin_conversation]
 
   def index
     @projects = Project.where(pending_approval: false).order(:title)
@@ -38,7 +39,7 @@ class ProjectsController < ApplicationController
     project_parameters[:story_attributes][:video].gsub!(/(youtube.com\/)(.)*v=([\w\-_]+)(.)*$/, '\1embed/\3')
     respond_to do |format|
       if @project.update(project_parameters)
-        format.html { redirect_to new_rewards_project_url(@project) }
+        format.html { redirect_to rewards_project_url(@project) }
         format.json { render action: 'show', status: :created, location: @project }
       else
         format.html { render action: 'new' }
@@ -48,7 +49,7 @@ class ProjectsController < ApplicationController
   end
 
   def new_rewards
-    if @project.rewards.nil?
+    if @project.rewards.empty?
       @reward = @project.rewards.build
     else
       @reward = @project.rewards
@@ -83,7 +84,7 @@ class ProjectsController < ApplicationController
 
     respond_to do |format|
       if @project.save
-        format.html { redirect_to new_story_project_url(@project) }
+        format.html { redirect_to story_project_url(@project) }
         format.json { render action: 'show',
           status: :created, location: @project }
       else
@@ -130,6 +131,36 @@ class ProjectsController < ApplicationController
     end
   end
 
+  def admin_conversation
+    respond_to do |format|
+      format.js {}
+    end
+  end
+
+  def create_admin_conversation
+    conv_params = conversation_params
+    Rails.logger.debug "\n\n\n Conv Param : #{conv_params[:project_conversations_attributes][:messages_attributes]}\n\n\n"
+    conv_params[:project_conversations_attributes]["0"][:messages_attributes]["0"][:from] = session[:user_id];
+    if session[:user_id] != @project.owner_id
+      conv_params[:project_conversations_attributes]["0"][:converser_id] = session[:user_id];
+      conv_params[:project_conversations_attributes]["0"][:converser_type] = 'admin';
+    else
+      conv_params[:project_conversations_attributes]["0"][:converser_id] = Admin.first.id;
+      conv_params[:project_conversations_attributes]["0"][:converser_type] = 'admin';
+    end
+    @project.update(conv_params)
+    redirect_to admin_conversation_project_url
+  end
+
+  def description
+    @story = @project.story
+    @rewards = @project.rewards
+    @user = @project.user
+    respond_to do |format|
+      format.js {}
+    end
+  end
+
   private
 
     def set_project
@@ -147,5 +178,21 @@ class ProjectsController < ApplicationController
     def project_params
       params.require(:project).permit(:title, :image, :category_id, :blurb, :location_name, :duration, :deadline, :goal, :story_attributes => [:id, :video, :description, :risks], :rewards_attributes => [:id, :minimum, :description, :estimated_delivery_on, :shipping, :limit])
     end
+
+    def conversation_params
+      params.require(:project).permit(:project_conversations_attributes => [:id, :messages_attributes => [:id, :content] ])
+    end
+
+    def set_params_for_conversation
+      @user = @project.user
+      @conversation = @project.project_conversations.where(converser_type: 'admin')[0]
+      if !@conversation.nil?
+        @messages = @conversation.messages.order(:created_at)
+      else
+        @conversation = @project.project_conversations.build
+      end
+      @message = @conversation.messages.build
+    end
+
 
 end
