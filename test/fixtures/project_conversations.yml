@@ -1,0 +1,11 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/Fixtures.html
+
+one:
+  converser_id: 
+  converser_type: Converser
+  project_id: 
+
+two:
+  converser_id: 
+  converser_type: Converser
+  project_id: 

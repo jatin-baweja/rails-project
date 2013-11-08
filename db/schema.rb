@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20131105143535) do
+ActiveRecord::Schema.define(version: 20131107142232) do
 
   create_table "admins", force: true do |t|
     t.string   "email"
@@ -39,6 +39,27 @@ ActiveRecord::Schema.define(version: 20131105143535) do
 
   add_index "ckeditor_assets", ["assetable_type", "assetable_id"], name: "idx_ckeditor_assetable", using: :btree
   add_index "ckeditor_assets", ["assetable_type", "type", "assetable_id"], name: "idx_ckeditor_assetable_type", using: :btree
+
+  create_table "messages", force: true do |t|
+    t.text     "content"
+    t.integer  "project_conversation_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.integer  "from"
+  end
+
+  add_index "messages", ["project_conversation_id"], name: "index_messages_on_project_conversation_id", using: :btree
+
+  create_table "project_conversations", force: true do |t|
+    t.integer  "converser_id"
+    t.string   "converser_type"
+    t.integer  "project_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "project_conversations", ["converser_id", "converser_type"], name: "index_project_conversations_on_converser_id_and_converser_type", using: :btree
+  add_index "project_conversations", ["project_id"], name: "index_project_conversations_on_project_id", using: :btree
 
   create_table "projects", force: true do |t|
     t.string   "title"
