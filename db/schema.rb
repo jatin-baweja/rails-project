@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20131107142232) do
+ActiveRecord::Schema.define(version: 20131109054338) do
 
   create_table "admins", force: true do |t|
     t.string   "email"
@@ -45,7 +45,7 @@ ActiveRecord::Schema.define(version: 20131107142232) do
     t.integer  "project_conversation_id"
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.integer  "from"
+    t.boolean  "from_converser",          default: true
   end
 
   add_index "messages", ["project_conversation_id"], name: "index_messages_on_project_conversation_id", using: :btree

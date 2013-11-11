@@ -4,13 +4,13 @@
       <div class="row">
         <div class="span3">
           <% if !admin_signed_in? %>
-            <% if message.from == @user.id %>
+            <% if !message.from_converser? %>
               <p>You:</p>
             <% else %>
               <p>Admin:</p>
             <% end %>
           <% else %>
-            <% if message.from == @user.id %>
+            <% if !message.from_converser? %>
               <p>Project Creator:</p>
             <% else %>
               <p>You:</p>
@@ -24,13 +24,15 @@
     <% end %>
   <% end %>
 </div>
-<div id="new-message">
-  <%= form_for @project, url: create_admin_conversation_project_path, remote: true do |f| %>
-    <%= f.fields_for :project_conversations, @conversation do |conversation| %>
-      <%= conversation.fields_for :messages, @message do |message| %>
-        <%= message.text_area :content %>
+<div class="row">
+  <div id="new-message" class="span8 offset3">
+    <%= form_for @project, url: create_admin_conversation_project_path, remote: true do |f| %>
+      <%= f.fields_for :project_conversations, @conversation do |conversation| %>
+        <%= conversation.fields_for :messages, @message do |message| %>
+          <%= message.text_area :content %>
+        <% end %>
       <% end %>
+      <%= f.submit "Send" %>
     <% end %>
-    <%= f.submit "Send" %>
-  <% end %>
+  </div>
 </div>

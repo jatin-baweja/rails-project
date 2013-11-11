@@ -10,7 +10,7 @@ class Admin::SessionsController < ApplicationController
     user = Admin.find_by email: params[:email]
     if user and user.authenticate(params[:password])
       session[:admin_id] = user.id
-      redirect_to admin_root_url
+      redirect_to admin_projects_pending_for_approval_url
     else
       redirect_to admin_login_url, notice: "Invalid user/password combination"
     end

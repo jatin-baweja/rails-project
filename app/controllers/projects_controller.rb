@@ -1,5 +1,5 @@
 class ProjectsController < ApplicationController
-  before_action :set_project, only: [:show, :edit, :update, :destroy, :back, :create_story, :create_rewards, :new_story, :new_rewards, :description, :admin_conversation, :create_admin_conversation]
+  before_action :set_project, only: [:show, :edit, :update, :destroy, :back, :create_story, :create_rewards, :new_story, :new_rewards, :description, :admin_conversation, :create_admin_conversation, :backers]
   skip_before_action :authorize, only: [:show, :index]
   before_action :check_if_user_is_owner, only: [:create, :edit, :update, :new_story, :new_rewards, :create_story, :create_rewards]
   before_action :set_params_for_conversation, only: [:admin_conversation]
@@ -139,14 +139,14 @@ class ProjectsController < ApplicationController
 
   def create_admin_conversation
     conv_params = conversation_params
-    Rails.logger.debug "\n\n\n Conv Param : #{conv_params[:project_conversations_attributes][:messages_attributes]}\n\n\n"
-    conv_params[:project_conversations_attributes]["0"][:messages_attributes]["0"][:from] = session[:user_id];
     if session[:user_id] != @project.owner_id
       conv_params[:project_conversations_attributes]["0"][:converser_id] = session[:user_id];
       conv_params[:project_conversations_attributes]["0"][:converser_type] = 'admin';
+      conv_params[:project_conversations_attributes]["0"][:messages_attributes]["0"][:from_converser] = false;
     else
       conv_params[:project_conversations_attributes]["0"][:converser_id] = Admin.first.id;
       conv_params[:project_conversations_attributes]["0"][:converser_type] = 'admin';
+      conv_params[:project_conversations_attributes]["0"][:messages_attributes]["0"][:from_converser] = true;
     end
     @project.update(conv_params)
     redirect_to admin_conversation_project_url
@@ -156,6 +156,13 @@ class ProjectsController < ApplicationController
     @story = @project.story
     @rewards = @project.rewards
     @user = @project.user
+    respond_to do |format|
+      format.js {}
+    end
+  end
+
+  def backers
+    @backers = @project.backers
     respond_to do |format|
       format.js {}
     end

@@ -19,11 +19,12 @@ Kickstarter::Application.routes.draw do
     get 'admin_conversation', on: :member
     patch 'create_admin_conversation', on: :member
     get 'description', on: :member
+    get 'backers', on: :member
   end
   get "my_projects", to: 'projects#user_owned'
 
   namespace :admin do
-    root "projects#pending_for_approval"
+    root "sessions#new"
     get "projects/pending_for_approval"
     resources :projects, except: :all do
       get "approve", on: :member
