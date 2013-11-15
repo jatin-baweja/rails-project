@@ -15,6 +15,7 @@
 /log/*.log
 /tmp
 /config/database.yml
+/config/environment/development.rb
 /public/images/
 /public/videos/
 /public/system/
