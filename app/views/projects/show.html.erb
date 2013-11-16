@@ -1,11 +1,13 @@
 <%- model_class = Project -%>
   <div class="page-header center">
-    <h2 class="text-center"><%= @project.title %></h2>
+    <% project_title = @project.title %>
+    <% project_title = "Untitled Project" if @project.title == "" %>
+    <h2 class="text-center"><%= project_title %></h2>
     <h5 class="text-center">By <%= @project.user.name %></h5>
     <div class="container-fluid navbar">
       <ul class="nav pull-left">
         <li><%= link_to "Description", description_project_path(@project), remote: true %></li>
-        <% if (admin_signed_in? || (@project.owner_id == session[:user_id]) ) %>
+        <% if (admin_signed_in? || (@project.owner_id == current_user) ) %>
           <%= menu_divider %>
           <li><%= link_to "Admin Conversation", admin_conversation_project_path(@project), remote: true  %></li>
         <% end %>
@@ -14,9 +16,11 @@
       </ul>
       <ul class="nav pull-right">
         <li class="no-link"><%= @project.location_name  %></li>
-        <% if(@project.owner_id == session[:user_id]) %>
-          <%= menu_divider %>
-          <li><%= link_to "Edit Project", edit_project_path(@project)  %></li>
+        <% if !@project.rejected? %>
+          <% if(@project.owner_id == session[:user_id]) %>
+            <%= menu_divider %>
+            <li><%= link_to "Edit Project", edit_project_path(@project)  %></li>
+          <% end %>
         <% end %>
       </ul>
     </div>

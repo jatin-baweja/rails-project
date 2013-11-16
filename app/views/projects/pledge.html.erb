@@ -1,0 +1,21 @@
+<%- model_class = Project -%>
+  <div class="page-header center">
+    <h2 class="text-center"><%= @project.title %></h2>
+    <h5 class="text-center">By <%= @project.user.name %></h5>
+  </div>
+<div class="row">
+  <div id="new-message" class="span8 offset3">
+    <%= form_for @project, url: create_pledge_project_path do |f| %>
+      <%= f.fields_for :pledges, @pledge do |pledge| %>
+      <div class="control-group">
+        <%= pledge.label :amount, :class => 'control-label' %>
+        <div class="controls">
+          <%= pledge.text_field :amount, :class => 'text_field' %>
+          <p class="help-block">Enter the amount you want to pledge for this project</p>
+        </div>
+      </div>
+      <% end %>
+      <%= f.submit "Pledge" %>
+    <% end %>
+  </div>
+</div>

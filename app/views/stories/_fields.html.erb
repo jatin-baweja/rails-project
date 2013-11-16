@@ -1,18 +1,30 @@
   <div class="control-group">
-    <%= f.label :video, :class => 'control-label' %>
-    <div class="controls">
-      <%= f.url_field :video, :class => 'url_field' %>
-    </div>
-  </div>
-  <div class="control-group">
     <%= f.label :description, :class => 'control-label' %>
     <div class="controls">
       <%= f.cktext_area :description, :class => 'text_field' %>
     </div>
   </div>
   <div class="control-group">
-    <%= f.label :risks, :class => 'control-label' %>
+    <%= f.label :why_we_need_help, :class => 'control-label' %>
+    <div class="controls">
+      <%= f.cktext_area :why_we_need_help, :class => 'text_field' %>
+    </div>
+  </div>
+  <div class="control-group">
+    <%= f.label :risks, 'Risks and Challenges', :class => 'control-label' %>
     <div class="controls">
       <%= f.cktext_area :risks, :class => 'text_field' %>
+    </div>
+  </div>
+  <div class="control-group">
+    <%= f.label :about_the_team, :class => 'control-label' %>
+    <div class="controls">
+      <%= f.cktext_area :about_the_team, :class => 'text_field' %>
+    </div>
+  </div>
+  <div class="control-group">
+    <%= f.label :faq, 'FAQs', :class => 'control-label' %>
+    <div class="controls">
+      <%= f.cktext_area :faq, :class => 'text_field' %>
     </div>
   </div>

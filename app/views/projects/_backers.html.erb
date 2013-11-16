@@ -2,11 +2,9 @@
   <% if !@backers.nil? %>
     <% @backers.each do |backer| %>
       <div class="row">
-        <div class="span3">
-          <%= backer.name %>
-        </div>
         <div class="span8 highlight">
-          <p><%= backer.email %></p>
+          <p><%= link_to backer.user.name, user_path(backer.user.id) %></p>
+          <p><%= backer.user.email %></p>
         </div>
       </div>
     <% end %>

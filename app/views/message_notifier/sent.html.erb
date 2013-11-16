@@ -1,0 +1,11 @@
+<% if @to_user.class == Admin %>
+  <% to_user_name = "Admin" %>
+  <% from_user_name = @from_user.name %>
+<% else %>
+  <% to_user_name = @to_user.name %>
+  <% from_user_name = "Admin" %>
+<% end %>
+<p>Dear <%= to_user_name %>,</p>
+<p>There's a new message for you in the project <%= link_to @for_project.title, project_url(@for_project) %> from <%= from_user_name %>. The message is as follows :</p>
+<p><%= @message %></p>
+<p>Please check the project for further details.</p>

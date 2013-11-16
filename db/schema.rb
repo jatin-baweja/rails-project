@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20131109054338) do
+ActiveRecord::Schema.define(version: 20131113130616) do
 
   create_table "admins", force: true do |t|
     t.string   "email"
@@ -50,6 +50,18 @@ ActiveRecord::Schema.define(version: 20131109054338) do
 
   add_index "messages", ["project_conversation_id"], name: "index_messages_on_project_conversation_id", using: :btree
 
+  create_table "pledges", force: true do |t|
+    t.integer  "project_id"
+    t.integer  "user_id"
+    t.integer  "amount"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "pledges", ["project_id"], name: "index_pledges_on_project_id", using: :btree
+  add_index "pledges", ["user_id", "project_id"], name: "index_pledges_on_user_id_and_project_id", unique: true, using: :btree
+  add_index "pledges", ["user_id"], name: "index_pledges_on_user_id", using: :btree
+
   create_table "project_conversations", force: true do |t|
     t.integer  "converser_id"
     t.string   "converser_type"
@@ -63,7 +75,7 @@ ActiveRecord::Schema.define(version: 20131109054338) do
 
   create_table "projects", force: true do |t|
     t.string   "title"
-    t.string   "blurb"
+    t.string   "summary",            limit: 300
     t.string   "location_name"
     t.integer  "duration"
     t.datetime "deadline"
@@ -76,7 +88,11 @@ ActiveRecord::Schema.define(version: 20131109054338) do
     t.string   "image_content_type"
     t.integer  "image_file_size"
     t.datetime "image_updated_at"
-    t.boolean  "pending_approval",   default: true
+    t.boolean  "pending_approval",               default: true
+    t.string   "name"
+    t.boolean  "rejected",                       default: false
+    t.datetime "publish_on"
+    t.boolean  "editing",                        default: true
   end
 
   add_index "projects", ["owner_id"], name: "index_projects_on_owner_id", using: :btree
@@ -87,6 +103,17 @@ ActiveRecord::Schema.define(version: 20131109054338) do
   end
 
   add_index "projects_users", ["user_id", "project_id"], name: "index_projects_users_on_user_id_and_project_id", unique: true, using: :btree
+
+  create_table "requested_rewards", force: true do |t|
+    t.integer  "pledge_id"
+    t.integer  "reward_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "requested_rewards", ["pledge_id", "reward_id"], name: "index_requested_rewards_on_pledge_id_and_reward_id", unique: true, using: :btree
+  add_index "requested_rewards", ["pledge_id"], name: "index_requested_rewards_on_pledge_id", using: :btree
+  add_index "requested_rewards", ["reward_id"], name: "index_requested_rewards_on_reward_id", using: :btree
 
   create_table "rewards", force: true do |t|
     t.integer  "minimum"
@@ -108,6 +135,9 @@ ActiveRecord::Schema.define(version: 20131109054338) do
     t.datetime "updated_at"
     t.integer  "project_id"
     t.string   "video"
+    t.text     "why_we_need_help"
+    t.text     "faq"
+    t.text     "about_the_team"
   end
 
   add_index "stories", ["project_id"], name: "index_stories_on_project_id", using: :btree

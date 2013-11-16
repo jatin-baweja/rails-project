@@ -54,9 +54,9 @@
             <% if user_signed_in? %>
               <li><%= link_to "My Projects", my_projects_path %></li>
               <%= menu_divider %>
-              <li><%= link_to "Edit Profile", edit_user_profile_path(current_user) %></li>
-              <%= menu_divider %>
               <li><%= link_to "New Project", new_project_path %></li>
+              <%= menu_divider %>
+              <li class='no-link'>Signed in as <%= session[:user_name] %></li>
               <%= menu_divider %>
               <li><%= link_to "Log Out", logout_path %></li>
             <% elsif admin_signed_in? %>

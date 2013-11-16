@@ -1,7 +1,21 @@
 <div class="highlight high300">
-  <h2 id="backer-count"><%= project.backers.count %></h2>
+  <h2 id="backer-count"><%= project.pledges.count %></h2>
   <p>backers</p>
-  <div id="back-button" class="large-button text-center">
-    <%= link_to "Back this project", back_project_path(project), remote: true %>
+  <h2 id="goal-required"><%= number_to_currency(project.goal) %></h2>
+  <p>funding required</p>
+  <h2 id="goal-achieved"><%= number_to_currency(project.pledges.sum(:amount)) %></h2>
+  <p>amount funded</p>
+  <div class="text-center">
+    <% if current_user != project.owner_id %>
+      <% if !@pledge.nil? %>
+        <div id="pledge-info" class="text-center">
+          <%= "You have pledged #{number_to_currency(@pledge.amount)} for this project." %>
+        </div>
+      <% else %>
+        <div id="pledge-button" class="large-button text-center">
+          <%= link_to "Pledge for this project", pledge_project_path(project) %>
+        </div>
+      <% end %>
+    <% end %>
   </div>
 </div>

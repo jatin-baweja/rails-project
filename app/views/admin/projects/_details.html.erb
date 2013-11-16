@@ -1,11 +1,20 @@
-<div class="highlight high300">
-  <% if project.pending_approval? %>
-    <div id="approve-button" class="large-button text-center">
-      <%= link_to "Approve Project", approve_admin_project_path(project), remote: true %>
-    </div>
+<div id="admin-buttons" class="highlight high300">
+  <% if !project.rejected? %>
+    <% if project.pending_approval? %>
+      <div id="approve-button" class="large-button text-center">
+        <%= link_to "Approve Project", approve_admin_project_path(project), remote: true %>
+      </div>
+      <div id="reject-button" class="large-button text-center">
+        <%= link_to "Reject Project", reject_admin_project_path(project), remote: true %>
+      </div>
+    <% else %>
+      <div id="approve-button" class="text-center">
+        Project Approved
+      </div>
+    <% end %>
   <% else %>
-    <div id="approve-button" class="text-center">
-      Project Approved
+    <div id="reject-button" class="text-center">
+      Project Rejected
     </div>
   <% end %>
 </div>

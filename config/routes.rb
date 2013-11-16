@@ -1,4 +1,5 @@
 Kickstarter::Application.routes.draw do
+  get "project_lists/index"
   mount Ckeditor::Engine => '/ckeditor'
   root :to => 'projects#index'
   controller :sessions do
@@ -9,12 +10,24 @@ Kickstarter::Application.routes.draw do
   resources :rewards
   resources :stories
 
+  resources :discover, controller: 'project_lists', only: [:index] do
+    collection do
+      match 'category/:category', action: 'index', via: [:get, :post]
+      match 'tag/:tag', action: 'index', via: [:get, :post]
+      match 'place/:place', action: 'index', via: [:get, :post]
+    end
+  end
+
   resources :projects do
     get 'back', on: :member
+    get 'pledge', on: :member
+    patch 'create_pledge', on: :member
     get 'new_reward', on: :collection
     get 'story', action: 'new_story', on: :member
+    get 'info', on: :member
     get 'rewards', action: 'new_rewards', on: :member
     patch 'create_story', on: :member
+    patch 'create_info', on: :member
     patch 'create_rewards', on: :member
     get 'admin_conversation', on: :member
     patch 'create_admin_conversation', on: :member
@@ -28,6 +41,7 @@ Kickstarter::Application.routes.draw do
     get "projects/pending_for_approval"
     resources :projects, except: :all do
       get "approve", on: :member
+      get "reject", on: :member
     end
     controller :sessions do
       get "login" => :new

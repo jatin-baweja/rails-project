@@ -10,6 +10,8 @@
 #
 
 class Admin < ActiveRecord::Base
+  validates :email, confirmation: true, uniqueness: true
+  validates :email_confirmation, presence: true
   has_secure_password
   has_many :conversations, as: :converser
 end

@@ -4,7 +4,7 @@
 #
 #  id                 :integer          not null, primary key
 #  title              :string(255)
-#  blurb              :string(255)
+#  summary            :string(300)
 #  location_name      :string(255)
 #  duration           :integer
 #  deadline           :datetime
@@ -18,6 +18,10 @@
 #  image_file_size    :integer
 #  image_updated_at   :datetime
 #  pending_approval   :boolean          default(TRUE)
+#  name               :string(255)
+#  rejected           :boolean          default(FALSE)
+#  publish_on         :datetime
+#  editing            :boolean          default(TRUE)
 #
 
 class Project < ActiveRecord::Base
@@ -31,5 +35,8 @@ class Project < ActiveRecord::Base
   has_attached_file :image, :styles => { :medium => "300x300>", :thumb => "202x135>" },  :default_url => "/images/:style/missing.png"
   has_many :project_conversations
   accepts_nested_attributes_for :project_conversations
+  has_many :pledges
+  has_many :users, through: :pledges
+  accepts_nested_attributes_for :pledges
 
 end
