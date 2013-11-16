@@ -6,6 +6,12 @@ gem 'rails', '4.0.0'
 # Use mysql as the database for Active Record
 gem 'mysql2'
 
+# Use rspec for testing
+group :development, :test do
+  gem "rspec-rails", "~> 2.0"
+  # gem "webrat", "0.7.2"
+end
+
 # Use SCSS for stylesheets
 gem 'sass-rails', '~> 4.0.0'
 
