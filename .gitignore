@@ -16,6 +16,10 @@
 /tmp
 /config/database.yml
 /config/environments/development.rb
+/config/initializers/stripe.rb
+/config/initializers/omnicontacts.rb
+/config/initializers/gibbon.rb
+/lib/tasks/campaign/create.rake
 /public/images/
 /public/videos/
 /public/system/
