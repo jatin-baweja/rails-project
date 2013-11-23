@@ -8,6 +8,7 @@ class Admin::ProjectsController < Admin::SessionsController
 
   def approve
     @project = Project.find(params[:id])
+    @project.publish_on = Time.now if @project.publish_on.nil?
     @project.pending_approval = false
     @project.save
   end
