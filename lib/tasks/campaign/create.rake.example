@@ -1,0 +1,9 @@
+namespace :campaign do
+  desc "Create a new campaign"
+  task :create => :environment do
+    gb = Gibbon::API.new
+    # some html
+    html_content = "<tr><td></td></tr>"
+    gb.campaigns.create({type: "regular", options: {list_id: list_id, subject: "Any Subject Line", from_email: "abc@example.com", from_name: "ABC XYZ", generate_text: true}, content: {html: html_content}})
+  end
+end
