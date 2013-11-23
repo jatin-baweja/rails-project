@@ -1,0 +1,82 @@
+
+ProjectConversation
+  is valid with valid attributes
+  is invalid without project
+  is invalid without converser
+
+Category
+  is valid with valid attributes
+  is invalid without a name
+
+Story
+  is invalid without about_the_team
+  is invalid without description
+  is valid with valid attributes
+  is invalid without faq
+  is invalid without why_we_need_help
+  is invalid without risks
+
+RequestedReward
+  is valid with valid attributes
+  is invalid without pledge
+  is invalid without reward
+
+Pledge
+  is invalid with amount not an integer
+  is valid with valid attributes
+  is invalid without amount
+  is invalid with amount less than or equal to 0
+
+Admin
+  is invalid without a password
+  is invalid without an email
+  is valid with valid attributes
+  is invalid without an email match
+  is invalid without an email_confirmation
+  is invalid without a password match
+
+Message
+  is valid with valid attributes
+  is invalid without content
+
+Reward
+  is invalid if minimum is less than or equal to 0
+  is invalid without minimum
+  is valid with valid attributes
+  is invalid without estimated_delivery_on
+  is invalid without description
+  is invalid if minimum is not an integer
+
+Project
+  after step 1
+    is invalid with title length greater than 60
+    is invalid without title
+    is valid with valid attributes
+    is invalid without location
+    is invalid without summary
+    is invalid with summary length greater than 300
+  after step 3
+    is invalid if duration is greater than 60
+    is invalid without funding amount
+    is invalid if duration is negative
+    is invalid if funding amount is negative
+    is invalid without publish_on
+    is invalid without duration
+    is valid with valid attributes
+    is invalid if duration is not an integer
+    is invalid if funding amount is not an integer
+
+User
+  is invalid without a name
+  is invalid without a password match
+  is invalid without an email
+  is valid with valid attributes
+  is invalid without an email match
+  is invalid without a password
+  is invalid without an email_confirmation
+
+Finished in 0.57948 seconds
+54 examples, 0 failures
+
+Randomized with seed 6329
+
