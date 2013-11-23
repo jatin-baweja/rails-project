@@ -16,4 +16,6 @@
 
 class Story < ActiveRecord::Base
   belongs_to :project
+
+  validates :description, :risks, :why_we_need_help, :faq, :about_the_team, presence: true
 end

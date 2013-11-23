@@ -11,6 +11,7 @@
 #
 
 class ProjectConversation < ActiveRecord::Base
+  validates :converser_id, :project_id, presence: true
   belongs_to :converser, polymorphic: true
   belongs_to :project
   has_many :messages

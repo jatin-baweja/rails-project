@@ -14,5 +14,8 @@
 #
 
 class Reward < ActiveRecord::Base
+  validates :minimum, :description, :estimated_delivery_on, presence: true
+  validates :minimum, numericality: { only_integer: true, greater_than_or_equal_to: 1 }, allow_blank: true
+
   belongs_to :project
 end

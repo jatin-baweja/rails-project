@@ -10,6 +10,7 @@
 #
 
 class RequestedReward < ActiveRecord::Base
+  validates :pledge_id, :reward_id, presence: true
   belongs_to :pledge
   belongs_to :reward
 end
