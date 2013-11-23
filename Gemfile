@@ -6,6 +6,15 @@ gem 'rails', '4.0.0'
 # Use mysql as the database for Active Record
 gem 'mysql2'
 
+# Gibbon Gem for interacting with MailChimp API
+gem 'gibbon'
+
+# Stripe for payment
+gem 'stripe', '~> 1.8.7'
+
+# OmniContacts for Gmail Contact Export
+gem "omnicontacts"
+
 # Use rspec for testing
 group :development, :test do
   gem "rspec-rails", "~> 2.0"

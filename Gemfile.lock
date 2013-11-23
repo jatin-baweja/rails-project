@@ -58,7 +58,13 @@ GEM
     diff-lcs (1.2.5)
     erubis (2.7.0)
     execjs (2.0.2)
+    gibbon (1.0.4)
+      httparty
+      multi_json (>= 1.3.4)
     hike (1.2.3)
+    httparty (0.12.0)
+      json (~> 1.8)
+      multi_xml (>= 0.5.2)
     i18n (0.6.5)
     jbuilder (1.5.2)
       activesupport (>= 3.0.0)
@@ -73,7 +79,11 @@ GEM
     mime-types (1.25)
     minitest (4.7.5)
     multi_json (1.8.2)
+    multi_xml (0.5.5)
     mysql2 (0.3.14)
+    omnicontacts (0.3.4)
+      json
+      rack
     orm_adapter (0.5.0)
     paperclip (3.5.2)
       activemodel (>= 3.0.0)
@@ -100,6 +110,8 @@ GEM
     rake (10.1.0)
     rdoc (3.12.2)
       json (~> 1.4)
+    rest-client (1.6.7)
+      mime-types (>= 1.16)
     rspec-core (2.14.7)
     rspec-expectations (2.14.4)
       diff-lcs (>= 1.1.3, < 2.0)
@@ -128,6 +140,9 @@ GEM
       actionpack (>= 3.0)
       activesupport (>= 3.0)
       sprockets (~> 2.8)
+    stripe (1.8.8)
+      multi_json (>= 1.0.4, < 2)
+      rest-client (~> 1.4)
     thor (0.18.1)
     thread_safe (0.1.3)
       atomic
@@ -150,14 +165,17 @@ DEPENDENCIES
   bcrypt-ruby (~> 3.0.0)
   ckeditor
   coffee-rails (~> 4.0.0)
+  gibbon
   jbuilder (~> 1.2)
   jquery-rails
   mysql2
+  omnicontacts
   paperclip (~> 3.0)
   rails (= 4.0.0)
   rspec-rails (~> 2.0)
   sass-rails (~> 4.0.0)
   sdoc
+  stripe (~> 1.8.7)
   turbolinks
   twitter-bootstrap-rails!
   uglifier (>= 1.3.0)
