@@ -1,12 +1,7 @@
 class SubscriptionsController < ApplicationController
-  def daily
-  end
 
   def weekly
     @email = User.find(session[:user_id]).email
-  end
-
-  def monthly
   end
 
   def index
