@@ -56,6 +56,8 @@
               <%= menu_divider %>
               <li><%= link_to "New Project", new_project_path %></li>
               <%= menu_divider %>
+              <li><%= link_to "Spread the Word", "/contacts/gmail" %></li>
+              <%= menu_divider %>
               <li class='no-link'>Signed in as <%= session[:user_name] %></li>
               <%= menu_divider %>
               <li><%= link_to "Log Out", logout_path %></li>
@@ -83,7 +85,7 @@
       </div><!--/row-->
 
       <footer class="span3 offset1">
-        <p>&copy; Company 2013</p>
+        <p>&copy; Company 2013 <a href='/subscriptions/weekly'>Subscribe</a></p>
       </footer>
 
     </div> <!-- /container -->
