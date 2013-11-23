@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20131113130616) do
+ActiveRecord::Schema.define(version: 20131122113330) do
 
   create_table "admins", force: true do |t|
     t.string   "email"
@@ -59,7 +59,7 @@ ActiveRecord::Schema.define(version: 20131113130616) do
   end
 
   add_index "pledges", ["project_id"], name: "index_pledges_on_project_id", using: :btree
-  add_index "pledges", ["user_id", "project_id"], name: "index_pledges_on_user_id_and_project_id", unique: true, using: :btree
+  add_index "pledges", ["user_id", "project_id"], name: "index_pledges_on_user_id_and_project_id", using: :btree
   add_index "pledges", ["user_id"], name: "index_pledges_on_user_id", using: :btree
 
   create_table "project_conversations", force: true do |t|
@@ -93,6 +93,7 @@ ActiveRecord::Schema.define(version: 20131113130616) do
     t.boolean  "rejected",                       default: false
     t.datetime "publish_on"
     t.boolean  "editing",                        default: true
+    t.string   "video"
   end
 
   add_index "projects", ["owner_id"], name: "index_projects_on_owner_id", using: :btree
@@ -134,13 +135,31 @@ ActiveRecord::Schema.define(version: 20131113130616) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.integer  "project_id"
-    t.string   "video"
     t.text     "why_we_need_help"
     t.text     "faq"
     t.text     "about_the_team"
   end
 
   add_index "stories", ["project_id"], name: "index_stories_on_project_id", using: :btree
+
+  create_table "stripe_accounts", force: true do |t|
+    t.string   "customer_token"
+    t.integer  "user_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.string   "card_token"
+  end
+
+  create_table "transactions", force: true do |t|
+    t.integer  "pledge_id"
+    t.string   "status"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.boolean  "card_used",         default: false
+    t.string   "transaction_token"
+  end
+
+  add_index "transactions", ["pledge_id"], name: "index_transactions_on_pledge_id", using: :btree
 
   create_table "users", force: true do |t|
     t.string   "name"
