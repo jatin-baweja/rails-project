@@ -1,4 +1,6 @@
 Kickstarter::Application.routes.draw do
+  get "subscriptions/weekly"
+  post "subscriptions", controller: 'subscriptions', action: 'index'
   get "project_lists/index"
   mount Ckeditor::Engine => '/ckeditor'
   root :to => 'projects#index'
@@ -10,6 +12,16 @@ Kickstarter::Application.routes.draw do
   resources :rewards
   resources :stories
 
+  match "/contacts/gmail/get_contacts", controller: "users", action: "gmail_callback", via: [:get, :post]
+  post "send_email", controller: "users"
+  get "projects/:project/charge_card", controller: 'payment/stripe/charges', action: 'charge_card'
+  namespace :payment do
+    namespace :stripe do
+      get "charges/new_card"
+      post "charges", controller: 'charges', action: 'create_card'
+    end
+  end
+
   resources :discover, controller: 'project_lists', only: [:index] do
     collection do
       match 'category/:category', action: 'index', via: [:get, :post]
@@ -19,6 +31,7 @@ Kickstarter::Application.routes.draw do
   end
 
   resources :projects do
+    get 'this_week', on: :collection
     get 'back', on: :member
     get 'pledge', on: :member
     patch 'create_pledge', on: :member
