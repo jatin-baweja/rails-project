@@ -56,6 +56,20 @@ class UsersController < ApplicationController
     end
   end
 
+  def gmail_callback
+    @contacts = request.env['omnicontacts.contacts']
+    @projects = Project.where(['owner_id = ? ',session[:user_id]]).where(pending_approval: false).where(['(publish_on <= ? OR publish_on IS NULL) AND (deadline >= ? OR deadline IS NULL)', Time.now, Time.now])
+  end
+
+  def send_email
+    @to_list = params[:emails]
+    @message = params[:message]
+    @project = params[:project]
+    @user = User.find(session[:user_id])
+    ProjectPromoter.promote(@to_list, @message, @user, @project).deliver
+    redirect_to projects_path, notice: 'Your email was successfully sent'
+  end
+
   private
 
     def set_user
