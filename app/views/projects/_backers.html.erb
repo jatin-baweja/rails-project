@@ -1,10 +1,9 @@
 <div id="backers">
-  <% if !@backers.nil? %>
-    <% @backers.each do |backer| %>
+  <% if !@pledges.nil? %>
+    <% @pledges.each do |pledge| %>
       <div class="row">
         <div class="span8 highlight">
-          <p><%= link_to backer.user.name, user_path(backer.user.id) %></p>
-          <p><%= backer.user.email %></p>
+          <p><%= link_to pledge.user.name, user_path(pledge.user.id) %> pledged <%= number_to_currency(pledge.amount) %> for the project <%= pledge.project.title %> on <%= pledge.created_at.strftime('%v') %>(<%= pledge.created_at.strftime('%I:%M %p') %>)</p>
         </div>
       </div>
     <% end %>

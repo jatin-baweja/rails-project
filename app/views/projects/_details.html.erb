@@ -1,5 +1,5 @@
-<div class="highlight high300">
-  <h2 id="backer-count"><%= project.pledges.count %></h2>
+<div class="highlight high470">
+  <h2 id="backer-count"><%= project.pledges.count('DISTINCT user_id') %></h2>
   <p>backers</p>
   <h2 id="goal-required"><%= number_to_currency(project.goal) %></h2>
   <p>funding required</p>
@@ -7,15 +7,14 @@
   <p>amount funded</p>
   <div class="text-center">
     <% if current_user != project.owner_id %>
-      <% if !@pledge.nil? %>
+      <% if @sum_of_pledges != 0 %>
         <div id="pledge-info" class="text-center">
-          <%= "You have pledged #{number_to_currency(@pledge.amount)} for this project." %>
+          <%= "You have pledged #{number_to_currency(@sum_of_pledges)} for this project." %>
         </div>
-      <% else %>
+      <% end %>
         <div id="pledge-button" class="large-button text-center">
           <%= link_to "Pledge for this project", pledge_project_path(project) %>
         </div>
-      <% end %>
     <% end %>
   </div>
 </div>

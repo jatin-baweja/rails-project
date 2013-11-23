@@ -8,13 +8,22 @@
     <%= form_for @project, url: create_pledge_project_path do |f| %>
       <%= f.fields_for :pledges, @pledge do |pledge| %>
       <div class="control-group">
-        <%= pledge.label :amount, :class => 'control-label' %>
+        <%= pledge.label :amount, "Amount(in USD)", :class => 'control-label' %>
         <div class="controls">
           <%= pledge.text_field :amount, :class => 'text_field' %>
-          <p class="help-block">Enter the amount you want to pledge for this project</p>
+          <p class="help-block">Enter the amount(in US Dollars) you want to pledge for this project</p>
         </div>
       </div>
       <% end %>
+      <div class="control-group">
+        <%= label_tag :payment_mode, "Payment Mode", :class => 'control-label' %>
+        <div class="controls">
+          <%= radio_button_tag :payment_mode, "Paypal" %>
+          <%= label_tag "payment_mode_Paypal", "Paypal", class: "radio" %>
+          <%= radio_button_tag :payment_mode, "Stripe" %>
+          <%= label_tag "payment_mode_Stripe", "Credit Card", class: "radio" %>
+        </div>
+      </div>
       <%= f.submit "Pledge" %>
     <% end %>
   </div>
