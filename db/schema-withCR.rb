@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20131125054705) do
+ActiveRecord::Schema.define(version: 20131122113330) do
 
   #FIXME_AB: Why can't we use users table for admins. We just need to add one column to identify user /admin
   create_table "admins", force: true do |t|
@@ -122,7 +122,6 @@ ActiveRecord::Schema.define(version: 20131125054705) do
     t.integer  "reward_id"
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.integer  "quantity"
   end
 
   add_index "requested_rewards", ["pledge_id", "reward_id"], name: "index_requested_rewards_on_pledge_id_and_reward_id", unique: true, using: :btree
@@ -141,7 +140,6 @@ ActiveRecord::Schema.define(version: 20131125054705) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.integer  "project_id"
-    t.integer  "remaining"
   end
 
   add_index "rewards", ["project_id"], name: "index_rewards_on_project_id", using: :btree
