@@ -1,8 +1,9 @@
 require 'spec_helper'
 
 describe User do
+
   before(:each) do
-    @user = User.new(:name => 'Xyz', :email => 'xyz@abc.com', :email_confirmation => 'xyz@abc.com', :password => 'abcd', :password_confirmation => 'abcd')
+    @user = User.new(:name => 'Xyz', :email => 'xyz@abc.com', :email_confirmation => 'xyz@abc.com', :password => 'abcd', :password_confirmation => 'abcd', admin: false)
   end
 
   it "is valid with valid attributes" do

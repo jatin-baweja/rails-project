@@ -43,7 +43,7 @@ describe Project do
   context "after step 3" do
 
     before(:each) do
-      @project = Project.new(:title => 'New Project', :summary => 'Just a short summary', :location_name => 'New Delhi', :goal => 20000, :duration => 35, :publish_on => Time.now + 5.days)
+      @project = Project.new(:title => 'New Project', :summary => 'Just a short summary', :location_name => 'New Delhi', :goal => 20000, :duration => 25, :published_at => Time.now + 5.days)
       @project.step = 3
     end
 
@@ -62,7 +62,7 @@ describe Project do
     end
 
     it "is invalid without publish_on" do
-      @project.publish_on = nil
+      @project.published_at = nil
       @project.should_not be_valid
     end
 
@@ -86,8 +86,8 @@ describe Project do
       @project.should_not be_valid
     end
 
-    it "is invalid if duration is greater than 60" do
-      @project.duration = 70
+    it "is invalid if duration is greater than 29" do
+      @project.duration = 30
       @project.should_not be_valid
     end
 
