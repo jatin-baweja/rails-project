@@ -1,0 +1,13 @@
+<div class="row">
+  <div id="new-message" class="span8 offset3">
+    <%= form_for @project, url: create_admin_conversation_project_path, remote: true do |f| %>
+      <%= f.fields_for :messages, @message do |message| %>
+        <%= message.label :subject %>
+        <%= message.text_field :subject %>
+        <%= message.label :message %>
+        <%= message.text_area :content %>
+      <% end %>
+      <%= f.submit "Send" %>
+    <% end %>
+  </div>
+</div>

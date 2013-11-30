@@ -1,4 +1,4 @@
-<% if @to_user.class == Admin %>
+<% if @to_user.admin? %>
   <% to_user_name = "Admin" %>
   <% from_user_name = @from_user.name %>
 <% else %>

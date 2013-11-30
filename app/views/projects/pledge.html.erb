@@ -4,8 +4,19 @@
     <h5 class="text-center">By <%= @project.user.name %></h5>
   </div>
 <div class="row">
-  <div id="new-message" class="span8 offset3">
-    <%= form_for @project, url: create_pledge_project_path do |f| %>
+<% if @pledge.errors.any? %>
+  <div id="error_explanation" class="alert alert-error">
+    <h2><%= pluralize(@pledge.errors.count, "error") %> prohibited this pledge from being saved:</h2>
+
+    <ul>
+    <% @pledge.errors.full_messages.each do |msg| %>
+      <li><%= msg %></li>
+    <% end %>
+    </ul>
+  </div>
+<% end %>
+  <div id="new-message" class="span8 offset1">
+    <%= form_for @project, url: create_pledge_project_path, html: { class: 'form-horizontal' } do |f| %>
       <%= f.fields_for :pledges, @pledge do |pledge| %>
       <div class="control-group">
         <%= pledge.label :amount, "Amount(in USD)", :class => 'control-label' %>
@@ -18,12 +29,43 @@
       <div class="control-group">
         <%= label_tag :payment_mode, "Payment Mode", :class => 'control-label' %>
         <div class="controls">
-          <%= radio_button_tag :payment_mode, "Paypal" %>
-          <%= label_tag "payment_mode_Paypal", "Paypal", class: "radio" %>
-          <%= radio_button_tag :payment_mode, "Stripe" %>
-          <%= label_tag "payment_mode_Stripe", "Credit Card", class: "radio" %>
+          <label class="radio">
+            <%= radio_button_tag :payment_mode, "Paypal" %>
+            Paypal
+          </label>
+          <label class="radio">
+            <%= radio_button_tag :payment_mode, "Stripe" %>
+            Credit Card
+          </label>
         </div>
       </div>
+      <div class="control-group">
+        <%= label_tag :rewards, "Choose Rewards", :class => 'control-label' %>
+        <div id="rewards" class="controls">
+
+          <% if !@rewards.empty? %> 
+            <div class="highlight">
+              <%# counter = 0 %>
+              <% @rewards.each_with_index do |reward, index| %>
+                <label class='checkbox' style="width:300px;display: inline-block;">
+                  <input type='checkbox' id='reward_<%= reward.id %>' name='rewards[<%= index %>][id]' value="<%= reward.id %>" />
+                  <div class="reward-info">
+                    <h5>Reward #<%= index + 1 %></h5>
+                    <div class="reward-details">
+                      <%= render partial: 'rewards/show_fields', locals: { :reward => reward } %>
+                    </div>
+                  </div>
+                </label>
+                <div class="reward-quantity" style="width: 100px;display: inline-block;">
+                  <input type='text' name='rewards[<%= index %>][quantity]' id='quantity_<%= reward.id %>' class='input-small'/>
+                </div>
+              <% end %>
+            </div>
+          <% end %>
+
+        </div>
+      </div>
+
       <%= f.submit "Pledge" %>
     <% end %>
   </div>

@@ -21,9 +21,9 @@
     </div>
   </div>
   <div class="control-group">
-    <%= f.label :publish_on, :class => 'control-label' %>
+    <%= f.label :published_at, :class => 'control-label' %>
     <div class="controls">
-      <%= f.date_select :publish_on, { :start_year => Time.now.year }, { :class => 'date_field' } %>
+      <%= f.date_select :published_at, { :start_year => Time.now.year }, { :class => 'date_field' } %>
       <p class="help-block">Enter the date to publish your project to start funding.</p>
     </div>
   </div>

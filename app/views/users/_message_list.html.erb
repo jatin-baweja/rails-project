@@ -1,0 +1,33 @@
+<div id="messages" class="container-fluid">
+  <h3>Messages</h3>
+  <% if !@messages.empty? %>
+    <% @messages.each do |message_set| %>
+      <% if !message_set.nil? %>
+        <% if !message_set.child_messages.empty? %>
+        <div class="row <%= (message_set.child_messages.last.to_user_id == session[:user_id] || message_set.child_messages.last.to_user_id == session[:admin_id]) && message_set.child_messages.last.unread? ? "unread-highlight" : "read-highlight" %>">
+        <% else %>
+        <div class="row <%= (message_set.to_user_id == session[:user_id] || message_set.to_user_id == session[:admin_id]) && message_set.unread? ? "unread-highlight" : "read-highlight" %>">
+
+        <% end %>
+          <div class="span2">
+            <% if message_set.to_user_id == session[:user_id] || message_set.to_user_id == session[:admin_id] %>
+              <%= message_set.from_user.name %>
+            <% elsif message_set.from_user_id == session[:user_id] || message_set.from_user_id == session[:admin_id] %>
+              <%= message_set.to_user.name %>
+            <% end %>
+          </div>
+          <div class="span6">
+            <%= link_to "[#{message_set.project.title}] #{message_set.subject}", message_path(message_set) %>
+          </div>
+          <div class="span3">
+            <% if !message_set.child_messages.empty? %>
+              <%= "#{distance_of_time_in_words message_set.child_messages.last.created_at, Time.now} ago" %>
+            <% else %>
+              <%= "#{distance_of_time_in_words message_set.created_at, Time.now} ago" %>
+            <% end %>
+          </div>
+        </div>
+      <% end %>
+    <% end %>
+  <% end %>
+</div>

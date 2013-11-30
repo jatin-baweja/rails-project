@@ -9,14 +9,14 @@
         <li><%= link_to "Description", description_project_path(@project), remote: true %></li>
         <% if (admin_signed_in? || (@project.owner_id == current_user) ) %>
           <%= menu_divider %>
-          <li><%= link_to "Admin Conversation", admin_conversation_project_path(@project), remote: true  %></li>
+          <li><%= link_to "Messages", admin_conversation_project_path(@project), remote: true  %></li>
         <% end %>
         <%= menu_divider %>
         <li><%= link_to "Backers", backers_project_path(@project), remote: true  %></li>
       </ul>
       <ul class="nav pull-right">
         <li class="no-link"><%= @project.location_name  %></li>
-        <% if !@project.rejected? %>
+        <% if !@project.rejected? && !@project.approved? %>
           <% if(@project.owner_id == session[:user_id]) %>
             <%= menu_divider %>
             <li><%= link_to "Edit Project", edit_project_path(@project)  %></li>

@@ -1,6 +1,6 @@
 <div class="highlight high300">
   <div class="highlight-inner">
-    <%= image_tag project.image.url(:thumb), class: 'project-thumbnail' %>
+    <%= image_tag project.display_images.where(primary: true)[0].picture.url(:thumb), class: 'project-thumbnail' if !project.display_images.where(primary: true)[0].nil?%>
     <% project_title = project.title %>
     <% project_title = "Untitled Project" if project.title == "" %>
     <h5 class='text-center'><%= link_to project_title, project_path(project) %></h5>

@@ -1,0 +1,20 @@
+<% if !@rewards.empty? %> 
+  <div class="highlight">
+    <h3>Choose Rewards</h3>
+    <% counter = 0 %>
+    <% @rewards.each do |reward| %>
+      <label class='checkbox'>
+        <input type='checkbox' id='reward_<%= reward.id %>' name='rewards[]' value="<%= reward.id %>" />
+        <div class="reward-info">
+          <h5>Reward #<%= counter = counter + 1 %></h5>
+          <div class="reward-details">
+            <%= render partial: 'rewards/show_fields', locals: { :reward => reward } %>
+          </div>
+        </div>
+      </label>
+      <div class="reward-quantity">
+        <input type='text' name='quantity[]' id='quantity_<%= reward.id %>' class='input-small'/>
+      </div>
+    <% end %>
+  </div>
+<% end %>

@@ -5,9 +5,32 @@
 <div class="container-fluid">
   <div class="row-fluid">
     <div class="span9">
-      <%= render partial: 'listing', locals: { :projects => @projects } %>
-    </div>
-    <div class="span3">
+      <form action="<%= search_results_discover_index_path %>" method="get">
+        <%= text_field_tag :q, params[:q], placeholder: 'Search projects...', style: 'margin-bottom:0px;' %>
+        <%= submit_tag "Search", name: nil, class: 'btn btn-primary' %>
+      </form>
     </div>
   </div>
 </div>
+<% if !@projects.empty? %>
+  <div class="container-fluid">
+    <div class="row-fluid">
+      <div class="span9">
+        <%= render partial: 'listing', locals: { :projects => @projects } %>
+        <%= will_paginate @projects %>
+      </div>
+      <div class="span3">
+      </div>
+    </div>
+  </div>
+<% else %>
+  <div class="container-fluid">
+    <div class="row-fluid">
+      <div class="span9">
+        <h4><%= "Your search returned no results" %></h4>
+      </div>
+      <div class="span3">
+      </div>
+    </div>
+  </div>
+<% end %>

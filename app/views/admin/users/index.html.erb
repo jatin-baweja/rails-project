@@ -1,0 +1,43 @@
+<%- model_class = User -%>
+<div class="page-header">
+  <h1><%=t '.title', :default => model_class.model_name.human.pluralize.titleize %></h1>
+</div>
+<table class="table table-striped">
+  <thead>
+    <tr>
+      <th><%= model_class.human_attribute_name(:id) %></th>
+      <th><%= model_class.human_attribute_name(:name) %></th>
+      <th><%= model_class.human_attribute_name(:email) %></th>
+      <th><%= model_class.human_attribute_name(:admin) %></th>
+      <th><%=t '.actions', :default => t("helpers.actions") %></th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @users.each do |user| %>
+      <tr>
+        <td><%= link_to user.id, user_path(user) %></td>
+        <td><%= user.name %></td>
+        <td><%= user.email %></td>
+        <td><%= user.admin? ? "Yes" : "No" %></td>
+        <td>
+        <% if user.id != session[:admin_id] %>
+          <%= link_to t('.destroy', :default => t("helpers.links.destroy")),
+                      user_path(user),
+                      :method => :delete,
+                      :data => { :confirm => t('.confirm', :default => t("helpers.links.confirm", :default => 'Are you sure?')) },
+                      :class => 'btn btn-mini btn-danger' %>
+        <% end %>
+        <% if !user.admin? %>
+          <%= link_to t('.make_admin', :default => t("helpers.links.make_admin")),
+                      admin_make_admin_path(user),
+                      :method => :post,
+                      :data => { :confirm => t('.confirm_admin', :default => t("helpers.links.confirm_admin", :default => "Are you sure you want to make user #{user.name} with email #{user.email} admin?")) },
+                      :class => 'btn btn-mini' %>
+        <% end %>
+        </td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<%= will_paginate @users %>

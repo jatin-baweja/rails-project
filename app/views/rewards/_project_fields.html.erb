@@ -1,8 +1,8 @@
 <%- @time = Time.now.to_i %>
 <div class="control-group">
-    <label class="control-label" for="project_rewards_attributes_<%= @time %>_minimum">Amount</label>
+    <label class="control-label" for="project_rewards_attributes_<%= @time %>_minimum_amount">Amount</label>
     <div class="controls">
-      <input class="text_field" id="project_rewards_attributes_<%= @time %>_minimum" name="project[rewards_attributes][<%= @time %>][minimum]" type="text" />
+      <input class="text_field" id="project_rewards_attributes_<%= @time %>_minimum_amount" name="project[rewards_attributes][<%= @time %>][minimum_amount]" type="text" />
     </div>
   </div>
   <div class="control-group">
@@ -29,8 +29,8 @@
     </div>
   </div>
   <div class="control-group">
-    <label class="control-label" for="project_rewards_attributes_<%= @time %>_limit">Limit</label>
+    <label class="control-label" for="project_rewards_attributes_<%= @time %>_quantity">Limit</label>
     <div class="controls">
-      <input class="text_field" id="project_rewards_attributes_<%= @time %>_limit" name="project[rewards_attributes][<%= @time %>][limit]" type="text" />
+      <input class="text_field" id="project_rewards_attributes_<%= @time %>_quantity" name="project[rewards_attributes][<%= @time %>][quantity]" type="text" />
     </div>
   </div>

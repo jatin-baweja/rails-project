@@ -6,12 +6,10 @@
   <thead>
     <tr>
       <th><%= model_class.human_attribute_name(:id) %></th>
-      <th><%= model_class.human_attribute_name(:minimum) %></th>
+      <th><%= model_class.human_attribute_name(:minimum_amount) %></th>
       <th><%= model_class.human_attribute_name(:description) %></th>
       <th><%= model_class.human_attribute_name(:estimated_delivery_on) %></th>
-      <th><%= model_class.human_attribute_name(:shipping) %></th>
-      <th><%= model_class.human_attribute_name(:limit) %></th>
-      <th><%= model_class.human_attribute_name(:created_at) %></th>
+      <th><%= model_class.human_attribute_name(:quantity) %></th>
       <th><%=t '.actions', :default => t("helpers.actions") %></th>
     </tr>
   </thead>
@@ -19,12 +17,10 @@
     <% @rewards.each do |reward| %>
       <tr>
         <td><%= link_to reward.id, reward_path(reward) %></td>
-        <td><%= reward.minimum %></td>
+        <td><%= reward.minimum_amount %></td>
         <td><%= reward.description %></td>
         <td><%= reward.estimated_delivery_on %></td>
-        <td><%= reward.shipping %></td>
-        <td><%= reward.limit %></td>
-        <td><%=l reward.created_at %></td>
+        <td><%= reward.quantity %></td>
         <td>
           <%= link_to t('.edit', :default => t("helpers.links.edit")),
                       edit_reward_path(reward), :class => 'btn btn-mini' %>

@@ -1,13 +1,15 @@
-<% if @project.errors.any? %>
-  <div id="error_explanation" class="alert alert-error">
-    <h2><%= pluralize(@project.errors.count, "error") %> prohibited this project from being saved:</h2>
+<% @project.rewards.each_with_index do |reward, index| %>
+  <% if reward.errors.any? %>
+    <div class="alert alert-error">
+      <h2><%= pluralize(reward.errors.count, "error") %> prohibited reward <%= index + 1 %> from being saved:</h2>
 
-    <ul>
-    <% @project.errors.full_messages.each do |msg| %>
-      <li><%= msg %></li>
-    <% end %>
-    </ul>
-  </div>
+      <ul>
+      <% reward.errors.full_messages.each do |msg| %>
+        <li><%= msg %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
 <% end %>
 <%= form_for @project, url: create_rewards_project_path, :html => { :class => 'form-horizontal' } do |f| %>
   <div class="highlight">
