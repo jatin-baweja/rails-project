@@ -1,7 +1,11 @@
 class SubscriptionsController < ApplicationController
 
   def weekly
-    @email = User.find(session[:user_id]).email
+    if session[:user_id]
+      @email = User.find(session[:user_id]).email
+    elsif session[:admin_id]
+      @email = User.find(session[:admin_id]).email
+    end
   end
 
   def index

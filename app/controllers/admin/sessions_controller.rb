@@ -7,7 +7,7 @@ class Admin::SessionsController < ApplicationController
   end
 
   def create
-    user = Admin.find_by email: params[:email]
+    user = User.where(admin: true).find_by email: params[:email]
     if user and user.authenticate(params[:password])
       session[:admin_id] = user.id
       redirect_to admin_projects_pending_for_approval_url
@@ -24,7 +24,7 @@ class Admin::SessionsController < ApplicationController
   private
 
   def admin_authorize
-    unless Admin.find_by id: session[:admin_id]
+    unless User.where(admin: true).find_by id: session[:admin_id]
       redirect_to admin_login_url, notice: "Please log in"
     end
   end

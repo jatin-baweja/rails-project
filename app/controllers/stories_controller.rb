@@ -21,7 +21,7 @@ class StoriesController < ApplicationController
     respond_to do |format|
       if @story.save
         format.html { redirect_to story_url(@story),
-          notice: "Story #{@story.minimum} was successfully created." }
+          notice: "Story was successfully created." }
         format.json { render action: 'show',
           status: :created, location: @story }
       else
@@ -36,7 +36,7 @@ class StoriesController < ApplicationController
     respond_to do |format|
       if @story.update(story_params)
         format.html { redirect_to story_url(@story),
-          notice: "Story #{@story.minimum} was successfully updated." }
+          notice: "Story was successfully updated." }
         format.json { head :no_content }
       else
         format.html { render action: 'edit' }
@@ -49,7 +49,7 @@ class StoriesController < ApplicationController
   def destroy
     begin
       @story.destroy
-      flash[:notice] = "Story #{@story.minimum} deleted"
+      flash[:notice] = "Story deleted"
     rescue StandardError => e
       flash[:notice] = e.message
     end

@@ -1,5 +1,7 @@
 class UsersController < ApplicationController
   before_action :set_user, only: [:show, :edit, :update, :destroy]
+  before_action :set_user_from_session, only: [:messages]
+  before_action :set_message, only: [:create_message, :message]
   skip_before_action :authorize, only: [:new, :create]
 
   def new
@@ -58,7 +60,7 @@ class UsersController < ApplicationController
 
   def gmail_callback
     @contacts = request.env['omnicontacts.contacts']
-    @projects = Project.where(['owner_id = ? ',session[:user_id]]).where(pending_approval: false).where(['(publish_on <= ? OR publish_on IS NULL) AND (deadline >= ? OR deadline IS NULL)', Time.now, Time.now])
+    @projects = Project.where(['owner_id = ? ',session[:user_id]]).where(approved: false).where(['(published_at <= ? OR published_at IS NULL) AND (deadline >= ? OR deadline IS NULL)', Time.now, Time.now])
   end
 
   def send_email
@@ -70,6 +72,20 @@ class UsersController < ApplicationController
     redirect_to projects_path, notice: 'Your email was successfully sent'
   end
 
+  def messages
+    @messages = @user.sent_messages.where('parent_id IS NULL').order('updated_at DESC')
+    @messages = @messages + @user.received_messages.where('parent_id IS NULL').order('updated_at DESC')
+  end
+
+  def message
+    @child_message = @message.child_messages.build
+  end
+
+  def create_message
+    @message.update(altered_message_params(@message))
+    redirect_to message_path(@message)
+  end
+
   private
 
     def set_user
@@ -79,6 +95,33 @@ class UsersController < ApplicationController
     # Never trust parameters from the scary internet, only allow the white list through.
     def user_params
       params.require(:user).permit(:name, :email, :email_confirmation, :password, :password_confirmation)
+    end
+
+    def set_message
+      @message = Message.find(params[:id])
+    end
+
+    def message_params
+      params.require(:message).permit(:id, :content, :child_messages_attributes => [:id, :content])
+    end
+
+    def altered_message_params(parent_message)
+      msg_params = message_params
+      msg_params["child_messages_attributes"]["0"]["subject"] = parent_message.subject
+      sending_user_id = session[:user_id] ? session[:user_id] : session[:admin_id]
+      msg_params["child_messages_attributes"]["0"]["from_user_id"] = sending_user_id
+      receiving_user_id = (parent_message.from_user_id == session[:user_id] || parent_message.from_user_id == session[:admin_id]) ? parent_message.to_user_id : parent_message.from_user_id
+      msg_params["child_messages_attributes"]["0"]["to_user_id"] = receiving_user_id
+      msg_params["child_messages_attributes"]["0"]["unread"] = true
+      msg_params
+    end
+
+    def set_user_from_session
+      if session[:user_id]
+        @user = User.find(session[:user_id])
+      elsif session[:admin_id]
+        @user = User.find(session[:admin_id])
+      end
     end
 
 end

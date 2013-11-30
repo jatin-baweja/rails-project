@@ -4,9 +4,9 @@ class Payment::Stripe::ChargesController < ApplicationController
     @project = Project.find(params[:project])
     @pledge = Pledge.find(params[:pledge])
     @user = User.find(session[:user_id])
-    if !@user.stripe_account.nil?
-      customer = Stripe::Customer.retrieve(@user.stripe_account.customer_token)
-      @cust_card = customer.cards.retrieve(@user.stripe_account.card_token)
+    if !@user.account.nil?
+      customer = Stripe::Customer.retrieve(@user.account.customer_id)
+      @cust_card = customer.cards.retrieve(@user.account.card_id)
     end
   end
 
@@ -27,10 +27,10 @@ class Payment::Stripe::ChargesController < ApplicationController
         }
       )
 
-      user.create_stripe_account(customer_token: customer.id, card_token: customer.default_card)
+      user.create_account(customer_id: customer.id, card_id: customer.default_card)
     end
     pledge = Pledge.find(params[:pledge_id])
-    pledge.create_transaction(status: 'uncharged', card_used: true)
+    pledge.create_transaction(status: 'uncharged', payment_mode: 'stripe')
 
   rescue Stripe::CardError => e
     flash[:error] = e.message
@@ -42,7 +42,7 @@ class Payment::Stripe::ChargesController < ApplicationController
     @pledges = @project.pledges
     @pledges.each do |pledge|
       user_to_charge = pledge.user
-      if(!user_to_charge.stripe_account.nil? && !pledge.transaction.nil? && pledge.transaction.status != 'charged')
+      if(!user_to_charge.account.nil? && !pledge.transaction.nil? && pledge.transaction.status != 'charged')
         amount_to_charge = pledge.amount
         amount_to_charge = amount_to_charge * 100    # To represent in cents
         cust_token = user_to_charge.stripe_account.customer_token
@@ -52,7 +52,7 @@ class Payment::Stripe::ChargesController < ApplicationController
           :description => 'Project Pledge customer',
           :currency    => 'usd'
         )
-        pledge.create_transaction(status: 'charged', transaction_token: charge.id)
+        pledge.create_transaction(status: 'charged', transaction_id: charge.id)
       end
     end
   end
