@@ -49,20 +49,26 @@
           <%= link_to "Kickstarter", root_path, class: 'brand'  %>
           <div class="container-fluid nav-collapse">
             <ul class="nav pull-right">
-              <li><%= link_to "Discover Projects", projects_path  %></li>
+              <li><%= link_to t(".discover_projects"), projects_path  %></li>
               <%= menu_divider %>
             <% if user_signed_in? %>
-              <li><%= link_to "My Projects", my_projects_path %></li>
+              <li><%= link_to t(".my_projects"), my_projects_path %></li>
               <%= menu_divider %>
-              <li><%= link_to "New Project", new_project_path %></li>
+              <li><%= link_to t(".new_project"), new_project_path %></li>
               <%= menu_divider %>
               <li><%= link_to "Spread the Word", "/contacts/gmail" %></li>
               <%= menu_divider %>
               <li class='no-link'>Signed in as <%= session[:user_name] %></li>
               <%= menu_divider %>
+              <li><%= link_to t(".messages"), messages_path %></li>
+              <%= menu_divider %>
               <li><%= link_to "Log Out", logout_path %></li>
             <% elsif admin_signed_in? %>
               <li><%= link_to "Pending Projects", admin_projects_pending_for_approval_path %></li>
+              <%= menu_divider %>
+              <li><%= link_to "Users", admin_users_path %></li>
+              <%= menu_divider %>
+              <li><%= link_to "Messages", messages_path %></li>
               <%= menu_divider %>
               <li><%= link_to "Log Out", admin_logout_path %></li>
             <% else %>

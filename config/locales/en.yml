@@ -21,3 +21,9 @@
 
 en:
   hello: "Hello world"
+  layouts:
+    application:
+      messages: "Messages"
+      new_project: "New Project"
+      my_projects: "My Projects"
+      discover_projects: "Discover Projects"

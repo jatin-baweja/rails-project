@@ -1,0 +1,7 @@
+hi:
+  layouts:
+    application:
+      messages: "संदेश"
+      new_project: "नई परियोजना"
+      my_projects: "मेरी परियोजनायें"
+      discover_projects: "परियोजनाएं प्रकट करें"
