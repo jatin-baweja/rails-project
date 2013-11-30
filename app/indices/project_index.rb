@@ -1,4 +1,4 @@
-ThinkingSphinx::Index.define :project, :with => :active_record do
+ThinkingSphinx::Index.define :project, :with => :active_record, :delta => true do
   indexes title
   indexes summary
   indexes location_name

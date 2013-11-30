@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20131127124726) do
+ActiveRecord::Schema.define(version: 20131130062600) do
 
   create_table "accounts", force: true do |t|
     t.string   "customer_id"
@@ -97,6 +97,7 @@ ActiveRecord::Schema.define(version: 20131127124726) do
     t.boolean  "editing",                   default: true
     t.string   "video_url"
     t.string   "project_state"
+    t.boolean  "delta",                     default: true,  null: false
   end
 
   add_index "projects", ["owner_id"], name: "index_projects_on_owner_id", using: :btree

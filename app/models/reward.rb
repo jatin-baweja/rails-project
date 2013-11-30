@@ -14,6 +14,9 @@
 #
 
 class Reward < ActiveRecord::Base
+  after_save :set_project_delta_flag
+  after_destroy :set_project_delta_flag
+
   validates :minimum_amount, :description, :estimated_delivery_on, presence: true
   validates :minimum_amount, numericality: { only_integer: true, greater_than_or_equal_to: 1 }, allow_blank: true
   validates :remaining_quantity, numericality: { only_integer: true, greater_than_or_equal_to: 1 }, allow_blank: true
@@ -34,4 +37,10 @@ class Reward < ActiveRecord::Base
   end
 
   belongs_to :project
+
+  def set_project_delta_flag
+    project.delta = true
+    project.save
+  end
+
 end
