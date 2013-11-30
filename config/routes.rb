@@ -24,14 +24,17 @@ Kickstarter::Application.routes.draw do
 
   resources :discover, controller: 'project_lists', only: [:index] do
     collection do
+      # match 'search', action: 'search', via: :post, as: :search_results
+      match 'search', action: 'search', via: :get, as: :search_results
       match 'category/:category', action: 'index', via: [:get, :post]
-      match 'tag/:tag', action: 'index', via: [:get, :post]
       match 'place/:place', action: 'index', via: [:get, :post]
     end
   end
 
   resources :projects do
+    get 'rewards/choose', on: :member, controller: 'rewards', action: 'choose'
     get 'this_week', on: :collection
+    get 'new_message', on: :member, as: :new_message
     get 'back', on: :member
     get 'pledge', on: :member
     patch 'create_pledge', on: :member
@@ -52,6 +55,9 @@ Kickstarter::Application.routes.draw do
   namespace :admin do
     root "sessions#new"
     get "projects/pending_for_approval"
+    get "users", action: 'index', controller: :users
+    delete "users", action: 'destroy', controller: :users
+    post "users/:id/make_admin", action: 'make_admin', controller: :users, as: :make_admin
     resources :projects, except: :all do
       get "approve", on: :member
       get "reject", on: :member
@@ -63,6 +69,9 @@ Kickstarter::Application.routes.draw do
     end
   end
 
+  patch "create_message/:id", to: 'users#create_message', as: :create_message
+  get "messages", to: 'users#messages'
+  get "message/:id", to: 'users#message', as: :message
   post "users", to: 'users#create'
   get "signup", to: 'users#new'
   get "users/:id/edit_profile", to: 'users#edit', as: :edit_user_profile
