@@ -30,6 +30,8 @@ class Project < ActiveRecord::Base
     state :submitted
     state :approved
     state :rejected
+    state :funding_successful
+    state :funding_failed
 
     event :submit do
       transitions :from => :draft, :to => :submitted
@@ -43,8 +45,12 @@ class Project < ActiveRecord::Base
       transitions :from => :submitted, :to => :rejected
     end
 
-    event :edit do
-      transitions :from => :submitted, :to => :draft
+    event :completely_funded do
+      transitions :from => :approved, :to => :funding_successful
+    end
+
+    event :incompletely_funded do
+      transitions :from => :approved, :to => :funding_failed
     end
 
   end
