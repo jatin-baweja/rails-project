@@ -31,6 +31,7 @@ class Payment::Stripe::ChargesController < ApplicationController
     end
     pledge = Pledge.find(params[:pledge_id])
     pledge.create_transaction(status: 'uncharged', payment_mode: 'stripe')
+    Delayed::Job.enqueue(PledgeNotifierJob.new(pledge, pledge.project, pledge.user))
 
   rescue Stripe::CardError => e
     flash[:error] = e.message

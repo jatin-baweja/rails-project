@@ -8,9 +8,13 @@ class Admin::ProjectsController < Admin::SessionsController
 
   def approve
     @project = Project.find(params[:id])
-    @project.published_at = Time.now if @project.published_at.nil?
+    @project.published_at = Time.now if @project.published_at.nil? || @project.published_at < Time.now
+    @project.deadline = @project.published_at + @project.duration.days
     @project.approve
-    @project.save
+    if @project.save
+      Delayed::Job.enqueue(PublishProjectJob.new(@project), 0, @project.published_at + 5.minutes)
+      Delayed::Job.enqueue(ProjectFundingJob.new(@project), 0, @project.deadline + 5.minutes)
+    end
   end
 
   def reject
