@@ -3,6 +3,9 @@ source 'https://rubygems.org'
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
 gem 'rails', '4.0.0'
 
+# Use gem for delayed job
+gem 'delayed_job_active_record'
+
 # Use state machine
 gem 'aasm', '~> 3.0.1'
 
