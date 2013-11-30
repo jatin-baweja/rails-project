@@ -13,13 +13,17 @@
 
 # Ignore all logfiles and tempfiles.
 /log/*.log
+/log/*.pid
 /tmp
 /config/database.yml
 /config/environments/development.rb
 /config/initializers/stripe.rb
 /config/initializers/omnicontacts.rb
 /config/initializers/gibbon.rb
+/config/development.sphinx.conf
 /lib/tasks/campaign/create.rake
+/db/sphinx/development/
 /public/images/
 /public/videos/
 /public/system/
+/public/ckeditor_assets/
