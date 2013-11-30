@@ -3,11 +3,20 @@ source 'https://rubygems.org'
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
 gem 'rails', '4.0.0'
 
+# Use state machine
+gem 'aasm', '~> 3.0.1'
+
+# For searching
+gem 'thinking-sphinx', '~> 3.0.2'
+
 # Use mysql as the database for Active Record
 gem 'mysql2'
 
 # Gibbon Gem for interacting with MailChimp API
 gem 'gibbon'
+
+# Pagination gem
+gem 'will_paginate'
 
 # Stripe for payment
 gem 'stripe', '~> 1.8.7'
