@@ -8,7 +8,6 @@
 #  created_at       :datetime
 #  updated_at       :datetime
 #  project_id       :integer
-#  video            :string(255)
 #  why_we_need_help :text
 #  faq              :text
 #  about_the_team   :text
