@@ -1,4 +1,5 @@
 class Admin::UsersController < Admin::SessionsController
+  cache_sweeper :user_sweeper, only: [:destroy]
   before_action :set_user, only: [:destroy, :make_admin]
   before_action :admin_authorize
 

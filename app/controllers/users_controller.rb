@@ -1,8 +1,10 @@
 class UsersController < ApplicationController
+  cache_sweeper :user_sweeper, only: [:update, :destroy]
   before_action :set_user, only: [:show, :edit, :update, :destroy]
   before_action :set_user_from_session, only: [:messages]
   before_action :set_message, only: [:create_message, :message]
   skip_before_action :authorize, only: [:new, :create]
+  caches_action :show
 
   def new
     @user = User.new
@@ -73,8 +75,7 @@ class UsersController < ApplicationController
   end
 
   def messages
-    @messages = @user.sent_messages.where('parent_id IS NULL').order('updated_at DESC')
-    @messages = @messages + @user.received_messages.where('parent_id IS NULL').order('updated_at DESC')
+    @messages = (@user.sent_messages.where('parent_id IS NULL') + @user.received_messages.where('parent_id IS NULL')).sort { |x,y| y.updated_at <=> x.updated_at }
   end
 
   def message
