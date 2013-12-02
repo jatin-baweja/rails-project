@@ -3,6 +3,12 @@ source 'https://rubygems.org'
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
 gem 'rails', '4.0.0'
 
+# Sweeper gem
+gem "rails-observers", "~> 0.1.2"
+
+# Action caching gem
+gem 'actionpack-action_caching'
+
 # Use gem for delayed job
 gem 'delayed_job_active_record'
 
