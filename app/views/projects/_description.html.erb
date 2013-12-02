@@ -2,24 +2,26 @@
     <%= image_tag @project.display_images.where(primary: true)[0].picture %>
   </div>
 
-  <% if !@story.nil? %> 
+  <% if !@story.nil? %>
   <div class="highlight">
-    <h4>Story</h4>
-    <p><%=raw sanitize @story.description, attributes: %w'style class id' %></p>
-    <h4>Risks</h4>
-    <p><%=raw @story.risks %></p>
-    <h4>Why we need Help</h4>
-    <p><%=raw @story.why_we_need_help %></p>
-    <h4>About the Team</h4>
-    <p><%=raw @story.about_the_team %></p>
-    <h4>FAQs</h4>
-    <p><%=raw @story.faq %></p>
+    <% cache @story do %>
+      <h4>Description</h4>
+      <p><%=raw sanitize @story.description, attributes: %w'style class id' %></p>
+      <h4>Risks</h4>
+      <p><%=raw @story.risks %></p>
+      <h4>Why we need Help</h4>
+      <p><%=raw @story.why_we_need_help %></p>
+      <h4>About the Team</h4>
+      <p><%=raw @story.about_the_team %></p>
+      <h4>FAQs</h4>
+      <p><%=raw @story.faq %></p>
+    <% end %>
     <% if !@project.video_url.nil? && @project.video_url.match(/youtube\.com/) %>
       <p><iframe title="YouTube video player" class="youtube-player" type="text/html" width="640" height="390" src="<%= @project.video_url %>" frameborder="0" allowFullScreen></iframe></p>
     <% end %>
   </div>
   <% end %>
-  <% if !@rewards.empty? %> 
+  <% if !@rewards.empty? %>
   <div class="highlight">
     <h4>Rewards</h4>
     <% counter = 0 %>

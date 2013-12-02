@@ -1,19 +1,23 @@
 <% if projects.any? %>
-  <% counter = 0 %>
-  <% projects.each do |project| %>
-    <% if counter%3 == 0 %>
-      <div class="row-fluid">
+  <% cache projects do %>
+    <% counter = 0 %>
+    <% projects.each do |project| %>
+      <% if counter%3 == 0 %>
+        <div class="row-fluid">
+      <% end %>
+      <div class="span4">
+        <% cache project do %>
+          <%= render partial: 'short_description', locals: { :project => project } %>
+        <% end %>
+      </div>
+      <% if counter%3 == 2 %>
+        </div>
+      <% end %>
+      <% counter = counter + 1 %>
     <% end %>
-    <div class="span4">
-      <%= render partial: 'short_description', locals: { :project => project } %>
-    </div>
-    <% if counter%3 == 2 %>
+    <% if counter%3 != 0 %>
       </div>
     <% end %>
-    <% counter = counter + 1 %>
-  <% end %>
-  <% if counter%3 != 0 %>
-    </div>
   <% end %>
 <% else %>
   <div class="row-fluid">

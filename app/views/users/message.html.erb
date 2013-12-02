@@ -7,7 +7,7 @@
         <p>To:<%= "#{ @message.to_user.name }" %></p>
       </div>
       <div class="span3 offset1">
-        <%= "#{distance_of_time_in_words @message.created_at, Time.now} ago" %>
+        <%= @message.created_at.in_time_zone("New Delhi").strftime("%Y-%m-%d %I:%M:%S %p %Z") %>
       </div>
       <div class="span8">
         <p><%= @message.content %></p>
@@ -26,7 +26,7 @@
             <p>To:<%= "#{ message.to_user.name }" if !message.to_user.nil? %></p>
           </div>
           <div class="span3 offset1">
-            <%= "#{distance_of_time_in_words message.created_at, Time.now} ago" %>
+            <%= message.created_at.in_time_zone("New Delhi").strftime("%Y-%m-%d %I:%M:%S %p %Z") %>
           </div>
           <div class="span8">
             <p><%= message.content %></p>

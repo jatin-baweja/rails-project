@@ -12,7 +12,7 @@
           <li><%= link_to "Messages", admin_conversation_project_path(@project), remote: true  %></li>
         <% end %>
         <%= menu_divider %>
-        <li><%= link_to "Backers", backers_project_path(@project), remote: true  %></li>
+        <li><%= link_to "Pledgers", backers_project_path(@project), remote: true  %></li>
       </ul>
       <ul class="nav pull-right">
         <li class="no-link"><%= @project.location_name  %></li>
@@ -28,7 +28,9 @@
 
 
 <div class="span8" id="project-main">
-  <%= render partial: 'description' %>
+  <%= cache @project do %>
+    <%= render partial: 'description' %>
+  <% end %>
 </div>
 <div class="span3">
   <% if admin_signed_in? %>

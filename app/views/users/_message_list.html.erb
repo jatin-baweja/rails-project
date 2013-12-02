@@ -20,11 +20,7 @@
             <%= link_to "[#{message_set.project.title}] #{message_set.subject}", message_path(message_set) %>
           </div>
           <div class="span3">
-            <% if !message_set.child_messages.empty? %>
-              <%= "#{distance_of_time_in_words message_set.child_messages.last.created_at, Time.now} ago" %>
-            <% else %>
-              <%= "#{distance_of_time_in_words message_set.created_at, Time.now} ago" %>
-            <% end %>
+            <%= message_set.updated_at.in_time_zone("New Delhi").strftime("%Y-%m-%d %I:%M:%S %p %Z") %>
           </div>
         </div>
       <% end %>
