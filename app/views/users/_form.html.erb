@@ -1,4 +1,7 @@
 <%= form_for @user, :html => { :class => 'form-horizontal' } do |f| %>
+<div class="row">
+  <div class="span5">
+
   <div class="control-group">
     <%= f.label :name, :class => 'control-label' %>
     <div class="controls">
@@ -29,6 +32,15 @@
       <%= f.password_field :password_confirmation, :class => 'text_field' %>
     </div>
   </div>
+
+  </div>
+  <div class="span2">
+    <h3 class="text-center">OR</h3>
+  </div>
+  <div class="span5">
+    <%= link_to "Sign in with Facebook", "/auth/facebook", id: "sign_in" %>
+  </div>
+</div>
 
   <div class="form-actions">
     <%= f.submit "Signup", :class => 'btn btn-primary' %>

@@ -9,6 +9,9 @@ Kickstarter::Application.routes.draw do
     post "login" => :create
     get "logout" => :destroy
   end
+  match 'auth/:provider/callback', to: 'sessions#facebook_create', provider: 'facebook', via: [:get, :post], as: :facebook_callback
+  match 'auth/failure', to: redirect('/'), via: [:get, :post]
+
   resources :rewards
   resources :stories
 
