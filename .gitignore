@@ -20,6 +20,7 @@
 /config/initializers/stripe.rb
 /config/initializers/omnicontacts.rb
 /config/initializers/gibbon.rb
+/config/initializers/omniauth.rb
 /config/development.sphinx.conf
 /lib/tasks/campaign/create.rake
 /db/sphinx/development/
