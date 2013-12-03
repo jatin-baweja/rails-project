@@ -14,7 +14,7 @@ class ProjectsController < ApplicationController
   end
 
   def index
-    @projects = Project.where(project_state: 'approved').where(['(published_at <= ? OR published_at IS NULL) AND (deadline >= ?)', Time.now, Time.now]).order(:title).page(params[:page]).per_page(15)
+    @projects = Project.where(project_state: 'approved').where(['(published_at <= ?) AND (deadline >= ?)', Time.now, Time.now]).order(:title).page(params[:page]).per_page(15)
   end
 
   def new
@@ -244,7 +244,7 @@ class ProjectsController < ApplicationController
   private
 
     def set_project
-      @project = Project.find(params[:id])
+      @project = Project.find_by_permalink(params[:id])
     end
 
     def check_if_user_is_owner
@@ -267,7 +267,7 @@ class ProjectsController < ApplicationController
 
     def check_if_deadline_is_over
       if(@project.deadline != nil)
-        if(@project.owner_id != session[:user_id] && @project.deadline <= Time.now.utc)
+        if(@project.owner_id != session[:user_id] && @project.deadline <= Time.now)
           redirect_to projects_path, notice: "Outdated project"
         end
       end

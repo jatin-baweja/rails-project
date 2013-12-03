@@ -93,6 +93,15 @@ class Project < ActiveRecord::Base
   has_many :users, through: :pledges
   accepts_nested_attributes_for :pledges
 
+  has_permalink :user_and_title
+
+  def user_and_title
+    if self.approved?
+      "#{ title }"
+    end
+  end
+
+  validates :title, uniqueness: true, if: "step == 1"
   validates :title, :summary, :location_name, presence: true, if: "step == 1"
   validates :title, length: { maximum: 60 }, if: "step == 1"
   validates :summary, length: { maximum: 300 }, if: "step == 1"
