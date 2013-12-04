@@ -4,6 +4,7 @@ class ProjectsController < ApplicationController
   before_action :check_if_user_is_owner, only: [:edit, :update, :new_rewards, :create_story, :create_rewards]
   before_action :set_params_for_conversation, only: [:admin_conversation]
   before_action :check_if_user_is_owner_or_admin, only: [:show]
+  before_action :check_if_user_is_admin, only: [:create_admin_conversation]
   before_action :check_if_deadline_is_over, only: [:show]
 
   def this_week
@@ -13,7 +14,7 @@ class ProjectsController < ApplicationController
   end
 
   def index
-    @projects = Project.where(project_state: 'approved').where(['(published_at <= ? OR published_at IS NULL) AND (deadline >= ?)', Time.now, Time.now]).order(:title).page(params[:page]).per_page(15)
+    @projects = Project.where(project_state: 'approved').where(['(published_at <= ?) AND (deadline >= ?)', Time.now, Time.now]).order(:title).page(params[:page]).per_page(15)
   end
 
   def new
@@ -212,14 +213,10 @@ class ProjectsController < ApplicationController
   def create_admin_conversation
     @messages = @project.messages.order(:created_at)
     # @parent_message = @messages.where(['subject = ?', conversation_params[:messages_attributes]["0"][:subject]).first
-    if session[:user_id] != @project.owner_id
+    if session[:user_id] != @project.owner_id && session[:admin_id]
       conv_params = altered_conversation_params(session[:admin_id], @project.owner_id)
       @from = User.find(session[:admin_id])
       @to = User.find(@project.owner_id)
-    else
-      conv_params = altered_conversation_params(@project.owner_id, User.where(admin: true).last.id)
-      @to = User.where(admin: true).last
-      @from = User.find(@project.owner_id)
     end
     @message = conv_params[:messages_attributes]["0"][:content]
     if @project.update(conv_params)
@@ -247,12 +244,18 @@ class ProjectsController < ApplicationController
   private
 
     def set_project
-      @project = Project.find(params[:id])
+      @project = Project.find_by_permalink(params[:id])
     end
 
     def check_if_user_is_owner
       if(@project.owner_id != session[:user_id])
         redirect_to project_path(@project), notice: "Only Project Owner can edit this Project"
+      end
+    end
+
+    def check_if_user_is_admin
+      if(!session[:admin_id])
+        redirect_to project_path(@project), notice: "Access Denied"
       end
     end
 
@@ -264,7 +267,7 @@ class ProjectsController < ApplicationController
 
     def check_if_deadline_is_over
       if(@project.deadline != nil)
-        if(@project.owner_id != session[:user_id] && @project.deadline <= Time.now.utc)
+        if(@project.owner_id != session[:user_id] && @project.deadline <= Time.now)
           redirect_to projects_path, notice: "Outdated project"
         end
       end

@@ -3,6 +3,12 @@ source 'https://rubygems.org'
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
 gem 'rails', '4.0.0'
 
+# Permalink Gem
+gem "has_permalink"
+
+# Omniauth Strategy for facebook
+gem 'omniauth-facebook'
+
 # Sweeper gem
 gem "rails-observers", "~> 0.1.2"
 

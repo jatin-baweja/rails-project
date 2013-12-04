@@ -77,6 +77,7 @@ class Project < ActiveRecord::Base
     "https://www.sandbox.paypal.com/cgi-bin/webscr?" + values.to_query 
   end
 
+  #FIXME_AB: validations, associations should be grouped. You should not define method between validations and associations
   has_many :rewards
   has_one :story, validate: false
   belongs_to :user, foreign_key: "owner_id"
@@ -100,7 +101,16 @@ class Project < ActiveRecord::Base
   has_many :users, through: :pledges
   accepts_nested_attributes_for :pledges
 
+  has_permalink :user_and_title
+
+  def user_and_title
+    if self.approved?
+      "#{ title }"
+    end
+  end
+
   #FIXME_AB: I think it would be good if we can extract these conditions for checking steps in method like step(1)?
+  validates :title, uniqueness: true, if: "step == 1"
   validates :title, :summary, :location_name, presence: true, if: "step == 1"
   validates :title, length: { maximum: 60 }, if: "step == 1"
   validates :summary, length: { maximum: 300 }, if: "step == 1"
