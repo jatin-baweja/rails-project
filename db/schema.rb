@@ -13,6 +13,7 @@
 
 ActiveRecord::Schema.define(version: 20131203072452) do
 
+  #FIXME_AB: Table name accounts doesn't look appropriate.
   create_table "accounts", force: true do |t|
     t.string   "customer_id"
     t.integer  "user_id"
@@ -27,6 +28,7 @@ ActiveRecord::Schema.define(version: 20131203072452) do
     t.datetime "updated_at"
   end
 
+  #FIXME_AB: Since this is polymorphic then the table name should be more generic. Also not sure why we have a type column
   create_table "ckeditor_assets", force: true do |t|
     t.string   "data_file_name",               null: false
     t.string   "data_content_type"
@@ -59,6 +61,7 @@ ActiveRecord::Schema.define(version: 20131203072452) do
 
   add_index "delayed_jobs", ["priority", "run_at"], name: "delayed_jobs_priority", using: :btree
 
+  #FIXME_AB: Why display images, why not just images. What is the difference between this and ckeditor_assets. I think possibly we can merge them both
   create_table "display_images", force: true do |t|
     t.string   "picture_file_name"
     t.string   "picture_content_type"
@@ -92,6 +95,7 @@ ActiveRecord::Schema.define(version: 20131203072452) do
     t.datetime "updated_at"
   end
 
+  #FIXME_AB: I am not sure why we are using btree index everywhere
   add_index "pledges", ["project_id"], name: "index_pledges_on_project_id", using: :btree
   add_index "pledges", ["user_id", "project_id"], name: "index_pledges_on_user_id_and_project_id", using: :btree
   add_index "pledges", ["user_id"], name: "index_pledges_on_user_id", using: :btree

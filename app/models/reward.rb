@@ -19,10 +19,13 @@ class Reward < ActiveRecord::Base
 
   validates :minimum_amount, :description, :estimated_delivery_on, presence: true
   validates :minimum_amount, numericality: { only_integer: true, greater_than_or_equal_to: 1 }, allow_blank: true
+  #FIXME_AB: I think we should use some sort of locking to avoid concurrent updates to remaining quantity
   validates :remaining_quantity, numericality: { only_integer: true, greater_than_or_equal_to: 1 }, allow_blank: true
   validate :remaining_is_less_than_or_equal_to_quantity
+  #FIXME_AB: Can be named better: validate :estimated_delivery_date
   validate :estimated_delivery_on_is_after_today
   validates :quantity, numericality: { only_integer: true, greater_than_or_equal_to: 0 }, allow_blank: true
+
 
   def estimated_delivery_on_is_after_today
     if estimated_delivery_on.nil? || estimated_delivery_on < Time.now
@@ -30,6 +33,7 @@ class Reward < ActiveRecord::Base
     end
   end
 
+  #FIXME_AB: I am not very sure why we need both quantity and remaining_quantity
   def remaining_is_less_than_or_equal_to_quantity
     if !remaining_quantity.nil? && remaining_quantity > quantity
       self.errors.add :remaining_quantity, 'should be less than or equal to quantity'
