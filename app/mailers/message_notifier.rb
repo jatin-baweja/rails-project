@@ -1,4 +1,5 @@
 class MessageNotifier < ActionMailer::Base
+  #FIXME_AB: Don't hard code such things
   default from: "jatinbaweja90@gmail.com"
 
   # Subject can be set in your I18n file at config/locales/en.yml
@@ -11,7 +12,7 @@ class MessageNotifier < ActionMailer::Base
     @from_user = from_user
     @for_project = project
     @message = message
-
+    #FIXME_AB: I think message how have a subject, can we use that as the email subject?
     mail to: to_user.email, subject: 'New Message'
   end
 

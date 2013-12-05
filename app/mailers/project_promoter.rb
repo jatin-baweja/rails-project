@@ -9,6 +9,7 @@ class ProjectPromoter < ActionMailer::Base
   def promote(to_list, message, user, project)
     @message = message
     @user = user
+    #FIXME_AB: why you would need to find project. Can't you pass project object itself? 
     @project = Project.find(project)
 
     mail to: to_list, subject: "#{user.name} wants you to know about his new Project"

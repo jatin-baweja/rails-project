@@ -22,6 +22,7 @@ class UsersController < ApplicationController
     respond_to do |format|
       if @user.save
         format.html { redirect_to user_url(@user),
+          #FIXME_AB: Is admin creating users? If not then following message is not appro.
           notice: "User #{@user.name} was successfully created." }
         format.json { render action: 'show',
           status: :created, location: @user }
@@ -35,8 +36,10 @@ class UsersController < ApplicationController
 
   def update
     respond_to do |format|
+      #FIXME_AB: I can update any user?
       if @user.update(user_params)
         format.html { redirect_to user_url(@user),
+          #FIXME_AB: message not appropriate
           notice: "User #{@user.name} was successfully updated." }
         format.json { head :no_content }
       else
@@ -49,6 +52,7 @@ class UsersController < ApplicationController
 
   def destroy
     begin
+      #FIXME_AB: I can delete any user?
       @user.destroy
       flash[:notice] = "User #{@user.name} deleted"
     rescue StandardError => e
@@ -60,8 +64,10 @@ class UsersController < ApplicationController
     end
   end
 
+  #FIXME_AB: Shouldn't we create a separate controller to import contacts
   def gmail_callback
     @contacts = request.env['omnicontacts.contacts']
+    #FIXME_AB: scopes can be used. Time.now being called two times?
     @projects = Project.where(['owner_id = ? ',session[:user_id]]).where(approved: false).where(['(published_at <= ? OR published_at IS NULL) AND (deadline >= ? OR deadline IS NULL)', Time.now, Time.now])
   end
 
@@ -69,11 +75,13 @@ class UsersController < ApplicationController
     @to_list = params[:emails]
     @message = params[:message]
     @project = params[:project]
+    #FIXME_AB: repetition for finding user
     @user = User.find(session[:user_id])
     ProjectPromoter.promote(@to_list, @message, @user, @project).deliver
     redirect_to projects_path, notice: 'Your email was successfully sent'
   end
 
+  #FIXME_AB: why messaging is being done in users controller. I think we need to have a controller for messaging?
   def messages
     @messages = (@user.sent_messages.where('parent_id IS NULL') + @user.received_messages.where('parent_id IS NULL')).sort { |x,y| y.updated_at <=> x.updated_at }
   end
@@ -100,12 +108,14 @@ class UsersController < ApplicationController
 
     def set_message
       @message = Message.find(params[:id])
+      #FIXME_AB: What if message is not found with this email
     end
 
     def message_params
       params.require(:message).permit(:id, :content, :child_messages_attributes => [:id, :content])
     end
 
+    #FIXME_AB: I don't think we would need this function or need to do things this way. Please explain
     def altered_message_params(parent_message)
       msg_params = message_params
       msg_params["child_messages_attributes"]["0"]["subject"] = parent_message.subject
@@ -117,6 +127,7 @@ class UsersController < ApplicationController
       msg_params
     end
 
+    #FIXME_AB: THis is something which I see as repetition. authorize method/callback also find user. So do can you think any other way around. Hint: I don't see any need of this method
     def set_user_from_session
       if session[:user_id]
         @user = User.find(session[:user_id])

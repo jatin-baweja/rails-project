@@ -1,3 +1,4 @@
+#FIXME_AB: You are inheriting every controller from this controller so should be named as something like Admin::BaseController or Admin::ApplicationController. Infact you should be using same form for user and admin login
 class Admin::SessionsController < ApplicationController
   before_action :admin_authorize
   skip_before_action :admin_authorize, only: [:new, :create]
@@ -24,6 +25,7 @@ class Admin::SessionsController < ApplicationController
   private
 
   def admin_authorize
+    #FIXME_AB: what about having something like current_user.admin?
     unless User.where(admin: true).find_by id: session[:admin_id]
       redirect_to admin_login_url, notice: "Please log in"
     end
