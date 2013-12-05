@@ -41,6 +41,10 @@ class Project < ActiveRecord::Base
       transitions :from => :submitted, :to => :approved
     end
 
+    event :edit do
+      transitions :from => :submitted, :to => :draft
+    end
+
     event :reject do
       transitions :from => :submitted, :to => :rejected
     end
