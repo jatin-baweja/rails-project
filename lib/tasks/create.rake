@@ -11,7 +11,7 @@ namespace :admin  do
     password = $stdin.gets.chomp
     print "Enter admin password confirmation: "
     password_confirmation = $stdin.gets.chomp
-    admin = User.new(:name => name, :email => email, :email_confirmation => email_confirmation, :password => password, :password_confirmation => password_confirmation, authorized_level: 'admin')
+    admin = User.new(:name => name, :email => email, :email_confirmation => email_confirmation, :password => password, :password_confirmation => password_confirmation, admin: true)
     admin.save!
     print "Admin with email #{email} created.\n"
   end
