@@ -14,26 +14,29 @@
 #
 
 class Reward < ActiveRecord::Base
-  after_save :set_project_delta_flag
-  after_destroy :set_project_delta_flag
+  after_save ThinkingSphinx::RealTime.callback_for(:project, [:project])
+  after_destroy ThinkingSphinx::RealTime.callback_for(:project, [:project])
 
   validates :minimum_amount, :description, :estimated_delivery_on, presence: true
   validates :minimum_amount, numericality: { only_integer: true, greater_than_or_equal_to: 1 }, allow_blank: true
   #FIXME_AB: I think we should use some sort of locking to avoid concurrent updates to remaining quantity
+  #FIXED: Will ensure locking in controller code
   validates :remaining_quantity, numericality: { only_integer: true, greater_than_or_equal_to: 1 }, allow_blank: true
   validate :remaining_is_less_than_or_equal_to_quantity
   #FIXME_AB: Can be named better: validate :estimated_delivery_date
-  validate :estimated_delivery_on_is_after_today
+  #FIXED: changed validation name
+  validate :estimated_delivery_date
   validates :quantity, numericality: { only_integer: true, greater_than_or_equal_to: 0 }, allow_blank: true
 
 
-  def estimated_delivery_on_is_after_today
+  def estimated_delivery_date
     if estimated_delivery_on.nil? || estimated_delivery_on < Time.now
       self.errors.add :estimated_delivery_on, 'has to be after today'
     end
   end
 
   #FIXME_AB: I am not very sure why we need both quantity and remaining_quantity
+  #FIXED: Project creator might need to know how much quantity he needs to make for a certain reward after project is fully funded
   def remaining_is_less_than_or_equal_to_quantity
     if !remaining_quantity.nil? && remaining_quantity > quantity
       self.errors.add :remaining_quantity, 'should be less than or equal to quantity'
@@ -42,9 +45,5 @@ class Reward < ActiveRecord::Base
 
   belongs_to :project
 
-  def set_project_delta_flag
-    project.delta = true
-    project.save
-  end
 
 end

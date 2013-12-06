@@ -9,20 +9,15 @@
 #
 
 class Category < ActiveRecord::Base
-  after_commit :set_project_delta_flag
+  after_commit ThinkingSphinx::RealTime.callback_for(:project, [:projects])
 
-  validates :name, presence: true
   #FIXME_AB: I think we should also consider format of category name. One should not allow to enter ##@@$$& as category name.
-  has_many :projects
+  #FIXED: Format of category name defined with regex
+  validates :name, presence: true, format: { with: /\A[[:alnum:]]+[\w\s[:punct:]]+\z/, message: 'only allows letters, numbers and special characters(not as first letter)' }
+  has_many :projects, dependent: :restrict_with_exception
 
-private
-
-  def set_project_delta_flag
     #FIXME_AB: Are we not using thinking sphinx 3. There is realtime indexing in this version. read more about this: http://freelancing-gods.com/posts/rewriting_thinking_sphinx_introducing_realtime_indices
     # I guess we don't need delta in that case.
-    Project.define_indexes
-    Project.update_all ['delta = ?', true], ['category_id = ?', id]
-    Project.index_delta
-  end
+    #FIXED: Added real time indexes
 
 end

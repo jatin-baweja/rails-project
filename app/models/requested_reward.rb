@@ -12,32 +12,32 @@
 
 class RequestedReward < ActiveRecord::Base
   #FIXME_AB: No validation on quantity?
-  validates :pledge_id, :reward_id, presence: true
+  #FIXED: Added quantity validation
+  validates :pledge_id, :reward_id, :quantity, presence: true
+  validates :quantity, numericality: { only_integer: true, greater_than_or_equal_to: 1 }
   belongs_to :pledge, inverse_of: :requested_rewards
   belongs_to :reward
-  validate :amount_of_requested_rewards_less_than_pledge_amount
+  validate :requested_rewards_total
 
   #FIXME_AB: Method can be named better
+  #FIXED: improved method name
   #FIXME_AB: Logic of this method can better. Some functionality can be extracted out in other methods. Think about it
-  def amount_of_requested_rewards_less_than_pledge_amount
-    # reward = Reward.find(self.reward_id)
-
+  #FIXED: Modularized code
+  def requested_rewards_total
     #FIXME_AB: why self?
-    reward = self.reward
+    #FIXED: removed reward here
     #FIXME_AB: What would be case when reward will be blank? How is this possible?
-    if !reward.nil?
+    #FIXED: removed reward-nil if condition
       #FIXME_AB: why self again. 
-      amount_of_requested_rewards = reward.minimum_amount * self.quantity
-      self.pledge.requested_rewards.each do |requested_reward|
+      #FIXED: removed self
         #FIXME_AB: why not requested_reward.reward. How about eager loading
-        reward = Reward.find(requested_reward.reward_id)
-        amount_of_requested_rewards = amount_of_requested_rewards + (reward.minimum_amount * requested_reward.quantity)
+        #FIXED: moved sum_of_requested_rewards to pledge model
+      amount_of_requested_rewards = (reward.minimum_amount * quantity) + pledge.sum_of_requested_rewards
+      if amount_of_requested_rewards > pledge.amount
+        error_message = 'Pledge amount should be greater than amount of requested rewards'
+        errors.add :base, error_message
+        pledge.errors.add :base, error_message
       end
-      if amount_of_requested_rewards > self.pledge.amount
-        self.errors.add :base, 'Pledge amount should be greater than amount of requested rewards'
-        self.pledge.errors.add :base, 'Pledge amount should be greater than amount of requested rewards'
-      end
-    end
   end
 
 end

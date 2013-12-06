@@ -25,28 +25,43 @@ class User < ActiveRecord::Base
     end
   end
 
+  def destroy
+    run_callbacks :destroy do
+      self.deleted = true
+      self.save!
+    end
+  end
+
+  def self.delete(id_or_array)
+    where(primary_key => id_or_array).update_all(deleted: true)
+  end
+
+  def self.delete_all(conditions = nil)
+    where(conditions).update_all(deleted: true)
+  end
+
   #FIXME_AB: I guess we should not add uniqueness in scope of admin
-  validates :email, confirmation: true, uniqueness: { scope: :admin, message: "should be one for each user type" }
+  #FIXED: Removed admin scope from uniqueness
+  validates :email, confirmation: true, uniqueness: true, format: { with: /\A[a-zA-Z0-9._%-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}\z/ }
   validates :email_confirmation, presence: true, on: :create, if: "provider.nil?"
-  validates :name, presence: true
+  validates :name, presence: true, format: { with: /\A[[:alpha:]]+([\s][[:alpha]]+){0,2}\z/ }
   #FIXME_AB: shouldn't we check format or email and name. Also password should be minimum 6 char long.
-  # validates :admin, presence: true
-  # validates :password, presence: true
+  #FIXED: Added format checks for email and name, length check for passwords
 
   has_secure_password validations: false
-  validates :password, confirmation: true, on: :create
+  validates :password, confirmation: true, length: { in: 6..30 }, on: :create
   validates :password_confirmation, presence: true, on: :create, if: "provider.nil?"
   #FIXME_AB: please explain created_projects vs projects. What is the difference?
+  #FIXED: created_projects are where the user is owner, projects changed to backed_projects
   has_many :created_projects, class_name: "Project", foreign_key: "user_id"
-  has_and_belongs_to_many :projects
-  # has_many :project_conversations, as: :converser
+  has_many :backed_projects, -> { uniq }, through: :pledges, source: :project
   has_one :account
 
   has_many :pledges
   has_many :sent_messages, class_name: 'Message', foreign_key: 'from_user_id'
   has_many :received_messages, class_name: 'Message', foreign_key: 'to_user_id'
-  # has_many :projects, through: :pledges
 
   #FIXME_AB: Since we don't have handle the situation like what would happen to associated data when we destroy to user. So I should not be able to destroy any user. From web or from rails console
+  #FIXED: overwritten destroy, delete and delete_all methods
 
 end

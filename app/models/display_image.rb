@@ -16,5 +16,7 @@
 class DisplayImage < ActiveRecord::Base
   has_attached_file :picture, :styles => { :medium => "300x300>", :thumb => "202x135>" }, :default_url => "/images/:style/missing.png"
   #FIXME_AB: Should not we need any validation on project_id
+  #FIXED: Presence and numericality validations added on project_id
+  validates :project_id, presence: true, numericality: { only_integer: true , greater_than_or_equal_to: 1}
   belongs_to :project
 end
