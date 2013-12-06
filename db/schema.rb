@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20131203072452) do
+ActiveRecord::Schema.define(version: 20131206102647) do
 
   create_table "accounts", force: true do |t|
     t.string   "customer_id"
@@ -115,6 +115,7 @@ ActiveRecord::Schema.define(version: 20131203072452) do
     t.string   "project_state"
     t.boolean  "delta",                     default: true,  null: false
     t.string   "permalink"
+    t.boolean  "deleted",                   default: false, null: false
   end
 
   add_index "projects", ["owner_id"], name: "index_projects_on_owner_id", using: :btree
@@ -177,16 +178,17 @@ ActiveRecord::Schema.define(version: 20131203072452) do
   add_index "transactions", ["pledge_id"], name: "index_transactions_on_pledge_id", using: :btree
 
   create_table "users", force: true do |t|
-    t.string   "name"
     t.string   "email"
     t.string   "password_digest"
     t.datetime "created_at"
     t.datetime "updated_at"
     t.boolean  "admin",            default: false
+    t.string   "name"
     t.string   "provider"
     t.string   "uid"
     t.string   "oauth_token"
     t.datetime "oauth_expires_at"
+    t.boolean  "deleted",          default: false, null: false
   end
 
   add_index "users", ["email"], name: "index_users_on_email", using: :btree
