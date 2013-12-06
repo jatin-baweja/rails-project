@@ -1,4 +1,4 @@
-ThinkingSphinx::Index.define :project, :with => :active_record, :delta => true do
+ThinkingSphinx::Index.define :project, :with => :real_time do
   indexes title
   indexes summary
   indexes location_name
@@ -11,5 +11,6 @@ ThinkingSphinx::Index.define :project, :with => :active_record, :delta => true d
   indexes story.about_the_team, as: :story_about_the_team
   indexes project_state
 
-  has deadline, published_at
+  has deadline, :type => :timestamp
+  has published_at, :type => :timestamp
 end
