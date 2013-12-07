@@ -1,7 +1,6 @@
-class Admin::UsersController < Admin::SessionsController
+class Admin::UsersController < Admin::BaseController
   cache_sweeper :user_sweeper, only: [:destroy]
   before_action :set_user, only: [:destroy, :make_admin]
-  before_action :admin_authorize
 
   def index
     @users = User.page(params[:page]).per_page(20)

@@ -6,7 +6,7 @@
   <h2 id="goal-achieved"><%= number_to_currency(project.pledges.sum(:amount)) %></h2>
   <p>amount funded</p>
   <div class="text-center">
-    <% if current_user != project.owner_id %>
+    <% if current_user.id != project.owner_id %>
       <% if @sum_of_pledges != 0 %>
         <div id="pledge-info" class="text-center">
           <%= "You have pledged #{number_to_currency(@sum_of_pledges)} for this project." %>

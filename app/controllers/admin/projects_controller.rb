@@ -1,6 +1,4 @@
-class Admin::ProjectsController < Admin::SessionsController
-  skip_before_action :authorize
-  before_action :admin_authorize
+class Admin::ProjectsController < Admin::BaseController
 
   def pending_for_approval
     @projects = Project.where(project_state: 'submitted').order('created_at ASC')

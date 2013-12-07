@@ -51,26 +51,26 @@
             <ul class="nav pull-right">
               <li><%= link_to t(".discover_projects"), projects_path  %></li>
               <%= menu_divider %>
-            <% if user_signed_in? %>
+            <% if logged_in? && !current_user.admin? %>
               <li><%= link_to t(".my_projects"), my_projects_path %></li>
               <%= menu_divider %>
               <li><%= link_to t(".new_project"), new_project_path %></li>
               <%= menu_divider %>
               <li><%= link_to "Spread the Word", "/contacts/gmail" %></li>
               <%= menu_divider %>
-              <li class='no-link'>Signed in as <%= session[:user_name] %></li>
+              <li class='no-link'>Signed in as <%= current_user.name %></li>
               <%= menu_divider %>
               <li><%= link_to t(".messages"), messages_path %></li>
               <%= menu_divider %>
               <li><%= link_to "Log Out", logout_path %></li>
-            <% elsif admin_signed_in? %>
+            <% elsif logged_in? && current_user.admin? %>
               <li><%= link_to "Pending Projects", admin_projects_pending_for_approval_path %></li>
               <%= menu_divider %>
               <li><%= link_to "Users", admin_users_path %></li>
               <%= menu_divider %>
               <li><%= link_to "Messages", messages_path %></li>
               <%= menu_divider %>
-              <li><%= link_to "Log Out", admin_logout_path %></li>
+              <li><%= link_to "Log Out", logout_path %></li>
             <% else %>
               <li><%= link_to "Signup", signup_path  %></li>
               <%= menu_divider %>

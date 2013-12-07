@@ -15,6 +15,18 @@
 #
 
 class Message < ActiveRecord::Base
+
+  before_validation :set_parent_params
+  scope :parent_messages, -> { where('parent_id IS NULL') }
+
+  def set_parent_params
+    if !parent.nil?
+      self.subject = parent.subject
+      self.unread = true
+      self.to_user_id = (parent.from_user_id == from_user_id) ? parent.to_user_id : parent.from_user_id
+    end
+  end
+
   validates :content, presence: true
   validates :subject, presence: true
 

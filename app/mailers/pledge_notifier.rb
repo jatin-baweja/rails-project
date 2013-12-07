@@ -1,5 +1,5 @@
 class PledgeNotifier < ActionMailer::Base
-  default from: "from@example.com"
+  default from: DEFAULT_FROM_EMAIL
 
   # Subject can be set in your I18n file at config/locales/en.yml
   # with the following lookup:
@@ -7,7 +7,8 @@ class PledgeNotifier < ActionMailer::Base
   #   en.pledge_notifier.inform_pledger.subject
   #
   #FIXME_AB: all methods in this file can be named better.
-  def inform_pledger(pledger, amount, project)
+  #FIXED: Method names changed
+  def pledge_by_user(pledger, amount, project)
     @pledger = pledger
     @amount = amount
     @project = project
@@ -19,7 +20,7 @@ class PledgeNotifier < ActionMailer::Base
   #
   #   en.pledge_notifier.inform_project_owner.subject
   #
-  def inform_project_owner(project, amount)
+  def project_pledged(project, amount)
     @amount = amount
     @project = project
     @project_owner = project.user
@@ -31,7 +32,7 @@ class PledgeNotifier < ActionMailer::Base
   #
   #   en.pledge_notifier.charged.subject
   #
-  def charged(user, amount, project)
+  def user_card_charged(user, amount, project)
     @user = user
     @amount = amount
     @project = project

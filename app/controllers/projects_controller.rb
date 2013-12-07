@@ -8,13 +8,25 @@ class ProjectsController < ApplicationController
   before_action :check_if_deadline_is_over, only: [:show]
 
   def this_week
-    # @projects = Project.where(project_state: 'approved').where(['(published_at <= ? OR published_at >= ?) AND (deadline >= ?)', Time.now, Time.now - 1.week, Time.now]).order(:title).page(params[:page]).per_page(15)
-    @projects = Project.approved.where(['(published_at <= ? OR published_at >= ?) AND (deadline >= ?)', Time.now, Time.now - 1.week, Time.now]).page(params[:page]).per_page(15)
+    @projects = Project.approved.published_between(Time.now, Time.now - 1.week).still_active.page(params[:page]).per_page(15)
     render action: 'index'
   end
 
+  #FIXME_AB: I am not sure why we need this controller. I guess everything can be done through projects controller.
+  #FIXED: Moved from Project_Lists Controller to Project Controller
+  #FIXME_AB: More over I think many of following conditions suits to be defined as scope
+  #FIXED: Scopes defined
+
   def index
-    @projects = Project.where(project_state: 'approved').where(['(published_at <= ?) AND (deadline >= ?)', Time.now, Time.now]).order(:title).page(params[:page]).per_page(15)
+    if params[:category]
+      @projects = Project.approved.published(Time.now).order(:title).collect do |x|
+        x if x.category.name.downcase == params[:category].downcase
+      end
+    elsif params[:place]
+      @projects = Project.approved.published(Time.now).located_in(params[:place]).order(:title)
+    else
+      @projects = Project.approved.published(Time.now).order(:title).page(params[:page]).per_page(15)
+    end
   end
 
   def new
@@ -23,7 +35,7 @@ class ProjectsController < ApplicationController
   end
 
   def show
-    flash[:notice] = "Your Transaction is #{params[:st]} for amount of $#{params[:amt]}. Thank You for shopping." if params[:st]
+    flash[:notice] = "Your Transaction is #{params[:st]} for amount of $#{params[:amt]}. Thank You for pledging." if params[:st]
     @story = @project.story
     @rewards = @project.rewards
     @user = @project.user
@@ -31,20 +43,15 @@ class ProjectsController < ApplicationController
   end
 
   def user_owned
-    @pending_projects = Project.where(owner_id: session[:user_id], project_state: 'submitted')
-    @approved_projects = Project.where(owner_id: session[:user_id], project_state: 'approved')
-    @editing_projects = Project.where(owner_id: session[:user_id], project_state: 'draft')
-    @rejected_projects = Project.where(owner_id: session[:user_id], project_state: 'rejected')
+    @pending_projects = Project.by_user(current_user.id).submitted
+    @approved_projects = Project.by_user(current_user.id).approved
+    @editing_projects = Project.by_user(current_user.id).draft
+    @rejected_projects = Project.by_user(current_user.id).rejected
   end
 
   def edit
     @story = @project.story
     @project.edit! if !@project.draft?
-    # if @project.display_images.empty?
-      # @display_image = @project.display_images.build
-    # else
-    #   @display_image = @project.display_images.where(primary: true)[0]
-    # end
   end
 
   def new_story
@@ -212,14 +219,13 @@ class ProjectsController < ApplicationController
 
   def create_admin_conversation
     @messages = @project.messages.order(:created_at)
-    # @parent_message = @messages.where(['subject = ?', conversation_params[:messages_attributes]["0"][:subject]).first
     if session[:user_id] != @project.owner_id && session[:admin_id]
       conv_params = altered_conversation_params(session[:admin_id], @project.owner_id)
       @from = User.find(session[:admin_id])
       @to = User.find(@project.owner_id)
     end
-    @message = conv_params[:messages_attributes]["0"][:content]
     if @project.update(conv_params)
+      @message = @project.messages.last
       MessageNotifier.sent(@to, @from, @project, @message).deliver
       redirect_to admin_conversation_project_url
     end

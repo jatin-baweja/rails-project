@@ -23,6 +23,12 @@
 
 class Project < ActiveRecord::Base
 
+  scope :published, ->(time) { where(['published_at <= ? AND deadline >= ?', time, time]) }
+  scope :published_between, ->(time1, time2) { where(['published_at <= ? OR published_at >= ?', time1, time2]) }
+  scope :still_active, -> { where(['deadline >= ?', Time.now]) }
+  scope :located_in, ->(place) { where(location_name: place) }
+  scope :by_user, ->(user_id) { where(owner_id: user_id) }
+
   include AASM
 
   aasm column: 'project_state' do

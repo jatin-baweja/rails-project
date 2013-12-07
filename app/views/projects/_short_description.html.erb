@@ -3,7 +3,11 @@
     <%= image_tag project.display_images.where(primary: true)[0].picture.url(:thumb), class: 'project-thumbnail' if !project.display_images.where(primary: true)[0].nil?%>
     <% project_title = project.title %>
     <% project_title = "Untitled Project" if project.title == "" %>
-    <h5 class='text-center'><%= link_to project_title, project_path(project) %></h5>
+    <% if project.permalink.present? %>
+      <h5 class='text-center'><%= link_to project_title, project_path(project) %></h5>
+    <% else %>
+      <h5 class='text-center'><%= link_to project_title, project_path(project.id) %></h5>
+    <% end %>
     <p><%= project.summary %></p>
   </div>
 </div>

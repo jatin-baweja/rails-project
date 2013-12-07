@@ -10,7 +10,8 @@ class ProjectPromoter < ActionMailer::Base
     @message = message
     @user = user
     #FIXME_AB: why you would need to find project. Can't you pass project object itself? 
-    @project = Project.find(project)
+    #FIXED: passing project object instead of id
+    @project = project
 
     mail to: to_list, subject: "#{user.name} wants you to know about his new Project"
   end

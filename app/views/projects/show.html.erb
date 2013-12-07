@@ -7,7 +7,7 @@
     <div class="container-fluid navbar">
       <ul class="nav pull-left">
         <li><%= link_to "Description", description_project_path(@project), remote: true %></li>
-        <% if (admin_signed_in? || (@project.owner_id == current_user) ) %>
+        <% if (current_user.admin? || (@project.owner_id == current_user.id) ) %>
           <%= menu_divider %>
           <li><%= link_to "Messages", admin_conversation_project_path(@project), remote: true  %></li>
         <% end %>
@@ -33,7 +33,7 @@
   <% end %>
 </div>
 <div class="span3">
-  <% if admin_signed_in? %>
+  <% if current_user.admin? %>
     <%= render partial: 'admin/projects/details', locals: { :project => @project } %>
   <% else %>
     <%= render partial: 'details', locals: { :project => @project } %>

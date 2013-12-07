@@ -5,7 +5,7 @@
 <div class="container-fluid">
   <div class="row-fluid">
     <div class="span9">
-      <form action="<%= search_results_discover_index_path %>" method="get">
+      <form action="<%= search_results_path %>" method="get">
         <%= text_field_tag :q, params[:q], placeholder: 'Search projects...', style: 'margin-bottom:0px;' %>
         <%= submit_tag "Search", name: nil, class: 'btn btn-primary' %>
       </form>
@@ -16,7 +16,7 @@
   <div class="container-fluid">
     <div class="row-fluid">
       <div class="span9">
-        <%= render partial: 'listing', locals: { :projects => @projects } %>
+        <%= render partial: 'projects/listing', locals: { :projects => @projects } %>
         <%= will_paginate @projects %>
       </div>
       <div class="span3">

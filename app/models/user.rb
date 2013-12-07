@@ -40,11 +40,15 @@ class User < ActiveRecord::Base
     where(conditions).update_all(deleted: true)
   end
 
+  def messages
+    sent_messages + received_messages
+  end
+
   #FIXME_AB: I guess we should not add uniqueness in scope of admin
   #FIXED: Removed admin scope from uniqueness
-  validates :email, confirmation: true, uniqueness: true, format: { with: /\A[a-zA-Z0-9._%-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}\z/ }
+  validates :email, confirmation: true, uniqueness: true, format: { with: REGEX_PATTERN[:email] }
   validates :email_confirmation, presence: true, on: :create, if: "provider.nil?"
-  validates :name, presence: true, format: { with: /\A[[:alpha:]]+([\s][[:alpha]]+){0,2}\z/ }
+  validates :name, presence: true, format: { with: REGEX_PATTERN[:name] }
   #FIXME_AB: shouldn't we check format or email and name. Also password should be minimum 6 char long.
   #FIXED: Added format checks for email and name, length check for passwords
 
