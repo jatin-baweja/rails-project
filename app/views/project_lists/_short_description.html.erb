@@ -1,7 +1,0 @@
-<div class="highlight high300">
-  <div class="highlight-inner">
-    <%= image_tag project.display_images.where(primary: true)[0].picture.url(:thumb), class: 'project-thumbnail' if !project.display_images.empty? %>
-    <h5 class='text-center'><%= link_to project.title, project_path(project) %></h5>
-    <p><%= project.summary %></p>
-  </div>
-</div>
