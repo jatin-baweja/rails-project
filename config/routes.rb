@@ -12,11 +12,8 @@ Kickstarter::Application.routes.draw do
   match 'auth/:provider/callback', to: 'sessions#facebook_create', provider: 'facebook', via: [:get, :post], as: :facebook_callback
   match 'auth/failure', to: redirect('/'), via: [:get, :post]
 
-  resources :rewards
-  resources :stories
-
-  match "/contacts/gmail/get_contacts", controller: "users", action: "gmail_callback", via: [:get, :post]
-  post "send_email", controller: "users"
+  match "/contacts/gmail/get_contacts", controller: "contacts", action: "gmail_callback", via: [:get, :post]
+  post "send_email", controller: "contacts"
   get "projects/:project/charge_card", controller: 'payment/stripe/charges', action: 'charge_card'
   namespace :payment do
     namespace :stripe do
@@ -25,16 +22,11 @@ Kickstarter::Application.routes.draw do
     end
   end
 
-  resources :discover, controller: 'project_lists', only: [:index] do
-    collection do
-      # match 'search', action: 'search', via: :post, as: :search_results
-      match 'search', action: 'search', via: :get, as: :search_results
-      match 'category/:category', action: 'index', via: [:get, :post]
-      match 'place/:place', action: 'index', via: [:get, :post]
-    end
-  end
+  match 'search', controller: 'searches', action: 'search', via: :get, as: :search_results
 
   resources :projects do
+    match 'category/:category', action: 'index', via: [:get, :post]
+    match 'place/:place', action: 'index', via: [:get, :post]
     get 'rewards/choose', on: :member, controller: 'rewards', action: 'choose'
     get 'this_week', on: :collection
     get 'new_message', on: :member, as: :new_message
@@ -72,9 +64,9 @@ Kickstarter::Application.routes.draw do
     end
   end
 
-  patch "create_message/:id", to: 'users#create_message', as: :create_message
-  get "messages", to: 'users#messages'
-  get "message/:id", to: 'users#message', as: :message
+  resources :messages, only: [:index, :show] do
+    post "create", on: :member, as: :create
+  end
   post "users", to: 'users#create'
   get "signup", to: 'users#new'
   get "users/:id/edit_profile", to: 'users#edit', as: :edit_user_profile
