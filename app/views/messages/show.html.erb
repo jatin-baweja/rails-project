@@ -1,0 +1,51 @@
+<div id="message" class="container-fluid">
+  <h4><%= "[#{@message.project.title}] #{@message.subject}" %></h4>
+  <p class='collapsed'>
+    <div class="row <%= (@message.to_user_id == session[:user_id] || @message.to_user_id == session[:admin_id]) && @message.unread? ? "unread" : "read" %>">
+      <div class="span8">
+        <p>From: <%= "#{ @message.from_user.name }" %></p>
+        <p>To:<%= "#{ @message.to_user.name }" %></p>
+      </div>
+      <div class="span3 offset1">
+        <%= @message.created_at.in_time_zone("New Delhi").strftime("%Y-%m-%d %I:%M:%S %p %Z") %>
+      </div>
+      <div class="span8">
+        <p><%= @message.content %></p>
+      </div>
+    </div>
+    <hr>
+    <% if (@message.unread? && (@message.to_user_id == session[:user_id] || @message.to_user_id == session[:admin_id])) %>
+      <% @message.update_columns(unread: false) %>
+    <% end %>
+  <% if !@message.child_messages.empty? %>
+    <% @message.child_messages.each do |message| %>
+      <% if !message.nil? && !message.id.nil? %>
+        <div class="row <%= (message.to_user_id == session[:user_id] || message.to_user_id == session[:admin_id]) && message.unread? ? "unread" : "read" %>">
+          <div class="span8">
+            <p>From: <%= "#{ message.from_user.name }" if !message.from_user.nil? %></p>
+            <p>To:<%= "#{ message.to_user.name }" if !message.to_user.nil? %></p>
+          </div>
+          <div class="span3 offset1">
+            <%= message.created_at.in_time_zone("New Delhi").strftime("%Y-%m-%d %I:%M:%S %p %Z") %>
+          </div>
+          <div class="span8">
+            <p><%= message.content %></p>
+          </div>
+        </div>
+        <hr>
+        <% message.update(unread: false) if ((message.to_user_id == session[:user_id] || message.to_user_id == session[:admin_id]) && message.unread?) %>
+      <% end %>
+    <% end %>
+  <% end %>
+</div>
+<div id="new-message" class="container-fluid">
+  <div class="row">
+    <div class="span8 offset2">
+      <%= form_for @child_message, url: create_message_path(@message) do |f| %>
+        <%= f.label :message %>
+        <%= f.text_area :content %>
+        <%= f.submit "Reply" %>
+      <% end %>
+    </div>
+  </div>
+</div>
