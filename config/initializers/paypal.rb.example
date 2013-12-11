@@ -1,6 +1,0 @@
-PAYPAL = {
-  :production => {
-  :merchant_email => ENV['PAYPAL_MERCHANT_EMAIL'],
-  :redirect_url => ENV['PAYPAL_REDIRECT_URL']
-  }
-}
