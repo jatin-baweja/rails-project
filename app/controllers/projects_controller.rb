@@ -1,5 +1,6 @@
 class ProjectsController < ApplicationController
-  before_action :set_project, only: [:show, :edit, :update, :destroy, :back, :pledge, :create_pledge, :create_story, :create_rewards, :new_story, :info, :create_info, :new_rewards, :description, :admin_conversation, :create_admin_conversation, :backers, :new_message]
+  before_action :set_project, only: [:show, :destroy, :back, :pledge, :create_pledge, :description, :admin_conversation, :create_admin_conversation, :backers, :new_message]
+  before_action :set_draft_project, only: [:edit, :update, :create_story, :create_rewards, :new_story, :info, :create_info, :new_rewards]
   skip_before_action :authorize, only: [:show, :index, :this_week]
   before_action :check_if_user_is_owner, only: [:edit, :update, :new_rewards, :create_story, :create_rewards]
   before_action :set_params_for_conversation, only: [:admin_conversation]
@@ -8,7 +9,7 @@ class ProjectsController < ApplicationController
   before_action :check_if_deadline_is_over, only: [:show]
 
   def this_week
-    @projects = Project.approved.published_between(Time.now, Time.now - 1.week).still_active.page(params[:page]).per_page(15)
+    @projects = Project.approved.published_between(Time.current, Time.current - 1.week).still_active.page(params[:page]).per_page(15)
     render action: 'index'
   end
 
@@ -19,13 +20,13 @@ class ProjectsController < ApplicationController
 
   def index
     if params[:category]
-      @projects = Project.approved.published(Time.now).order(:title).collect do |x|
+      @projects = Project.approved.published(Time.current).order(:title).collect do |x|
         x if x.category.name.downcase == params[:category].downcase
       end
     elsif params[:place]
-      @projects = Project.approved.published(Time.now).located_in(params[:place]).order(:title)
+      @projects = Project.approved.published(Time.current).located_in(params[:place]).order(:title)
     else
-      @projects = Project.approved.published(Time.now).order(:title).page(params[:page]).per_page(15)
+      @projects = Project.approved.published(Time.current).order(:title).page(params[:page]).per_page(15)
     end
   end
 
@@ -63,11 +64,10 @@ class ProjectsController < ApplicationController
   end
 
   def create_story
-    project_parameters = project_params
     @project.step = 2;
     respond_to do |format|
-      if @project.update(project_parameters)
-        format.html { redirect_to info_project_url(@project) }
+      if @project.update(project_params)
+        format.html { redirect_to info_project_url(@project.id) }
         format.json { render action: 'show', status: :created, location: @project }
       else
         format.html { render action: 'new_story' }
@@ -92,13 +92,11 @@ class ProjectsController < ApplicationController
   end
 
   def create_rewards
-    project_parameters = project_params
-    project_parameters[:deadline] = Time.now + @project.duration.to_i.days
     @project.step = 4;
     respond_to do |format|
-      if @project.update(project_parameters)
+      if @project.update(project_params)
         @project.submit!
-        format.html { redirect_to project_url(@project),
+        format.html { redirect_to project_url(@project.id),
           notice: "Project #{@project.title} was successfully created/updated." }
         format.json { render action: 'show',
           status: :created, location: @project }
@@ -117,19 +115,12 @@ class ProjectsController < ApplicationController
     @project.step = 3
     respond_to do |format|
       if @project.update(project_params)
-        format.html { redirect_to rewards_project_url(@project) }
+        format.html { redirect_to rewards_project_url(@project.id) }
         format.json { render action: 'show', status: :created, location: @project }
       else
         format.html { render action: 'info' }
         format.json { render json: @project.errors, status: :unprocessable_entity }
       end
-    end
-  end
-
-  def back
-    @project.backers << User.find(session[:user_id])
-    respond_to do |format|
-      format.js { }
     end
   end
 
@@ -141,11 +132,24 @@ class ProjectsController < ApplicationController
 
   def create_pledge
     ActiveRecord::Base.transaction do
-      @pledge = Pledge.new(pledge_params_with_user_set)
+      @pledge = @project.pledges.build(pledge_params)
+      @pledge.user = current_user
       @pledge.save
-      @rewards = params[:rewards]
-      @rewards.each do |key, reward|
-        @pledge.requested_rewards.create!(reward_id: reward[:id], quantity: reward[:quantity])
+      reward_present = false
+      if params[:rewards]
+        params[:rewards].each do |key, val|
+          val.each do |attr_key, attr_val|
+            reward_present = true if attr_val.present?
+          end
+        end
+      end
+      if reward_present == true
+        @rewards = params[:rewards]
+        @rewards.each do |key, reward|
+          @pledge.requested_rewards.create!(reward_id: reward[:id], quantity: reward[:quantity])
+          chosen_reward = Reward.find(reward[:id])
+          chosen_reward.update(remaining_quantity: (chosen_reward.remaining_quantity - reward[:quantity])) if chosen_reward.remaining_quantity
+        end
       end
     end
     if params[:payment_mode] == "Paypal"
@@ -159,13 +163,13 @@ class ProjectsController < ApplicationController
   end
 
   def create
-    @project = Project.new(project_params_with_youtube_embed_link)
+    @project = Project.new(project_params)
     @project.owner_id = session[:user_id]
     @project.step = 1;
 
     respond_to do |format|
       if @project.save
-        format.html { redirect_to story_project_url(@project) }
+        format.html { redirect_to story_project_url(@project.id) }
         format.json { render action: 'show',
           status: :created, location: @project }
       else
@@ -180,8 +184,8 @@ class ProjectsController < ApplicationController
     @project.step = 1;
 
     respond_to do |format|
-      if @project.update(project_params_with_youtube_embed_link)
-        format.html { redirect_to story_project_url(@project) }
+      if @project.update(project_params)
+        format.html { redirect_to story_project_url(@project.id) }
         format.json { head :no_content }
       else
         format.html { render action: 'edit' }
@@ -211,7 +215,7 @@ class ProjectsController < ApplicationController
   end
 
   def admin_conversation
-    @messages = @project.messages.where('parent_id IS NULL').order('updated_at DESC')
+    @messages = @project.messages.parent_messages.order('updated_at DESC')
     respond_to do |format|
       format.js {}
     end
@@ -219,16 +223,15 @@ class ProjectsController < ApplicationController
 
   def create_admin_conversation
     @messages = @project.messages.order(:created_at)
-    if session[:user_id] != @project.owner_id && session[:admin_id]
-      conv_params = altered_conversation_params(session[:admin_id], @project.owner_id)
-      @from = User.find(session[:admin_id])
-      @to = User.find(@project.owner_id)
-    end
-    if @project.update(conv_params)
-      @message = @project.messages.last
+    @from = current_user
+    @to = User.find(@project.owner_id)
+    @message = @project.messages.build(conversation_params)
+    @message.from_user_id = @from.id
+    @message.to_user_id = @to.id
+    if @message.save
       MessageNotifier.sent(@to, @from, @project, @message).deliver
-      redirect_to admin_conversation_project_url
     end
+    redirect_to admin_conversation_project_url
   end
 
   def description
@@ -250,30 +253,36 @@ class ProjectsController < ApplicationController
   private
 
     def set_project
-      @project = Project.find_by_permalink(params[:id])
+      if !(@project = Project.find_by_permalink(params[:id]))
+        @project = Project.find(params[:id])
+      end
+    end
+
+    def set_draft_project
+      @project = Project.find(params[:id])
     end
 
     def check_if_user_is_owner
-      if(@project.owner_id != session[:user_id])
+      if(logged_in? && @project.owner_id != current_user.id)
         redirect_to project_path(@project), notice: "Only Project Owner can edit this Project"
       end
     end
 
     def check_if_user_is_admin
-      if(!session[:admin_id])
+      if(logged_in? && current_user.admin?)
         redirect_to project_path(@project), notice: "Access Denied"
       end
     end
 
     def check_if_user_is_owner_or_admin
-      if(!@project.approved? && @project.owner_id != session[:user_id] && !session[:admin_id])
+      if(!@project.approved? && @project.owner_id != current_user.id && !current_user.admin?)
         redirect_to projects_path, notice: "Access Denied"
       end
     end
 
     def check_if_deadline_is_over
       if(@project.deadline != nil)
-        if(@project.owner_id != session[:user_id] && @project.deadline <= Time.now)
+        if(@project.owner_id != current_user.id && @project.deadline <= Time.current)
           redirect_to projects_path, notice: "Outdated project"
         end
       end
@@ -284,34 +293,12 @@ class ProjectsController < ApplicationController
       params.require(:project).permit(:title, :image, :category_id, :summary, :location_name, :video_url, :duration, :deadline, :goal, :published_at, :display_images_attributes => [:id, :picture], :story_attributes => [:id, :description, :risks, :why_we_need_help, :about_the_team, :faq], :rewards_attributes => [:id, :minimum_amount, :description, :estimated_delivery_on, :shipping, :quantity])
     end
 
-    def project_params_with_youtube_embed_link
-      project_parameters = project_params
-      project_parameters[:video_url].gsub!(/(youtube.com\/)(.)*v=([\w\-_]+)(.)*$/, '\1embed/\3')
-      project_parameters
-    end
-
-
     def conversation_params
-      params.require(:project).permit(:messages_attributes => [:id, :subject, :content])
+      params.require(:message).permit(:id, :subject, :content)
     end
-
-    def altered_conversation_params(from_id, to_id)
-      conv_params = conversation_params
-      conv_params[:messages_attributes]["0"][:from_user_id] = from_id;
-      conv_params[:messages_attributes]["0"][:to_user_id] = to_id;
-      conv_params
-    end
-
 
     def pledge_params
-      params.require(:project).permit(:pledges_attributes => [:id, :amount, :requested_rewards_attributes => [:id] ])
-    end
-
-    def pledge_params_with_user_set
-      altered_pledge_params = pledge_params
-      altered_pledge_params[:pledges_attributes]["0"][:user_id] = session[:user_id]
-      altered_pledge_params[:pledges_attributes]["0"][:project_id] = @project.id
-      altered_pledge_params[:pledges_attributes]["0"]
+      params.require(:pledge).permit(:amount, :requested_rewards_attributes => [:id])
     end
 
     def set_params_for_conversation
