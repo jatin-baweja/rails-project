@@ -23,6 +23,19 @@
 
 class Project < ActiveRecord::Base
 
+  before_save :set_deadline
+  before_save :convert_to_embed_link
+
+  def convert_to_embed_link
+    self.video_url.gsub!(/(youtube.com\/)(.)*v=([\w\-_]+)(.)*$/, '\1embed/\3')
+  end
+
+  def set_deadline
+    if step == 4
+      self.deadline = Time.now + self.duration.to_i.days
+    end
+  end
+
   scope :published, ->(time) { where(['published_at <= ? AND deadline >= ?', time, time]) }
   scope :published_between, ->(time1, time2) { where(['published_at <= ? OR published_at >= ?', time1, time2]) }
   scope :still_active, -> { where(['deadline >= ?', Time.now]) }
@@ -126,7 +139,7 @@ class Project < ActiveRecord::Base
   has_many :messages
   #FIXME_AB: What is the difference between display_images and image
   #FIXED: Removed image attribute from project
-  has_many :display_images
+  has_many :display_images, inverse_of: :project
   has_many :pledges
   #FIXME_AB: users through pledges? means backers?
   #FIXED: backers instead of users
