@@ -6,20 +6,20 @@
     <h5 class="text-center">By <%= @project.user.name %></h5>
     <div class="container-fluid navbar">
       <ul class="nav pull-left">
-        <li><%= link_to "Description", description_project_path(@project), remote: true %></li>
+        <li><%= link_to "Description", description_project_path(@project.id), remote: true %></li>
         <% if (current_user.admin? || (@project.owner_id == current_user.id) ) %>
           <%= menu_divider %>
-          <li><%= link_to "Messages", admin_conversation_project_path(@project), remote: true  %></li>
+          <li><%= link_to "Messages", admin_conversation_project_path(@project.id), remote: true  %></li>
         <% end %>
         <%= menu_divider %>
-        <li><%= link_to "Pledgers", backers_project_path(@project), remote: true  %></li>
+        <li><%= link_to "Pledgers", backers_project_path(@project.id), remote: true  %></li>
       </ul>
       <ul class="nav pull-right">
         <li class="no-link"><%= @project.location_name  %></li>
         <% if !@project.rejected? && !@project.approved? %>
           <% if(@project.owner_id == session[:user_id]) %>
             <%= menu_divider %>
-            <li><%= link_to "Edit Project", edit_project_path(@project)  %></li>
+            <li><%= link_to "Edit Project", edit_project_path(@project.id)  %></li>
           <% end %>
         <% end %>
       </ul>

@@ -17,7 +17,7 @@
     <% end %>
   </div>
   <div class="form-actions">
-    <%= link_to "< Prev", edit_project_path(@project), :class => 'btn' %>
+    <%= link_to "< Prev", edit_project_path(@project.id), :class => 'btn' %>
     <%= f.submit "Next >", :class => 'btn btn-primary' %>
   </div>
 <% end %>
