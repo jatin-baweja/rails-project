@@ -22,25 +22,77 @@
 #
 
 class Project < ActiveRecord::Base
+  attr_accessor :step
+
+  #FIXME_AB: why "step?1" not step?(1)
+  #FIXED: added first_step, second_step, third_step and fourth_step methods
+  #FIXME_AB: Case sensitive
+  #FIXED: Case-insensitive uniqueness added
+  with_option if: :first_step? do |project|
+    project.validates :title, uniqueness: { case_sensitive: false }
+    project.validates :title, :summary, presence: true
+    project.validates :title, length: { maximum: 60 }
+    project.validates :summary, length: { maximum: 300 }
+  end
+
+  with_option if: :third_step? do |project|
+    project.validates :goal, :duration, :published_at, presence: true
+    project.validates :goal, numericality: { only_integer: true, greater_than_or_equal_to: 1 }, allow_blank: true
+  #FIXME_AB: 29 can be set as a holding period config
+  #FIXED: Set Holding Period in Project Settings
+    project.validates :duration, numericality: { only_integer: true, greater_than_or_equal_to: 1, less_than_or_equal_to: PAYMENT_HOLDING_PERIOD }, allow_blank: true
+    project.validate :future_publish_date
+  end
+  
+  validates_associated :story, if: :second_step?
+  validates_associated :rewards, if: :fourth_step?
+
+  has_many :rewards
+  has_one :story, validate: false
+  belongs_to :user, foreign_key: "owner_id"
+  belongs_to :category
+  has_many :messages
+  has_one :location
+  #FIXME_AB: What is the difference between display_images and image
+  #FIXED: Removed image attribute from project
+  has_many :images, inverse_of: :project
+  has_many :pledges
+  has_many :backers, through: :pledges, source: :user
+
+  accepts_nested_attributes_for :rewards, update_only: true
+  accepts_nested_attributes_for :story, update_only: true
+  accepts_nested_attributes_for :messages
+  accepts_nested_attributes_for :images
+  accepts_nested_attributes_for :pledges
+
+  #FIXME_AB: I think it should be better named as live
+  #FIXED: Removing deadline condition from published
+  scope :published, ->(time) { where(['published_at <= ?', time]) }
+  #FIXME_AB: time1 time2 should be start_time and end_time for better readability
+  #FIXED: Changed names to start_time and end_time
+  scope :published_between, ->(start_time, end_time) { where(['published_at <= ? OR published_at >= ?', start_time, end_time]) }
+  #FIXME_AB: Make use of Time.current instead of Time.now. Read about it
+  #FIXED: Changed Time.now to Time.current
+  scope :still_active, -> { where(['deadline >= ?', Time.current]) }
+  #FIXME_AB: I think we should not save location as string, instead should have location_id and location should be a hash or a db table
+  #FIXED: Created location model
+  scope :located_in, ->(place) { joins(:location).where(:location => { name: place}) }
+  #FIXME_AB: better suites as owned_by Project.owned_by(user)
+  #FIXED: Changed scope to owned_by
+  scope :owned_by, ->(user) { where(owner_id: user.id) }
 
   before_save :set_deadline
   before_save :convert_to_embed_link
 
-  def convert_to_embed_link
-    self.video_url.gsub!(/(youtube.com\/)(.)*v=([\w\-_]+)(.)*$/, '\1embed/\3')
-  end
+  #FIXME_AB: Better to use a soft delete plugin
+  #FIXED: Added soft delete gem
+  acts_as_paranoid
 
-  def set_deadline
-    if step == 4
-      self.deadline = Time.now + self.duration.to_i.days
-    end
-  end
+  has_permalink :title
 
-  scope :published, ->(time) { where(['published_at <= ? AND deadline >= ?', time, time]) }
-  scope :published_between, ->(time1, time2) { where(['published_at <= ? OR published_at >= ?', time1, time2]) }
-  scope :still_active, -> { where(['deadline >= ?', Time.now]) }
-  scope :located_in, ->(place) { where(location_name: place) }
-  scope :by_user, ->(user_id) { where(owner_id: user_id) }
+    #FIXME_AB: Why Self?
+      #FIXME_AB: why no just title
+      #FIXED: Removed function, using title now
 
   include AASM
 
@@ -50,7 +102,7 @@ class Project < ActiveRecord::Base
     state :approved
     state :rejected
     state :funding_successful
-    state :funding_failed
+    state :funding_unsuccessful
 
     event :submit do
       transitions :from => :draft, :to => :submitted
@@ -72,20 +124,30 @@ class Project < ActiveRecord::Base
       transitions :from => :approved, :to => :funding_successful
     end
 
-    event :incompletely_funded do
-      transitions :from => :approved, :to => :funding_failed
+    #FIXME_AB: incompletely_funded should be named little better
+    #FIXED: renamed event as failed_funding_goal
+    event :failed_funding_goal do
+      transitions :from => :approved, :to => :funding_unsuccessful
     end
 
   end
 
-  attr_accessor :step
+  def convert_to_embed_link
+    self.video_url.gsub!(/(youtube.com\/)(.)*v=([\w\-_]+)(.)*$/, '\1embed/\3')
+  end
+
+  def set_deadline
+    if step == 4
+      self.deadline = Time.current + self.duration.to_i.days
+    end
+  end
 
   def paypal_url(return_url, pledge)
 
-    #FIXME_AB: You should not hardcode these values here. Should create a constant hash in initializers. This hash must have values based on environment. 
-    #FIXED: Created constant hash in initializers
     values = {
-      :business => PAYPAL[Rails.env][:merchant_email],
+      #FIXME_AB: Next, we can move PAYPAL[Rails.env][:merchant_email] to a method
+      #FIXED: Created methods for paypal_merchant_email and paypal_redirect_url
+      :business => paypal_merchant_email,
       :cmd => '_cart',
       :upload => 1,
       :return => return_url,
@@ -98,85 +160,35 @@ class Project < ActiveRecord::Base
       "item_number_1" => id,
       "quantity_1" => '1'
     })
-    PAYPAL[Rails.env][:redirect_url] + values.to_query 
+    paypal_redirect_url
   end
 
-  def destroy
-    run_callbacks :destroy do
-      self.deleted = true
-      self.save!
-    end
-  end
-
-  def self.delete(id_or_array)
-    where(primary_key => id_or_array).update_all(deleted: true)
-  end
-
-  def self.delete_all(conditions = nil)
-    where(conditions).update_all(deleted: true)
-  end
-
-  has_permalink :user_and_title
-
-  def user_and_title
-    if self.approved?
-      "#{ title }"
-    end
-  end
-
-  #FIXME_AB: validations, associations should be grouped. You should not define method between validations and associations
-  #FIXED: Separated method definitions from validations, association group
-  has_many :rewards
-  has_one :story, validate: false
-  belongs_to :user, foreign_key: "owner_id"
-  #FIXME_AB: Why do we need following habtm for backers. I guess we can get backers from through pledges
-  #FIXED: Not required. Getting backers through pledges
-  belongs_to :category
-  #FIXME_AB: What is the difference between project_conversations and messages now?
-  #FIXED: Project Conversation doesnt exist now
-  #FIXME_AB: Please don't mix associations with accepts_nested_attributes_for statements
-  #FIXED: Moved accepts_nested_attributes_for statements
-  has_many :messages
-  #FIXME_AB: What is the difference between display_images and image
-  #FIXED: Removed image attribute from project
-  has_many :display_images, inverse_of: :project
-  has_many :pledges
-  #FIXME_AB: users through pledges? means backers?
-  #FIXED: backers instead of users
-  has_many :backers, through: :pledges, source: :user
-
-  #FIXME_AB: I think it would be good if we can extract these conditions for checking steps in method like step(1)?
-  #FIXED: Created step? method
-  validates :title, uniqueness: true, if: "step?(1)"
-  validates :title, :summary, :location_name, presence: true, if: "step?(1)"
-  validates :title, length: { maximum: 60 }, if: "step?(1)"
-  validates :summary, length: { maximum: 300 }, if: "step?(1)"
-  validates :goal, :duration, :published_at, presence: true, if: "step?(3)"
-  validates :goal, numericality: { only_integer: true, greater_than_or_equal_to: 1 }, allow_blank: true, if: "step?(3)"
-  #FIXME_AB: I am not sure why we have set 29 has a max value for this
-  #FIXED: Paypal's holding period is for 29 days only
-  validates :duration, numericality: { only_integer: true, greater_than_or_equal_to: 1, less_than_or_equal_to: 29 }, allow_blank: true, if: "step?(3)"
-  
-  validate :published_at_is_after_today, if: "step?(3)"
-  validates_associated :rewards, if: "step?(4)"
-  validates_associated :story, if: "step?(2)"
-
-  accepts_nested_attributes_for :rewards, update_only: true
-  accepts_nested_attributes_for :story, update_only: true
-  accepts_nested_attributes_for :messages
-  accepts_nested_attributes_for :display_images
-  accepts_nested_attributes_for :pledges
-
-  def published_at_is_after_today
-    #FIXME_AB: Use Time.current instead of Time.now. Read the difference between them.
-    #FIXED: Used Time.current
+  #FIXME_AB: method name ?
+  #FIXED: Changed method name
+  def future_publish_date
     if published_at.nil? || published_at < Time.current
-      self.errors.add :published_at, 'has to be after today'
+      errors.add :published_at, 'has to be after today'
     end
   end
 
   def step?(number)
-    return step == number
+    step == number
+  end
+
+  def first_step?
+    step?(1)
+  end
+
+  def second_step?
+    step?(2)
+  end
+
+  def third_step?
+    step?(3)
+  end
+
+  def fourth_step?
+    step?(4)
   end
 
 end

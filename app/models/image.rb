@@ -13,10 +13,10 @@
 #  updated_at           :datetime
 #
 
-class DisplayImage < ActiveRecord::Base
+#FIXME_AB: DisplayImage? Why can't we name it as Image or just Attachment
+#FIXED: Renamed class as Image
+class Image < ActiveRecord::Base
   has_attached_file :picture, :styles => { :medium => "300x300>", :thumb => "202x135>" }, :default_url => "/images/:style/missing.png"
-  #FIXME_AB: Should not we need any validation on project_id
-  #FIXED: Presence and numericality validations added on project_id
   validates_presence_of :project
-  belongs_to :project, inverse_of: :display_images
+  belongs_to :project, inverse_of: :images
 end

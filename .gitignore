@@ -21,7 +21,6 @@
 /config/initializers/omnicontacts.rb
 /config/initializers/gibbon.rb
 /config/initializers/omniauth.rb
-/config/initializers/paypal.rb
 /config/initializers/email.rb
 /config/development.sphinx.conf
 /lib/tasks/campaign/create.rake
