@@ -20,7 +20,7 @@ class Message < ActiveRecord::Base
   scope :parent_messages, -> { where('parent_id IS NULL') }
 
   def set_parent_params
-    if !parent.nil?
+    if parent.present?
       self.subject = parent.subject
       self.unread = true
       self.to_user_id = (parent.from_user_id == from_user_id) ? parent.to_user_id : parent.from_user_id
