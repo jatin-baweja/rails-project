@@ -32,7 +32,7 @@ Kickstarter::Application.routes.draw do
     get 'new_message', on: :member, as: :new_message
     get 'back', on: :member
     get 'pledge', on: :member
-    patch 'create_pledge', on: :member
+    post 'create_pledge', on: :member
     get 'new_reward', on: :collection
     get 'story', action: 'new_story', on: :member
     get 'info', on: :member
