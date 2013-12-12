@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20131206102647) do
+ActiveRecord::Schema.define(version: 20131209122841) do
 
   create_table "accounts", force: true do |t|
     t.string   "customer_id"
@@ -107,13 +107,9 @@ ActiveRecord::Schema.define(version: 20131206102647) do
     t.datetime "updated_at"
     t.integer  "owner_id"
     t.integer  "category_id"
-    t.boolean  "approved",                  default: true
-    t.boolean  "rejected",                  default: false
     t.datetime "published_at"
-    t.boolean  "editing",                   default: true
     t.string   "video_url"
     t.string   "project_state"
-    t.boolean  "delta",                     default: true,  null: false
     t.string   "permalink"
     t.boolean  "deleted",                   default: false, null: false
   end
