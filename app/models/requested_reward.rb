@@ -13,9 +13,10 @@
 class RequestedReward < ActiveRecord::Base
   #FIXME_AB: No validation on quantity?
   #FIXED: Added quantity validation
-  validates :pledge_id, :reward_id, :quantity, presence: true
+  validates :reward_id, :quantity, presence: true
   validates :quantity, numericality: { only_integer: true, greater_than_or_equal_to: 1 }
   belongs_to :pledge, inverse_of: :requested_rewards
+  validates_presence_of :pledge
   belongs_to :reward
   validate :requested_rewards_total
 

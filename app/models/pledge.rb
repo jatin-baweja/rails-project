@@ -25,6 +25,6 @@ class Pledge < ActiveRecord::Base
   #FIXED: Need for inverse_of doesn't seem necessary
   #FIXME_AB: What would happen to following associated objects when pledge is destroyed?
   #FIXED: added dependent: :destroy to both
-  has_many :requested_rewards, dependent: :destroy
+  has_many :requested_rewards, inverse_of: :pledge, validate: false, dependent: :destroy
   has_one :transaction, dependent: :destroy
 end
