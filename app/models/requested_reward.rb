@@ -13,10 +13,10 @@
 class RequestedReward < ActiveRecord::Base
   validates :reward_id, :quantity, presence: true
   validates :quantity, numericality: { only_integer: true, greater_than_or_equal_to: 1 }
-  belongs_to :pledge, inverse_of: :requested_rewards
   validates_presence_of :pledge
-  belongs_to :reward
   validate :requested_rewards_total
+  belongs_to :pledge, inverse_of: :requested_rewards
+  belongs_to :reward
 
   def requested_rewards_total
       amount_of_requested_rewards = (reward.minimum_amount * quantity) + pledge.sum_of_requested_rewards

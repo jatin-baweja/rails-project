@@ -26,6 +26,9 @@ class User < ActiveRecord::Base
   has_many :sent_messages, class_name: 'Message', foreign_key: 'from_user_id'
   has_many :received_messages, class_name: 'Message', foreign_key: 'to_user_id'
 
+  has_secure_password validations: false
+  acts_as_paranoid
+
   def self.from_omniauth(auth)
     where(auth.slice(:provider, :uid)).first_or_initialize.tap do |user|
       user.provider = auth.provider
@@ -36,21 +39,6 @@ class User < ActiveRecord::Base
       user.oauth_expires_at = Time.at(auth.credentials.expires_at)
       user.save!
     end
-  end
-
-  def destroy
-    run_callbacks :destroy do
-      self.deleted = true
-      self.save!
-    end
-  end
-
-  def self.delete(id_or_array)
-    where(primary_key => id_or_array).update_all(deleted: true)
-  end
-
-  def self.delete_all(conditions = nil)
-    where(conditions).update_all(deleted: true)
   end
 
   def messages
