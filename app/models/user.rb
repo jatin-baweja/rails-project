@@ -47,21 +47,6 @@ class User < ActiveRecord::Base
     end
   end
 
-  def destroy
-    run_callbacks :destroy do
-      self.deleted = true
-      self.save!
-    end
-  end
-
-  def self.delete(id_or_array)
-    where(primary_key => id_or_array).update_all(deleted: true)
-  end
-
-  def self.delete_all(conditions = nil)
-    where(conditions).update_all(deleted: true)
-  end
-
   def messages
     sent_messages + received_messages
   end

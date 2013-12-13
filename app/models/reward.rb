@@ -32,7 +32,7 @@ class Reward < ActiveRecord::Base
 
   def estimated_delivery_date
     if estimated_delivery_on.nil? || estimated_delivery_on < Time.now
-      self.errors.add :estimated_delivery_on, 'has to be after today'
+      errors.add :estimated_delivery_on, 'has to be after today'
     end
   end
 
@@ -40,7 +40,7 @@ class Reward < ActiveRecord::Base
   #FIXED: Project creator might need to know how much quantity he needs to make for a certain reward after project is fully funded
   def remaining_is_less_than_or_equal_to_quantity
     if !remaining_quantity.nil? && remaining_quantity > quantity
-      self.errors.add :remaining_quantity, 'should be less than or equal to quantity'
+      errors.add :remaining_quantity, 'should be less than or equal to quantity'
     end
   end
 
