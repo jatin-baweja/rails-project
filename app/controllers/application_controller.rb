@@ -1,3 +1,4 @@
+#FIXME_AB: There are many css and js un-used files remove them
 class ApplicationController < ActionController::Base
   # Prevent CSRF attacks by raising an exception.
   # For APIs, you may want to use :null_session instead.
@@ -13,12 +14,11 @@ class ApplicationController < ActionController::Base
     end
 
     def logged_in?
+      #FIXME_AB: Another way to do is !!current_user. Just for the info. You can delete this comment once you get it
       current_user != nil
     end
 
     def authorize
-      #FIXME_AB: Why we are distinguishing user and admin by user_id and admin_id in session. admin is a type of user so you should only save user_id in session. 
-      #FIXED: Only user_id stored in session
       unless (logged_in?)
         redirect_to login_url, notice: "Please log in"
       end
@@ -29,8 +29,6 @@ class ApplicationController < ActionController::Base
         if I18n.available_locales.map(&:to_s).include?(params[:locale])
           I18n.locale = params[:locale]
         else
-          #FIXME_AB: assignment should be in the same line
-          #FIXED: assignment in the same line
           flash.now[:notice] = "#{params[:locale]} translation not available"
           logger.error flash.now[:notice]
         end

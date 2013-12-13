@@ -23,13 +23,12 @@ class Reward < ActiveRecord::Base
   #FIXED: Will ensure locking in controller code
   validates :remaining_quantity, numericality: { only_integer: true, greater_than_or_equal_to: 1 }, allow_blank: true
   validate :remaining_is_less_than_or_equal_to_quantity
-  #FIXME_AB: Can be named better: validate :estimated_delivery_date
-  #FIXED: changed validation name
   validate :estimated_delivery_date
   validates :quantity, numericality: { only_integer: true, greater_than_or_equal_to: 0 }, allow_blank: true
 
 
   def estimated_delivery_date
+    #FIXME_AB: Again Time.now
     if estimated_delivery_on.nil? || estimated_delivery_on < Time.now
       self.errors.add :estimated_delivery_on, 'has to be after today'
     end
@@ -43,6 +42,7 @@ class Reward < ActiveRecord::Base
     end
   end
 
+  #FIXME_AB: association between methods
   belongs_to :project
 
 

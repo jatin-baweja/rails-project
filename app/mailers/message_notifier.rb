@@ -1,6 +1,5 @@
 class MessageNotifier < ActionMailer::Base
-  #FIXME_AB: Don't hard code such things
-  #FIXED: Added mail initializer
+  #FIXME_AB: From env. based hash
   default from: DEFAULT_FROM_EMAIL
 
   # Subject can be set in your I18n file at config/locales/en.yml
@@ -13,8 +12,6 @@ class MessageNotifier < ActionMailer::Base
     @from_user = from_user
     @for_project = project
     @message = message
-    #FIXME_AB: I think message how have a subject, can we use that as the email subject?
-    #FIXED: Using that as email subject
     mail to: to_user.email, subject: "New Message: #{ @message.subject }"
   end
 
@@ -24,7 +21,6 @@ class MessageNotifier < ActionMailer::Base
   #   en.message_notifier.rejected.subject
   #
   def rejected(to_user, rejection_reason)
-
     mail to: to_user.email, subject: 'Project Rejected by Admin'
   end
 end

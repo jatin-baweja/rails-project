@@ -13,8 +13,6 @@
 #  updated_at           :datetime
 #
 
-#FIXME_AB: DisplayImage? Why can't we name it as Image or just Attachment
-#FIXED: Renamed class as Image
 class Image < ActiveRecord::Base
   has_attached_file :picture, :styles => { :medium => "300x300>", :thumb => "202x135>" }, :default_url => "/images/:style/missing.png"
   validates_presence_of :project

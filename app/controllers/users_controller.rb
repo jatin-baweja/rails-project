@@ -20,9 +20,8 @@ class UsersController < ApplicationController
 
     respond_to do |format|
       if @user.save
+        #FIXME_AB: When you have multiple lines. use do-end block instead of {}
         format.html { redirect_to user_url(@user),
-          #FIXME_AB: Is admin creating users? If not then following message is not appro.
-          #FIXED: Changed user on-create message
           notice: "Dear #{@user.name}, you have been successfully registered." }
         format.json { render action: 'show',
           status: :created, location: @user }
@@ -36,8 +35,6 @@ class UsersController < ApplicationController
 
   def update
     respond_to do |format|
-      #FIXME_AB: I can update any user?
-      #FIXED: Put user check before edit, update and destroy
       if @user.update(user_params)
         format.html { redirect_to user_url(@user),
           #FIXME_AB: message not appropriate
@@ -52,10 +49,9 @@ class UsersController < ApplicationController
     end
   end
 
+  #FIXME_AB: Can I destroy my own account. I think this should not allowed
   def destroy
     begin
-      #FIXME_AB: I can delete any user?
-      #FIXED: Put user check before edit, update and destroy
       @user.destroy
       flash[:notice] = "Your account has been deleted"
     rescue StandardError => e
@@ -67,19 +63,16 @@ class UsersController < ApplicationController
     end
   end
 
-  #FIXME_AB: Shouldn't we create a separate controller to import contacts
-  #FIXED: Created contacts controller
-
-  #FIXME_AB: why messaging is being done in users controller. I think we need to have a controller for messaging?
-  #FIXED: Added messages controller
-
   private
 
     def set_user
       @user = User.find(params[:id])
+      #FIXME_AB: Waht if user not found with this id
     end
 
+    #FIXME_AB: Method name verify_owner, suits better
     def user_is_current_user
+      #FIXME_AB: !logged_in? => anonymous?
       if !logged_in? || current_user.id != @user.id
         redirect_to root_url, notice: 'Access Denied'
       end
@@ -90,7 +83,5 @@ class UsersController < ApplicationController
       params.require(:user).permit(:name, :email, :email_confirmation, :password, :password_confirmation)
     end
 
-    #FIXME_AB: THis is something which I see as repetition. authorize method/callback also find user. So do can you think any other way around. Hint: I don't see any need of this method
-    #FIXED: using current_user method in messages controller
 
 end

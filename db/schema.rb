@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20131212065833) do
+ActiveRecord::Schema.define(version: 20131212124301) do
 
   create_table "accounts", force: true do |t|
     t.string   "customer_id"
@@ -59,7 +59,7 @@ ActiveRecord::Schema.define(version: 20131212065833) do
 
   add_index "delayed_jobs", ["priority", "run_at"], name: "delayed_jobs_priority", using: :btree
 
-  create_table "display_images", force: true do |t|
+  create_table "images", force: true do |t|
     t.string   "picture_file_name"
     t.string   "picture_content_type"
     t.integer  "picture_file_size"
@@ -70,7 +70,7 @@ ActiveRecord::Schema.define(version: 20131212065833) do
     t.datetime "updated_at"
   end
 
-  add_index "display_images", ["project_id"], name: "index_display_images_on_project_id", using: :btree
+  add_index "images", ["project_id"], name: "index_images_on_project_id", using: :btree
 
   create_table "locations", force: true do |t|
     t.string   "name"
@@ -87,7 +87,8 @@ ActiveRecord::Schema.define(version: 20131212065833) do
     t.integer  "project_id"
     t.integer  "from_user_id"
     t.integer  "to_user_id"
-    t.boolean  "unread",       default: true
+    t.boolean  "unread",       default: true, null: false
+    t.time     "deleted_at"
   end
 
   create_table "pledges", force: true do |t|
@@ -96,6 +97,7 @@ ActiveRecord::Schema.define(version: 20131212065833) do
     t.integer  "amount"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.time     "deleted_at"
   end
 
   add_index "pledges", ["project_id"], name: "index_pledges_on_project_id", using: :btree
@@ -117,7 +119,7 @@ ActiveRecord::Schema.define(version: 20131212065833) do
     t.string   "video_url"
     t.string   "project_state"
     t.string   "permalink"
-    t.boolean  "deleted",                   default: false, null: false
+    t.time     "deleted_at"
   end
 
   add_index "projects", ["owner_id"], name: "index_projects_on_owner_id", using: :btree
@@ -180,17 +182,17 @@ ActiveRecord::Schema.define(version: 20131212065833) do
   add_index "transactions", ["pledge_id"], name: "index_transactions_on_pledge_id", using: :btree
 
   create_table "users", force: true do |t|
+    t.string   "name"
     t.string   "email"
     t.string   "password_digest"
     t.datetime "created_at"
     t.datetime "updated_at"
     t.boolean  "admin",            default: false
-    t.string   "name"
     t.string   "provider"
     t.string   "uid"
     t.string   "oauth_token"
     t.datetime "oauth_expires_at"
-    t.boolean  "deleted",          default: false, null: false
+    t.time     "deleted_at"
   end
 
   add_index "users", ["email"], name: "index_users_on_email", using: :btree
