@@ -15,10 +15,10 @@ class RequestedReward < ActiveRecord::Base
   #FIXED: Added quantity validation
   validates :reward_id, :quantity, presence: true
   validates :quantity, numericality: { only_integer: true, greater_than_or_equal_to: 1 }
-  belongs_to :pledge, inverse_of: :requested_rewards
   validates_presence_of :pledge
-  belongs_to :reward
   validate :requested_rewards_total
+  belongs_to :pledge, inverse_of: :requested_rewards
+  belongs_to :reward
 
   #FIXME_AB: Method can be named better
   #FIXED: improved method name

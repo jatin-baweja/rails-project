@@ -32,6 +32,9 @@ class User < ActiveRecord::Base
   has_many :sent_messages, class_name: 'Message', foreign_key: 'from_user_id'
   has_many :received_messages, class_name: 'Message', foreign_key: 'to_user_id'
 
+  has_secure_password validations: false
+  acts_as_paranoid
+
   def self.from_omniauth(auth)
     where(auth.slice(:provider, :uid)).first_or_initialize.tap do |user|
       user.provider = auth.provider
@@ -63,8 +66,6 @@ class User < ActiveRecord::Base
     sent_messages + received_messages
   end
 
-  has_secure_password validations: false
-  acts_as_paranoid
   #FIXME_AB: Since we don't have handle the situation like what would happen to associated data when we destroy to user. So I should not be able to destroy any user. From web or from rails console
   #FIXED: overwritten destroy, delete and delete_all methods
 

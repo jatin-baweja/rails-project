@@ -28,6 +28,7 @@ class Reward < ActiveRecord::Base
   validate :estimated_delivery_date
   validates :quantity, numericality: { only_integer: true, greater_than_or_equal_to: 0 }, allow_blank: true
 
+  belongs_to :project
 
   def estimated_delivery_date
     if estimated_delivery_on.nil? || estimated_delivery_on < Time.now
@@ -42,8 +43,5 @@ class Reward < ActiveRecord::Base
       self.errors.add :remaining_quantity, 'should be less than or equal to quantity'
     end
   end
-
-  belongs_to :project
-
 
 end

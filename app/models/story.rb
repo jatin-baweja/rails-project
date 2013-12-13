@@ -17,8 +17,8 @@ class Story < ActiveRecord::Base
   after_save ThinkingSphinx::RealTime.callback_for(:project, [:project])
   after_destroy ThinkingSphinx::RealTime.callback_for(:project, [:project])
 
-  belongs_to :project
-
   validates :description, :risks, :why_we_need_help, :faq, :about_the_team, presence: true
+
+  belongs_to :project
 
 end
