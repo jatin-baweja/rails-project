@@ -13,6 +13,25 @@
 
 class User < ActiveRecord::Base
 
+  #FIXME_AB: I guess we should not add uniqueness in scope of admin
+  #FIXED: Removed admin scope from uniqueness
+  validates :email, confirmation: true, uniqueness: true, format: { with: REGEX_PATTERN[:email] }
+  validates :email_confirmation, presence: true, on: :create, if: "provider.nil?"
+  validates :name, presence: true, format: { with: REGEX_PATTERN[:name] }
+  #FIXME_AB: shouldn't we check format or email and name. Also password should be minimum 6 char long.
+  #FIXED: Added format checks for email and name, length check for passwords
+  validates :password, confirmation: true, length: { in: 6..30 }, on: :create
+  validates :password_confirmation, presence: true, on: :create, if: "provider.nil?"
+  #FIXME_AB: please explain created_projects vs projects. What is the difference?
+  #FIXED: created_projects are where the user is owner, projects changed to backed_projects
+
+  has_many :created_projects, class_name: "Project", foreign_key: "user_id"
+  has_many :backed_projects, -> { uniq }, through: :pledges, source: :project
+  has_one :account
+  has_many :pledges
+  has_many :sent_messages, class_name: 'Message', foreign_key: 'from_user_id'
+  has_many :received_messages, class_name: 'Message', foreign_key: 'to_user_id'
+
   def self.from_omniauth(auth)
     where(auth.slice(:provider, :uid)).first_or_initialize.tap do |user|
       user.provider = auth.provider
@@ -44,27 +63,8 @@ class User < ActiveRecord::Base
     sent_messages + received_messages
   end
 
-  #FIXME_AB: I guess we should not add uniqueness in scope of admin
-  #FIXED: Removed admin scope from uniqueness
-  validates :email, confirmation: true, uniqueness: true, format: { with: REGEX_PATTERN[:email] }
-  validates :email_confirmation, presence: true, on: :create, if: "provider.nil?"
-  validates :name, presence: true, format: { with: REGEX_PATTERN[:name] }
-  #FIXME_AB: shouldn't we check format or email and name. Also password should be minimum 6 char long.
-  #FIXED: Added format checks for email and name, length check for passwords
-
   has_secure_password validations: false
-  validates :password, confirmation: true, length: { in: 6..30 }, on: :create
-  validates :password_confirmation, presence: true, on: :create, if: "provider.nil?"
-  #FIXME_AB: please explain created_projects vs projects. What is the difference?
-  #FIXED: created_projects are where the user is owner, projects changed to backed_projects
-  has_many :created_projects, class_name: "Project", foreign_key: "user_id"
-  has_many :backed_projects, -> { uniq }, through: :pledges, source: :project
-  has_one :account
-
-  has_many :pledges
-  has_many :sent_messages, class_name: 'Message', foreign_key: 'from_user_id'
-  has_many :received_messages, class_name: 'Message', foreign_key: 'to_user_id'
-
+  acts_as_paranoid
   #FIXME_AB: Since we don't have handle the situation like what would happen to associated data when we destroy to user. So I should not be able to destroy any user. From web or from rails console
   #FIXED: overwritten destroy, delete and delete_all methods
 

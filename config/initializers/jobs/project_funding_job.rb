@@ -23,7 +23,7 @@ class ProjectFundingJob < Struct.new(:project)
         project.completely_funded!
         ProjectStatusNotifier.funded(project).deliver
       else
-        project.incompletely_funded!
+        project.failed_funding_goal!
         ProjectStatusNotifier.failed(project).deliver
       end # if project goal reached or not
     end # if project approved

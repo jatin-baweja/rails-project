@@ -20,19 +20,20 @@ class ProjectsController < ApplicationController
 
   def index
     if params[:category]
-      @projects = Project.approved.published(Time.current).order(:title).collect do |x|
+      @projects = Project.approved.published(Time.current).still_active.order(:title).collect do |x|
         x if x.category.name.downcase == params[:category].downcase
       end
     elsif params[:place]
-      @projects = Project.approved.published(Time.current).located_in(params[:place]).order(:title)
+      @projects = Project.approved.published(Time.current).still_active.located_in(params[:place]).order(:title)
     else
-      @projects = Project.approved.published(Time.current).order(:title).page(params[:page]).per_page(15)
+      @projects = Project.approved.published(Time.current).still_active.order(:title).page(params[:page]).per_page(15)
     end
   end
 
   def new
     @project = Project.new
-    @display_image = @project.display_images.build
+    @image = @project.images.build
+    @location = @project.build_location
   end
 
   def show
@@ -44,14 +45,15 @@ class ProjectsController < ApplicationController
   end
 
   def user_owned
-    @pending_projects = Project.by_user(current_user.id).submitted
-    @approved_projects = Project.by_user(current_user.id).approved
-    @editing_projects = Project.by_user(current_user.id).draft
-    @rejected_projects = Project.by_user(current_user.id).rejected
+    @pending_projects = Project.owned_by(current_user).submitted
+    @approved_projects = Project.owned_by(current_user).approved
+    @draft_projects = Project.owned_by(current_user).draft
+    @rejected_projects = Project.owned_by(current_user).rejected
   end
 
   def edit
-    @story = @project.story
+    @image = @project.images.first
+    @location = @project.location
     @project.edit! if !@project.draft?
   end
 
@@ -290,7 +292,7 @@ class ProjectsController < ApplicationController
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def project_params
-      params.require(:project).permit(:title, :image, :category_id, :summary, :location_name, :video_url, :duration, :deadline, :goal, :published_at, :display_images_attributes => [:id, :picture], :story_attributes => [:id, :description, :risks, :why_we_need_help, :about_the_team, :faq], :rewards_attributes => [:id, :minimum_amount, :description, :estimated_delivery_on, :shipping, :quantity])
+      params.require(:project).permit(:title, :image, :category_id, :summary, :video_url, :duration, :deadline, :goal, :published_at, :location_attributes => [:id, :name], :images_attributes => [:id, :picture], :story_attributes => [:id, :description, :risks, :why_we_need_help, :about_the_team, :faq], :rewards_attributes => [:id, :minimum_amount, :description, :estimated_delivery_on, :shipping, :quantity])
     end
 
     def conversation_params

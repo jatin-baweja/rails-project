@@ -1,5 +1,5 @@
 <div class="highlight high470">
-  <h2 id="backer-count"><%= project.pledges.count('DISTINCT user_id') %></h2>
+  <h2 id="backer-count"><%= project.backers.count %></h2>
   <p>backers</p>
   <h2 id="goal-required"><%= number_to_currency(project.goal) %></h2>
   <p>funding required</p>

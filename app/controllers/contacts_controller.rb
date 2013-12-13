@@ -4,7 +4,7 @@ class ContactsController < ApplicationController
     @contacts = request.env['omnicontacts.contacts']
     #FIXME_AB: scopes can be used. Time.now being called two times?
     #FIXED: scopes being used
-    @projects = Project.by_user(current_user.id).approved.published(Time.now)
+    @projects = Project.owned_by(current_user).approved.published(Time.current).still_active
   end
 
   def send_email

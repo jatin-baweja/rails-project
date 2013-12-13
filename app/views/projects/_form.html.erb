@@ -17,7 +17,7 @@
       <p class="help-block">Enter the title of your project</p>
     </div>
   </div>
-  <%= f.fields_for :display_images, @display_image do |image| %>
+  <%= f.fields_for :images, @image do |image| %>
     <div class="control-group">
       <%= image.label :picture, :Image, :class => 'control-label' %>
       <div class="controls">
@@ -49,13 +49,15 @@
     </div>
   </div>
 
-  <div class="control-group">
-    <%= f.label :location_name, "Location", :class => 'control-label' %>
-    <div class="controls">
-      <%= f.text_field :location_name, :class => 'text_field' %>
-        <p class="help-block">Enter the location of your project</p>
+  <%= f.fields_for :location, @location do |location| %>
+    <div class="control-group">
+      <%= location.label :name, "Location", :class => 'control-label' %>
+      <div class="controls">
+        <%= location.text_field :name, :class => 'text_field' %>
+          <p class="help-block">Enter the location of your project</p>
+      </div>
     </div>
-  </div>
+  <% end %>
 
   <div class="form-actions">
     <%= link_to t('.cancel', :default => t("helpers.links.cancel")), projects_path, :class => 'btn' %>

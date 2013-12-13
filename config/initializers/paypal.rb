@@ -8,8 +8,8 @@ PAYPAL = {
   :redirect_url => "https://www.sandbox.paypal.com/cgi-bin/webscr?"
   },
   :production => {
-  :merchant_email => ENV['PAYPAL_MERCHANT_EMAIL'],
-  :redirect_url => ENV['PAYPAL_REDIRECT_URL']
+  :merchant_email => "xyz@abc.com",
+  :redirect_url => "https://www.paypal.com/cgi-bin/webscr?"
   }
 }
 def paypal_merchant_email

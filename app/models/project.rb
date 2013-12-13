@@ -28,14 +28,14 @@ class Project < ActiveRecord::Base
   #FIXED: added first_step, second_step, third_step and fourth_step methods
   #FIXME_AB: Case sensitive
   #FIXED: Case-insensitive uniqueness added
-  with_option if: :first_step? do |project|
+  with_options if: :first_step? do |project|
     project.validates :title, uniqueness: { case_sensitive: false }
     project.validates :title, :summary, presence: true
     project.validates :title, length: { maximum: 60 }
     project.validates :summary, length: { maximum: 300 }
   end
 
-  with_option if: :third_step? do |project|
+  with_options if: :third_step? do |project|
     project.validates :goal, :duration, :published_at, presence: true
     project.validates :goal, numericality: { only_integer: true, greater_than_or_equal_to: 1 }, allow_blank: true
   #FIXME_AB: 29 can be set as a holding period config
@@ -57,10 +57,11 @@ class Project < ActiveRecord::Base
   #FIXED: Removed image attribute from project
   has_many :images, inverse_of: :project
   has_many :pledges
-  has_many :backers, through: :pledges, source: :user
+  has_many :backers, -> { uniq },through: :pledges, source: :user
 
   accepts_nested_attributes_for :rewards, update_only: true
   accepts_nested_attributes_for :story, update_only: true
+  accepts_nested_attributes_for :location, update_only: true
   accepts_nested_attributes_for :messages
   accepts_nested_attributes_for :images
   accepts_nested_attributes_for :pledges

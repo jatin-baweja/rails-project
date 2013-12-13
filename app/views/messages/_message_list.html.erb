@@ -4,15 +4,14 @@
     <% @messages.each do |message_set| %>
       <% if !message_set.nil? %>
         <% if !message_set.child_messages.empty? %>
-        <div class="row <%= (message_set.child_messages.last.to_user_id == session[:user_id] || message_set.child_messages.last.to_user_id == session[:admin_id]) && message_set.child_messages.last.unread? ? "unread-highlight" : "read-highlight" %>">
+        <div class="row <%= (message_set.child_messages.last.to_user.id == current_user.id) && message_set.child_messages.last.unread? ? "unread-highlight" : "read-highlight" %>">
         <% else %>
-        <div class="row <%= (message_set.to_user_id == session[:user_id] || message_set.to_user_id == session[:admin_id]) && message_set.unread? ? "unread-highlight" : "read-highlight" %>">
-
+        <div class="row <%= (message_set.to_user_id == current_user.id) && message_set.unread? ? "unread-highlight" : "read-highlight" %>">
         <% end %>
           <div class="span2">
-            <% if message_set.to_user_id == session[:user_id] || message_set.to_user_id == session[:admin_id] %>
+            <% if message_set.to_user_id == current_user.id %>
               <%= message_set.from_user.name %>
-            <% elsif message_set.from_user_id == session[:user_id] || message_set.from_user_id == session[:admin_id] %>
+            <% elsif message_set.from_user_id == current_user.id %>
               <%= message_set.to_user.name %>
             <% end %>
           </div>

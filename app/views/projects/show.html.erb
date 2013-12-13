@@ -15,7 +15,7 @@
         <li><%= link_to "Pledgers", backers_project_path(@project.id), remote: true  %></li>
       </ul>
       <ul class="nav pull-right">
-        <li class="no-link"><%= @project.location_name  %></li>
+        <li class="no-link"><%= @project.location_name %></li>
         <% if !@project.rejected? && !@project.approved? %>
           <% if(@project.owner_id == session[:user_id]) %>
             <%= menu_divider %>

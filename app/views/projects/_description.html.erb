@@ -1,8 +1,8 @@
-  <div class="image-container">
-    <%= image_tag @project.display_images.where(primary: true)[0].picture if !@project.display_images.empty? %>
-  </div>
+<div class="image-container">
+  <%= image_tag @project.images.where(primary: true)[0].picture if !@project.images.empty? %>
+</div>
 
-  <% if !@story.nil? %>
+<% if !@story.nil? %>
   <div class="highlight">
     <% cache @story do %>
       <h4>Description</h4>
@@ -34,4 +34,4 @@
       </div>
     <% end %>
   </div>
-  <% end %>
+<% end %>

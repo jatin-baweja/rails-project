@@ -1,7 +1,7 @@
 <div id="message" class="container-fluid">
   <h4><%= "[#{@message.project.title}] #{@message.subject}" %></h4>
   <p class='collapsed'>
-    <div class="row <%= (@message.to_user_id == session[:user_id] || @message.to_user_id == session[:admin_id]) && @message.unread? ? "unread" : "read" %>">
+    <div class="row <%= (@message.to_user_id == current_user.id) && @message.unread? ? "unread" : "read" %>">
       <div class="span8">
         <p>From: <%= "#{ @message.from_user.name }" %></p>
         <p>To:<%= "#{ @message.to_user.name }" %></p>
@@ -14,13 +14,13 @@
       </div>
     </div>
     <hr>
-    <% if (@message.unread? && (@message.to_user_id == session[:user_id] || @message.to_user_id == session[:admin_id])) %>
+    <% if (@message.unread? && (@message.to_user_id == current_user.id)) %>
       <% @message.update_columns(unread: false) %>
     <% end %>
   <% if !@message.child_messages.empty? %>
     <% @message.child_messages.each do |message| %>
       <% if !message.nil? && !message.id.nil? %>
-        <div class="row <%= (message.to_user_id == session[:user_id] || message.to_user_id == session[:admin_id]) && message.unread? ? "unread" : "read" %>">
+        <div class="row <%= (message.to_user_id == current_user.id) && message.unread? ? "unread" : "read" %>">
           <div class="span8">
             <p>From: <%= "#{ message.from_user.name }" if !message.from_user.nil? %></p>
             <p>To:<%= "#{ message.to_user.name }" if !message.to_user.nil? %></p>
@@ -33,7 +33,7 @@
           </div>
         </div>
         <hr>
-        <% message.update(unread: false) if ((message.to_user_id == session[:user_id] || message.to_user_id == session[:admin_id]) && message.unread?) %>
+        <% message.update(unread: false) if ((message.to_user_id == current_user.id) && message.unread?) %>
       <% end %>
     <% end %>
   <% end %>
