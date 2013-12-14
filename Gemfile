@@ -3,6 +3,9 @@ source 'https://rubygems.org'
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
 gem 'rails', '4.0.0'
 
+# For coverage reports
+gem 'simplecov', :require => false, :group => :test
+
 # Gem for soft deletion
 gem 'paranoia', '~> 2.0'
 
@@ -45,7 +48,9 @@ gem "omnicontacts"
 # Use rspec for testing
 group :development, :test do
   gem "rspec-rails", "~> 2.0"
-  # gem "webrat", "0.7.2"
+  gem 'factory_girl_rails'
+  gem 'faker'
+  gem 'debugger'
 end
 
 # Use SCSS for stylesheets
