@@ -2,6 +2,7 @@ class MessagesController < ApplicationController
   before_action :set_message, only: [:create, :show]
 
   def index
+    #FIXME_AB: current_user.inbox what do you think?
     @messages = (current_user.sent_messages.parent_messages + current_user.received_messages.parent_messages).sort { |x,y| y.updated_at <=> x.updated_at }
   end
 
@@ -10,6 +11,8 @@ class MessagesController < ApplicationController
   end
 
   def create
+    #FIXME_AB: Nice use of merge 
+    #FIXME_AB: we are not using created_message local variable so why we define that
     if created_message = current_user.sent_messages.create(message_params.merge(parent_id: @message.id.to_s))
       redirect_to message_path(@message)
     else
@@ -21,17 +24,14 @@ class MessagesController < ApplicationController
 
     def set_message
       @message = Message.parent_messages.find(params[:id])
-      #FIXME_AB: What if message is not found with this email
-      #FIXED: Added exception handling
+      #FIXME_AB: Better use find_by and use if @message.nil? instead of active record RecordNotFound
     rescue ActiveRecord::RecordNotFound
+      #FIXME_AB: From User prospective this message is of no use to me. 
       redirect_to messages_url, alert: 'Invalid message id'
     end
 
     def message_params
       params.require(:message).permit(:id, :content)
     end
-
-    #FIXME_AB: I don't think we would need this function or need to do things this way. Please explain
-    #FIXED: Added callbacks and merged parent_id in message_params
 
 end

@@ -25,6 +25,7 @@ class Admin::UsersController < Admin::BaseController
       @user.save!
       flash[:notice] = "User #{@user.name} promoted to admin status"
     rescue StandardError => e
+      #FIXME_AB: Why are you doing this way. I mean catching exception. you can use if @user.save and else
       flash[:notice] = e.message
     end
     respond_to do |format|
@@ -37,6 +38,7 @@ class Admin::UsersController < Admin::BaseController
 
     def set_user
       @user = User.find(params[:id])
+      #FIXME_AB: What if user not found
     end
 
 end

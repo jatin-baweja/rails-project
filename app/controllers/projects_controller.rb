@@ -2,28 +2,35 @@ class ProjectsController < ApplicationController
   before_action :set_project, only: [:show, :destroy, :back, :pledge, :create_pledge, :description, :admin_conversation, :create_admin_conversation, :backers, :new_message]
   before_action :set_draft_project, only: [:edit, :update, :create_story, :create_rewards, :new_story, :info, :create_info, :new_rewards]
   skip_before_action :authorize, only: [:show, :index, :this_week]
+  #FIXME_AB: Validate_owner?
   before_action :check_if_user_is_owner, only: [:edit, :update, :new_rewards, :create_story, :create_rewards]
   before_action :set_params_for_conversation, only: [:admin_conversation]
+  #FIXME_AB: check_if_user_is_owner_or_admin is not just checking user or admin. It is also checking the state of user. So it should name it :check_accessibility. Similarly for others
   before_action :check_if_user_is_owner_or_admin, only: [:show]
+
+
   before_action :check_if_user_is_admin, only: [:create_admin_conversation]
   before_action :check_if_deadline_is_over, only: [:show]
 
   def this_week
+    #FIXME_AB: This is taking projects in past on week. Not this week Mon-Sat.
+    #FIXME_AB: Much of this can be moved to model
+    #FIXME_AB: Time.current called twice can be saved
     @projects = Project.approved.published_between(Time.current, Time.current - 1.week).still_active.page(params[:page]).per_page(15)
     render action: 'index'
   end
 
-  #FIXME_AB: I am not sure why we need this controller. I guess everything can be done through projects controller.
-  #FIXED: Moved from Project_Lists Controller to Project Controller
-  #FIXME_AB: More over I think many of following conditions suits to be defined as scope
-  #FIXED: Scopes defined
-
+  #FIXME_AB: I would prefer URL like: projects/category/mycategory and projects/location/mylocation So we can have it broken in 3 actions?
   def index
     if params[:category]
+      #FIXME_AB: Project.live I added a comment for this scope somewhere
       @projects = Project.approved.published(Time.current).still_active.order(:title).collect do |x|
+        #FIXME_AB: What you are doing is, loading all projects and then filtering them based on the category name. Very BAD
+        #FIXME_AB: YOu should use the project-category association to load such projects. Also use pagination. Current implementation is very inefficient 
         x if x.category.name.downcase == params[:category].downcase
       end
     elsif params[:place]
+      #FIXME_AB: pagination
       @projects = Project.approved.published(Time.current).still_active.located_in(params[:place]).order(:title)
     else
       @projects = Project.approved.published(Time.current).still_active.order(:title).page(params[:page]).per_page(15)
@@ -37,14 +44,18 @@ class ProjectsController < ApplicationController
   end
 
   def show
+    #FIXME_AB: I have to look what is params[:st]. But setting flash this way is not the right way
     flash[:notice] = "Your Transaction is #{params[:st]} for amount of $#{params[:amt]}. Thank You for pledging." if params[:st]
+    #FIXME_AB: Why you are creating instance variables for story, rewards, users. You don't need them here. And for views you have @project variable available. So use can use @project.story and others in the view directly
     @story = @project.story
     @rewards = @project.rewards
     @user = @project.user
     @sum_of_pledges = Pledge.where([ "user_id = ? AND project_id = ?", session[:user_id], params[:id]]).sum(:amount)
   end
 
+  #FIXME_AB: Shuld be accessible by /projects/mine or /projects/owned
   def user_owned
+    #FIXME_AB: I have another way to do this in a single query.
     @pending_projects = Project.owned_by(current_user).submitted
     @approved_projects = Project.owned_by(current_user).approved
     @draft_projects = Project.owned_by(current_user).draft
@@ -52,11 +63,13 @@ class ProjectsController < ApplicationController
   end
 
   def edit
+    #FIXME_AB: You just need @project variable other @image and @location is not needed here. You are preparing for the view. You would be having @project variable available in view so you can use that directly
     @image = @project.images.first
     @location = @project.location
     @project.edit! if !@project.draft?
   end
 
+  #FIXME_AB: I am not yet very convinced why we need this in this controller
   def new_story
     if @project.story.nil?
       @story = @project.build_story
@@ -65,6 +78,7 @@ class ProjectsController < ApplicationController
     end
   end
 
+  #FIXME_AB: I am not yet very convinced why we need this in this controller
   def create_story
     @project.step = 2;
     respond_to do |format|
@@ -78,6 +92,7 @@ class ProjectsController < ApplicationController
     end
   end
 
+  #FIXME_AB: I am not yet very convinced why we need this in this controller
   def new_rewards
     if @project.rewards.empty?
       @reward = @project.rewards.build
@@ -93,6 +108,7 @@ class ProjectsController < ApplicationController
     end
   end
 
+  #FIXME_AB: I am not yet very convinced why we need this in this controller
   def create_rewards
     @project.step = 4;
     respond_to do |format|
@@ -110,9 +126,11 @@ class ProjectsController < ApplicationController
     end
   end
 
+  #FIXME_AB: I am not yet very convinced why we need this in this controller
   def info
   end
 
+  #FIXME_AB: I am not yet very convinced why we need this in this controller
   def create_info
     @project.step = 3
     respond_to do |format|
@@ -132,6 +150,7 @@ class ProjectsController < ApplicationController
     @requested_rewards = @pledge.requested_rewards.build
   end
 
+  #FIXME_AB: This action can be made better
   def create_pledge
     ActiveRecord::Base.transaction do
       @pledge = @project.pledges.build(pledge_params)
@@ -166,6 +185,7 @@ class ProjectsController < ApplicationController
 
   def create
     @project = Project.new(project_params)
+    #FIXME_AB: Why referring to session user_id
     @project.owner_id = session[:user_id]
     @project.step = 1;
 
@@ -199,6 +219,7 @@ class ProjectsController < ApplicationController
 
   def destroy
     begin
+      #FIXME_AB: Any project can be destroyed
       @project.destroy
       flash[:notice] = "Project #{@project.title} deleted"
     rescue StandardError => e
@@ -216,6 +237,7 @@ class ProjectsController < ApplicationController
     end
   end
 
+  #FIXME_AB: I am not yet very convinced why we need this in this controller
   def admin_conversation
     @messages = @project.messages.parent_messages.order('updated_at DESC')
     respond_to do |format|
@@ -223,6 +245,7 @@ class ProjectsController < ApplicationController
     end
   end
 
+  #FIXME_AB: I am not yet very convinced why we need this in this controller
   def create_admin_conversation
     @messages = @project.messages.order(:created_at)
     @from = current_user

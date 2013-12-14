@@ -1,16 +1,14 @@
 class SessionsController < ApplicationController
   skip_before_action :authorize
+
   def new
   end
 
   def create
-    #FIXME_AB: good practice to have parenthesis around arguments
-    #FIXED: parenthesis added
     user = User.find_by(email: params[:email])
     if user and user.authenticate(params[:password])
       session[:user_id] = user.id
-      #FIXME_AB: I think we don't need to save name in session
-      #FIXED: removed name from session
+      #FIXME_AB: One other way(how I do this is): redirect_to_admin_or_home
       if current_user.admin?
         redirect_to admin_projects_pending_for_approval_url
       else
@@ -22,8 +20,6 @@ class SessionsController < ApplicationController
   end
 
   def destroy
-    #FIXME_AB: This is not the right way to logout any user. 
-    #FIXED: Clearing entire session instead of specific keys
     reset_session
     redirect_to root_url, notice: "You have been logged out"
   end

@@ -182,12 +182,12 @@ ActiveRecord::Schema.define(version: 20131212124301) do
   add_index "transactions", ["pledge_id"], name: "index_transactions_on_pledge_id", using: :btree
 
   create_table "users", force: true do |t|
+    t.string   "name"
     t.string   "email"
     t.string   "password_digest"
     t.datetime "created_at"
     t.datetime "updated_at"
     t.boolean  "admin",            default: false
-    t.string   "name"
     t.string   "provider"
     t.string   "uid"
     t.string   "oauth_token"

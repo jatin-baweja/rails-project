@@ -13,8 +13,6 @@
 #  updated_at           :datetime
 #
 
-#FIXME_AB: DisplayImage? Why can't we name it as Image or just Attachment
-#FIXED: Renamed class as Image
 class Image < ActiveRecord::Base
   validates_presence_of :project
   belongs_to :project, inverse_of: :images
