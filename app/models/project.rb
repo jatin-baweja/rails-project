@@ -161,7 +161,7 @@ class Project < ActiveRecord::Base
       "item_number_1" => id,
       "quantity_1" => '1'
     })
-    paypal_redirect_url
+    paypal_redirect_url + values.to_query
   end
 
   #FIXME_AB: method name ?
