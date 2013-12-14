@@ -20,6 +20,9 @@ Kickstarter::Application.routes.draw do
       get "charges/new_card"
       post "charges", controller: 'charges', action: 'create_card'
     end
+    namespace :paypal do
+      match "notify", controller: 'notifications', action: 'create', via: [:get, :post]
+    end
   end
 
   match 'search', controller: 'searches', action: 'search', via: :get, as: :search_results
