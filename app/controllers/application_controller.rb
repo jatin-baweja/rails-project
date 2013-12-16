@@ -35,6 +35,7 @@ class ApplicationController < ActionController::Base
       end
     end
 
+    #FIXME_AB: locale=en should not be in the URL as this is the default. also every url has locale=en. Once the language is set, you should save this in session and use from there.. I mean use locale in url for changing language. Once it is changed save it in session.
     def default_url_options
       { locale: I18n.locale }
     end

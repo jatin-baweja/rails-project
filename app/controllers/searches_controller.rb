@@ -1,5 +1,7 @@
 class SearchesController < ApplicationController
 
+  #FIXME_AB: Why should I be logged in to search projects?
+  #FIXME_AB: Check the page view when search does not return any record. Footer should be in footer
   def search
     if params[:q].present?
       #FIXME_AB: Lots of scope of improvement in following line. Please do as per your learning after CR comments

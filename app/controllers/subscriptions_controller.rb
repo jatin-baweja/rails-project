@@ -1,6 +1,8 @@
 class SubscriptionsController < ApplicationController
+  #FIXME_AB: Why do I need to be logged in to be able to subscribe?
   skip_before_action :authorize, only: [:weekly]
 
+  #FIXME_AB: Both action name do not justify their working. Why not new and create.
   def weekly
     if logged_in?
       @email = current_user.email
