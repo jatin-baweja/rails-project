@@ -37,8 +37,6 @@ class UsersController < ApplicationController
     respond_to do |format|
       if @user.update(user_params)
         format.html { redirect_to user_url(@user),
-          #FIXME_AB: message not appropriate
-          #FIXED: Message changed
           notice: "Your profile has been successfully updated." }
         format.json { head :no_content }
       else
@@ -67,7 +65,7 @@ class UsersController < ApplicationController
 
     def set_user
       @user = User.find(params[:id])
-      #FIXME_AB: Waht if user not found with this id
+      #FIXME_AB: What if user not found with this id
     end
 
     #FIXME_AB: Method name verify_owner, suits better
