@@ -1,15 +1,17 @@
 class SubscriptionsController < ApplicationController
   #FIXME_AB: Why do I need to be logged in to be able to subscribe?
-  skip_before_action :authorize, only: [:weekly]
+  #FIXED: All actions to skip authorize by default
+  skip_before_action :authorize
 
   #FIXME_AB: Both action name do not justify their working. Why not new and create.
-  def weekly
+  #FIXED: Changed names to new and create
+  def new
     if logged_in?
       @email = current_user.email
     end
   end
 
-  def index
+  def create
     if params[:email].match(REGEX_PATTERN[:email])
       begin
         gb = Gibbon::API.new

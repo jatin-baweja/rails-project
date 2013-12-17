@@ -5,6 +5,7 @@ class SessionsController < ApplicationController
   end
 
   #FIXME_AB: Empty signup form submitted. No error was shown
+  #FIXED: Showing errors now
   def create
     user = User.find_by(email: params[:email])
     if user and user.authenticate(params[:password])

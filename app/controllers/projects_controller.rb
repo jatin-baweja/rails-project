@@ -8,8 +8,6 @@ class ProjectsController < ApplicationController
   #FIXME_AB: check_if_user_is_owner_or_admin is not just checking user or admin. It is also checking the state of user. So it should name it :check_accessibility. Similarly for others
   #FIXED: Method names changed
   before_action :check_accessibility, only: [:show]
-
-
   before_action :validate_deadline, only: [:show]
 
   def this_week
@@ -19,7 +17,7 @@ class ProjectsController < ApplicationController
     #FIXME_AB: Time.current called twice can be saved
     #FIXED: Using 1.week.ago
     @projects = Project.this_week.page(params[:page]).per_page(15)
-    render action: 'index'
+    render action: :index
   end
 
   #FIXME_AB: I would prefer URL like: projects/category/mycategory and projects/location/mylocation So we can have it broken in 3 actions?
@@ -53,7 +51,7 @@ class ProjectsController < ApplicationController
     #FIXED: Removed it.
     #FIXME_AB: Why you are creating instance variables for story, rewards, users. You don't need them here. And for views you have @project variable available. So use can use @project.story and others in the view directly
     #FIXED: Moved variables to view
-    @sum_of_pledges = Pledge.where([ "user_id = ? AND project_id = ?", session[:user_id], params[:id]]).sum(:amount)
+    @sum_of_pledges = Pledge.where([ "user_id = ? AND project_id = ?", current_user.id, @project.id]).sum(:amount)
   end
 
   #FIXME_AB: Shuld be accessible by /projects/mine or /projects/owned
@@ -100,9 +98,9 @@ class ProjectsController < ApplicationController
     respond_to do |format|
       if @project.update(project_params)
         format.html { redirect_to rewards_project_url(@project.id) }
-        format.json { render action: 'show', status: :created, location: @project }
+        format.json { render action: :show, status: :created, location: @project }
       else
-        format.html { render action: 'info' }
+        format.html { render action: :info }
         format.json { render json: @project.errors, status: :unprocessable_entity }
       end
     end
@@ -158,12 +156,10 @@ class ProjectsController < ApplicationController
     respond_to do |format|
       if @project.save
         format.html { redirect_to story_project_url(@project.id) }
-        format.json { render action: 'show',
-          status: :created, location: @project }
+        format.json { render action: :show, status: :created, location: @project }
       else
-        format.html { render action: 'new' }
-        format.json { render json: @project.errors,
-          status: :unprocessable_entity }
+        format.html { render action: :new }
+        format.json { render json: @project.errors, status: :unprocessable_entity }
       end
     end
   end
@@ -176,9 +172,8 @@ class ProjectsController < ApplicationController
         format.html { redirect_to story_project_url(@project.id) }
         format.json { head :no_content }
       else
-        format.html { render action: 'edit' }
-        format.json { render json: @project.errors,
-          status: :unprocessable_entity }
+        format.html { render action: :edit }
+        format.json { render json: @project.errors, status: :unprocessable_entity }
       end
     end
   end
@@ -252,7 +247,7 @@ class ProjectsController < ApplicationController
 
     def validate_deadline
       if(@project.deadline != nil)
-        if(@project.owner_id != current_user.id && @project.deadline <= Time.current)
+        if(logged_in? && @project.owner_id != current_user.id && current_user.admin? && @project.deadline <= Time.current)
           redirect_to projects_path, notice: "Outdated project"
         end
       end

@@ -1,14 +1,15 @@
 <div class="highlight high470">
   <h2 id="backer-count"><%= project.backers.count %></h2>
   <% #FIXME_AB: When you have one backer or no backer you will be displaying 1 backers. How would you handle this case? -%>
-  <p>backers</p>
+  <% #FIXED: using pluralize -%>
+  <p><%= "backer".pluralize(project.backers.count) %></p>
   <h2 id="goal-required"><%= number_to_currency(project.goal) %></h2>
   <p>funding required</p>
   <h2 id="goal-achieved"><%= number_to_currency(project.pledges.sum(:amount)) %></h2>
   <p>amount funded</p>
   <div class="text-center">
     <% #FIXME_AB: Is this the right way to check owner. How about project.owner?(current_user) -%>
-    <% if current_user.id != project.owner_id %>
+    <% if logged_in? && !project.owner?(current_user) %>
       <% if @sum_of_pledges != 0 %>
         <div id="pledge-info" class="text-center">
           <%= "You have pledged #{number_to_currency(@sum_of_pledges)} for this project." %>

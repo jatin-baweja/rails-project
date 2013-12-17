@@ -69,7 +69,7 @@ class Project < ActiveRecord::Base
   scope :pending_for_approval, -> { submitted.still_active.order('created_at ASC') }
   scope :this_week, -> { approved.published_between(Time.current, 1.week.ago).still_active }
 
-  sphinx_scope(:approved) { { :conditions => { :project_state => 'approved' } } }
+  sphinx_scope(:been_approved) { { :conditions => { :project_state => 'approved' } } }
   sphinx_scope(:active) { { :with => { :deadline => Time.current..1.month.from_now, :published_at => 1.month.ago..Time.current } } }
 
   before_save :set_deadline
@@ -197,6 +197,10 @@ class Project < ActiveRecord::Base
   def admin_reject
     reject
     save
+  end
+
+  def owner?(user)
+    owner_id == user.id
   end
 
 end

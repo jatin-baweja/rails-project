@@ -23,9 +23,9 @@ class UsersController < ApplicationController
         #FIXME_AB: When you have multiple lines. use do-end block instead of {}
         #FIXED: Using single line
         format.html { redirect_to user_url(@user), notice: "Dear #{@user.name}, you have been successfully registered." }
-        format.json { render action: 'show', status: :created, location: @user }
+        format.json { render action: :show, status: :created, location: @user }
       else
-        format.html { render action: 'new' }
+        format.html { render action: :new }
         format.json { render json: @user.errors, status: :unprocessable_entity }
       end
     end
@@ -37,7 +37,7 @@ class UsersController < ApplicationController
         format.html { redirect_to user_url(@user), notice: "Your profile has been successfully updated." }
         format.json { head :no_content }
       else
-        format.html { render action: 'edit' }
+        format.html { render action: :edit }
         format.json { render json: @user.errors, status: :unprocessable_entity }
       end
     end

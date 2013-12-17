@@ -1,11 +1,11 @@
 <% #FIXME_AB: Why do you need to set model_class variable -%>
-<%- model_class = User -%>
+<% #FIXED: Removed model_class variable -%>
 
 <dl>
   <% #FIXME_AB: You are doing too much here for just displaying User -%>
-  <dt><strong><%= model_class.human_attribute_name(:name) %>:</strong></dt>
+  <% #FIXED: Removed functions -%>
+  <dt><strong>Name:</strong></dt>
   <dd><%= user.name %></dd>
-  <dt><strong><%= model_class.human_attribute_name(:email) %>:</strong></dt>
   <% #FIXME_AB: This is not the right way to display emails. Spammers will start spam this email if displayed this way in plain text -%>
-  <dd><%= user.email %></dd>
+  <% #FIXED: Removed email display -%>
 </dl>
