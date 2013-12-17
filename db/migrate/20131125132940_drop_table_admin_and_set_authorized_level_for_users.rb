@@ -1,11 +1,6 @@
 class DropTableAdminAndSetAuthorizedLevelForUsers < ActiveRecord::Migration
 
   def up
-    users = User.all
-    users.each do |user|
-      user.authorized_level = 'regular'
-      user.save!
-    end
     drop_table :admins
   end
 
