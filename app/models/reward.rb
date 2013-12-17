@@ -30,7 +30,7 @@ class Reward < ActiveRecord::Base
 
   def estimated_delivery_date
     #FIXME_AB: Again Time.now
-    if estimated_delivery_on.nil? || estimated_delivery_on < Time.now
+    if estimated_delivery_on.nil? || estimated_delivery_on < Time.current
       errors.add :estimated_delivery_on, 'has to be after today'
     end
   end

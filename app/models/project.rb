@@ -22,6 +22,7 @@
 #
 
 class Project < ActiveRecord::Base
+  include ThinkingSphinx::Scopes
   attr_accessor :step
 
   with_options if: :first_step? do |project|
@@ -46,7 +47,7 @@ class Project < ActiveRecord::Base
   belongs_to :user, foreign_key: "owner_id"
   belongs_to :category
   has_many :messages
-  has_one :location
+  belongs_to :location
   has_many :images, inverse_of: :project
   has_many :pledges
   has_many :backers, -> { uniq },through: :pledges, source: :user
@@ -63,9 +64,16 @@ class Project < ActiveRecord::Base
   scope :still_active, -> { where(['deadline >= ?', Time.current]) }
   scope :located_in, ->(place) { joins(:location).where(:location => { name: place}) }
   scope :owned_by, ->(user) { where(owner_id: user.id) }
+  scope :live, -> { approved.published(Time.current).still_active }
+  scope :live_for_user, ->(user) { live.where(owner_id: user.id) }
+  scope :pending_for_approval, -> { submitted.still_active.order('created_at ASC') }
+  scope :this_week, -> { approved.published_between(Time.current, 1.week.ago).still_active }
+
+  sphinx_scope(:approved) { { :conditions => { :project_state => 'approved' } } }
+  sphinx_scope(:active) { { :with => { :deadline => Time.current..1.month.from_now, :published_at => 1.month.ago..Time.current } } }
 
   before_save :set_deadline
-  before_save :convert_to_embed_link
+  before_save :convert_to_youtube_embed_link
 
   acts_as_paranoid
 
@@ -108,15 +116,20 @@ class Project < ActiveRecord::Base
   end
 
   #FIXME_AB: This is a youtube specific, so same should reflect in the method name
+  #FIXED: Changed method name
   #FIXME_AB: also add a comment what it is actually doing with example
-  def convert_to_embed_link
+  # Converts any standard youtube link to equivalent embed link
+  # eg. Youtube Link: http://www.youtube.com/watch?v=8SbUC-UaAxE&list=TLzRodY7MxKM0Hs7zgM0ueePM1_MzGI3h5
+  # Embed Link: http://www.youtube.com/embed/8SbUC-UaAxE
+  def convert_to_youtube_embed_link
     self.video_url.gsub!(/(youtube.com\/)(.)*v=([\w\-_]+)(.)*$/, '\1embed/\3')
   end
 
   def set_deadline
     if step == 4
       #FIXME_AB: why self.duration?
-      self.deadline = Time.current + self.duration.to_i.days
+      #FIXED: Removed self
+      self.deadline = Time.current + duration.to_i.days
     end
   end
 
@@ -163,6 +176,27 @@ class Project < ActiveRecord::Base
 
   def fourth_step?
     step?(4)
+  end
+
+  def admin_approve
+    generate_permalink!
+    self.published_at = Time.current if published_at.nil? || published_at < Time.current
+    self.deadline = published_at + duration.days
+    approve
+    save
+  end
+
+  def set_publishing_delayed_job
+    Delayed::Job.enqueue(PublishProjectJob.new(self), 0, published_at)
+  end
+
+  def set_funding_delayed_job
+    Delayed::Job.enqueue(ProjectFundingJob.new(self), 0, deadline)
+  end
+
+  def admin_reject
+    reject
+    save
   end
 
 end

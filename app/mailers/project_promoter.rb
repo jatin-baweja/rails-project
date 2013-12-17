@@ -1,5 +1,5 @@
 class ProjectPromoter < ActionMailer::Base
-  default from: "xyz@sample.com"
+  default from: default_sender_email
 
   # Subject can be set in your I18n file at config/locales/en.yml
   # with the following lookup:

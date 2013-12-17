@@ -13,18 +13,22 @@
 
 class User < ActiveRecord::Base
 
-  validates :email, confirmation: true, uniqueness: true, format: { with: REGEX_PATTERN[:email] }
+  validates :email, confirmation: true, uniqueness: true, format: { with: REGEX_PATTERN[:email], message: 'is not in correct format' }, allow_blank: true, if: "provider.nil?"
   validates :email_confirmation, presence: true, on: :create, if: "provider.nil?"
-  validates :name, presence: true, format: { with: REGEX_PATTERN[:name] }
-  validates :password, confirmation: true, length: { in: 6..30 }, on: :create
+  validates :name, presence: true, format: { with: REGEX_PATTERN[:name], message: 'only allows letters and spaces' }, allow_blank: true
+  validates :password, confirmation: true, length: { in: 6..30 }, on: :create, if: "provider.nil?"
   validates :password_confirmation, presence: true, on: :create, if: "provider.nil?"
 
-  has_many :created_projects, class_name: "Project", foreign_key: "user_id"
+  has_many :created_projects, class_name: "Project", foreign_key: "owner_id"
   has_many :backed_projects, -> { uniq }, through: :pledges, source: :project
   has_one :account
   has_many :pledges
   has_many :sent_messages, class_name: 'Message', foreign_key: 'from_user_id'
   has_many :received_messages, class_name: 'Message', foreign_key: 'to_user_id'
+
+  def inbox 
+    (sent_messages.parent_messages + received_messages.parent_messages).sort { |x,y| y.updated_at <=> x.updated_at }
+  end
 
   has_secure_password validations: false
   acts_as_paranoid

@@ -33,6 +33,7 @@ class Payment::Stripe::ChargesController < ApplicationController
     @project = @pledge.project
     @pledge.create_transaction(status: 'uncharged', payment_mode: 'stripe')
     Delayed::Job.enqueue(PledgeNotifierJob.new(@pledge, @project, @user))
+    redirect_to project_path(@project), notice: 'Your card has been successfully stored'
 
   rescue Stripe::CardError => e
     flash[:error] = e.message

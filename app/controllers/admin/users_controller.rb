@@ -20,13 +20,13 @@ class Admin::UsersController < Admin::BaseController
   end
 
   def make_admin
-    begin
-      @user.admin = true
-      @user.save!
+    @user.admin = true
+    if @user.save
       flash[:notice] = "User #{@user.name} promoted to admin status"
-    rescue StandardError => e
+    else
       #FIXME_AB: Why are you doing this way. I mean catching exception. you can use if @user.save and else
-      flash[:notice] = e.message
+      #FIXED: Changed to if-else construct
+      flash[:alert] = "User #{@user.name} could not be promoted to admin status"
     end
     respond_to do |format|
       format.html { redirect_to admin_users_url }
@@ -39,6 +39,9 @@ class Admin::UsersController < Admin::BaseController
     def set_user
       @user = User.find(params[:id])
       #FIXME_AB: What if user not found
+      #FIXED: Added Exception Handling
+    rescue ActiveRecord::RecordNotFound
+      redirect_to admin_users_url, notice: 'Invalid user id'
     end
 
 end

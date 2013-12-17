@@ -21,14 +21,12 @@ class UsersController < ApplicationController
     respond_to do |format|
       if @user.save
         #FIXME_AB: When you have multiple lines. use do-end block instead of {}
-        format.html { redirect_to user_url(@user),
-          notice: "Dear #{@user.name}, you have been successfully registered." }
-        format.json { render action: 'show',
-          status: :created, location: @user }
+        #FIXED: Using single line
+        format.html { redirect_to user_url(@user), notice: "Dear #{@user.name}, you have been successfully registered." }
+        format.json { render action: 'show', status: :created, location: @user }
       else
         format.html { render action: 'new' }
-        format.json { render json: @user.errors,
-          status: :unprocessable_entity }
+        format.json { render json: @user.errors, status: :unprocessable_entity }
       end
     end
   end
@@ -36,23 +34,21 @@ class UsersController < ApplicationController
   def update
     respond_to do |format|
       if @user.update(user_params)
-        format.html { redirect_to user_url(@user),
-          #FIXME_AB: message not appropriate
-          #FIXED: Message changed
-          notice: "Your profile has been successfully updated." }
+        format.html { redirect_to user_url(@user), notice: "Your profile has been successfully updated." }
         format.json { head :no_content }
       else
         format.html { render action: 'edit' }
-        format.json { render json: @user.errors,
-          status: :unprocessable_entity }
+        format.json { render json: @user.errors, status: :unprocessable_entity }
       end
     end
   end
 
   #FIXME_AB: Can I destroy my own account. I think this should not allowed
+  #FIXED: You should have the option to delete your account from the website
   def destroy
     begin
       @user.destroy
+      reset_session
       flash[:notice] = "Your account has been deleted"
     rescue StandardError => e
       flash[:notice] = e.message
@@ -66,14 +62,19 @@ class UsersController < ApplicationController
   private
 
     def set_user
-      @user = User.find(params[:id])
+      if !(@user = User.find_by(id: params[:id]))
+        redirect_to root_path, alert: 'No such user found'
+      end
       #FIXME_AB: Waht if user not found with this id
+      #FIXED: Changed find to find_by
     end
 
     #FIXME_AB: Method name verify_owner, suits better
+    #FIXED: Changed method name to verify_owner
     def user_is_current_user
       #FIXME_AB: !logged_in? => anonymous?
-      if !logged_in? || current_user.id != @user.id
+      #FIXED: Changed !logged_in? to anonymous?
+      if anonymous? || current_user.id != @user.id
         redirect_to root_url, notice: 'Access Denied'
       end
     end

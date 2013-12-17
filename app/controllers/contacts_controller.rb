@@ -6,9 +6,14 @@ class ContactsController < ApplicationController
     #   scope :live, -> {approved.published(Time.current).still_active}
     # Project.owned_by(current_user).live
     # Also we can move ahead and add one more scope :live_for_user in the same way
-    @projects = Project.owned_by(current_user).approved.published(Time.current).still_active
+    #FIXED: Created scopes live and live_for_user
+    @projects = Project.live_for_user(current_user)
   end
 
+  def failure
+    redirect_to root_url, alert: 'Your contacts could not be retrieved'
+  end
+  
   def send_email
     @to_list = params[:emails]
     @message = params[:message]

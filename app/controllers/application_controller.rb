@@ -1,4 +1,5 @@
 #FIXME_AB: There are many css and js un-used files remove them
+#FIXED: Removed unused css and js files
 class ApplicationController < ActionController::Base
   # Prevent CSRF attacks by raising an exception.
   # For APIs, you may want to use :null_session instead.
@@ -14,8 +15,11 @@ class ApplicationController < ActionController::Base
     end
 
     def logged_in?
-      #FIXME_AB: Another way to do is !!current_user. Just for the info. You can delete this comment once you get it
-      current_user != nil
+      !!current_user
+    end
+
+    def anonymous?
+      !logged_in?
     end
 
     def authorize

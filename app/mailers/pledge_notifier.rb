@@ -1,5 +1,5 @@
 class PledgeNotifier < ActionMailer::Base
-  default from: DEFAULT_FROM_EMAIL
+  default from: default_sender_email
 
   # Subject can be set in your I18n file at config/locales/en.yml
   # with the following lookup:
