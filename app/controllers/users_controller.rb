@@ -20,8 +20,6 @@ class UsersController < ApplicationController
 
     respond_to do |format|
       if @user.save
-        #FIXME_AB: When you have multiple lines. use do-end block instead of {}
-        #FIXED: Using single line
         format.html { redirect_to user_url(@user), notice: "Dear #{@user.name}, you have been successfully registered." }
         format.json { render action: :show, status: :created, location: @user }
       else
@@ -43,8 +41,7 @@ class UsersController < ApplicationController
     end
   end
 
-  #FIXME_AB: Can I destroy my own account. I think this should not allowed
-  #FIXED: You should have the option to delete your account from the website
+  #FIXME_AB: Can I destroy my own account. I think this should not allowed. Do not allow to destroy for now
   def destroy
     begin
       @user.destroy
@@ -65,15 +62,9 @@ class UsersController < ApplicationController
       if !(@user = User.find_by(id: params[:id]))
         redirect_to root_path, alert: 'No such user found'
       end
-      #FIXME_AB: Waht if user not found with this id
-      #FIXED: Changed find to find_by
     end
 
-    #FIXME_AB: Method name verify_owner, suits better
-    #FIXED: Changed method name to verify_owner
     def verify_owner
-      #FIXME_AB: !logged_in? => anonymous?
-      #FIXED: Changed !logged_in? to anonymous?
       if anonymous? || current_user.id != @user.id
         redirect_to root_url, notice: 'Access Denied'
       end

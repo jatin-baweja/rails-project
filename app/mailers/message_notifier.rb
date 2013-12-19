@@ -1,6 +1,4 @@
 class MessageNotifier < ActionMailer::Base
-  #FIXME_AB: From env. based hash
-  #FIXED: Changed to environment based hash
   default from: default_sender_email
 
   # Subject can be set in your I18n file at config/locales/en.yml

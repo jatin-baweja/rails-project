@@ -1,11 +1,7 @@
 class SubscriptionsController < ApplicationController
-  #FIXME_AB: Why do I need to be logged in to be able to subscribe?
-  #FIXED: All actions to skip authorize by default
   skip_before_action :authorize
   before_action :check_params, only: [:create]
 
-  #FIXME_AB: Both action name do not justify their working. Why not new and create.
-  #FIXED: Changed names to new and create
   def new
     if logged_in?
       @email = current_user.email

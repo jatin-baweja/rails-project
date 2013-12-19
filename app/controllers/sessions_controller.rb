@@ -4,14 +4,10 @@ class SessionsController < ApplicationController
   def new
   end
 
-  #FIXME_AB: Empty signup form submitted. No error was shown
-  #FIXED: Showing errors now
   def create
     user = User.find_by(email: params[:email])
     if user and user.authenticate(params[:password])
       session[:user_id] = user.id
-      #FIXME_AB: One other way(how I do this is): redirect_to_admin_or_home
-      #FIXED: Made a private method
       redirect_to_admin_or_home
     else
       redirect_to login_url, alert: "Invalid user/password"

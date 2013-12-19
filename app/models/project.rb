@@ -125,8 +125,6 @@ class Project < ActiveRecord::Base
 
   def set_deadline
     if fourth_step?
-      #FIXME_AB: why self.duration?
-      #FIXED: Removed self
       self.deadline = Time.current + duration.to_i.days
     end
   end

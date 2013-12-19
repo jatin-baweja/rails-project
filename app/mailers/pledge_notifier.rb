@@ -6,8 +6,6 @@ class PledgeNotifier < ActionMailer::Base
   #
   #   en.pledge_notifier.inform_pledger.subject
   #
-  #FIXME_AB: all methods in this file can be named better.
-  #FIXED: Method names changed
   def pledge_by_user(pledger, amount, project)
     @pledger = pledger
     @amount = amount

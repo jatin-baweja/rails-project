@@ -35,14 +35,11 @@ class ProjectsController < ApplicationController
   def show
     #FIXME_AB: @sum_of_pledges vs @total_pledged_amont
     #FIXME_AB: Also here you are finding out the amount pledged by a user for a project, now can you recall a better way?
-
     if logged_in?
       @sum_of_pledges = @project.pledges.by_user(current_user).sum(:amount)
     end
   end
 
-  #FIXME_AB: Shuld be accessible by /projects/mine or /projects/owned
-  #FIXED: Can be accessed via /my_projects
   def user_owned
     @user_projects = current_user.created_projects.group_by(&:project_state)
   end

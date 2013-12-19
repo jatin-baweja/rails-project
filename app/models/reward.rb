@@ -19,8 +19,6 @@ class Reward < ActiveRecord::Base
 
   validates :minimum_amount, :description, :estimated_delivery_on, presence: true
   validates :minimum_amount, numericality: { only_integer: true, greater_than_or_equal_to: 1 }, allow_blank: true
-  #FIXME_AB: I think we should use some sort of locking to avoid concurrent updates to remaining quantity
-  #FIXED: Will ensure locking in controller code
   validates :remaining_quantity, numericality: { only_integer: true, greater_than_or_equal_to: 1 }, allow_blank: true
   validate :remaining_is_less_than_or_equal_to_quantity
   validate :estimated_delivery_date
@@ -29,7 +27,6 @@ class Reward < ActiveRecord::Base
   belongs_to :project
 
   def estimated_delivery_date
-    #FIXME_AB: Again Time.now
     if estimated_delivery_on.nil? || estimated_delivery_on < Time.current
       errors.add :estimated_delivery_on, 'has to be after today'
     end

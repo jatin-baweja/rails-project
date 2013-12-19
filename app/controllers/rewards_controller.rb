@@ -21,13 +21,7 @@ class RewardsController < ApplicationController
     end
   end
 
-  #FIXME_AB: I have some concerns on the method name
-  #FIXED: Choosing rewards on pledge page itself, deleted choose action
-
   private
-
-      #FIXME_AB: What if project not found with the id. We should handle this everywhere 
-      #FIXED: Handling not found cases
 
     def set_draft_project
       if !(@project = Project.find_by(id: params[:id]))

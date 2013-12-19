@@ -24,8 +24,6 @@ class Admin::UsersController < Admin::BaseController
     if @user.save
       flash[:notice] = "User #{@user.name} promoted to admin status"
     else
-      #FIXME_AB: Why are you doing this way. I mean catching exception. you can use if @user.save and else
-      #FIXED: Changed to if-else construct
       flash[:alert] = "User #{@user.name} could not be promoted to admin status"
     end
     respond_to do |format|
@@ -38,8 +36,7 @@ class Admin::UsersController < Admin::BaseController
 
     def set_user
       @user = User.find(params[:id])
-      #FIXME_AB: What if user not found
-      #FIXED: Added Exception Handling
+      #FIXME_AB: I would prefer to use 'if' instead of rescue
     rescue ActiveRecord::RecordNotFound
       redirect_to admin_users_url, notice: 'Invalid user id'
     end
