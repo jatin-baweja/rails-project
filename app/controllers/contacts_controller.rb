@@ -2,11 +2,7 @@ class ContactsController < ApplicationController
 
   def gmail_callback
     @contacts = request.env['omnicontacts.contacts']
-    #FIXME_AB: We can also create one more scope called live which will return all the live projects;
-    #   scope :live, -> {approved.published(Time.current).still_active}
-    # Project.owned_by(current_user).live
-    # Also we can move ahead and add one more scope :live_for_user in the same way
-    #FIXED: Created scopes live and live_for_user
+    #FIXME_AB: how about current_user.projects.live or current_user.owned_projects.live
     @projects = Project.live_for_user(current_user)
   end
 

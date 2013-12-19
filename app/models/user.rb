@@ -19,6 +19,7 @@ class User < ActiveRecord::Base
   validates :password, confirmation: true, length: { in: 6..30 }, on: :create, if: "provider.nil?"
   validates :password_confirmation, presence: true, on: :create, if: "provider.nil?"
 
+  #FIXME_AB: owned_projects
   has_many :created_projects, class_name: "Project", foreign_key: "owner_id"
   has_many :backed_projects, -> { uniq }, through: :pledges, source: :project
   has_one :account

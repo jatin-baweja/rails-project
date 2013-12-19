@@ -1,5 +1,3 @@
-#FIXME_AB: There are many css and js un-used files remove them
-#FIXED: Removed unused css and js files
 class ApplicationController < ActionController::Base
   # Prevent CSRF attacks by raising an exception.
   # For APIs, you may want to use :null_session instead.
@@ -23,6 +21,7 @@ class ApplicationController < ActionController::Base
     end
 
     def authorize
+      #FIXME_AB: You have anonymous? so You can use that here :)
       unless (logged_in?)
         redirect_to login_url, notice: "Please log in"
       end
@@ -40,9 +39,8 @@ class ApplicationController < ActionController::Base
       elsif session[:locale]
         I18n.locale = session[:locale]
       end
+      #FIXME_AB: what if locale is not in params and not in session too
     end
 
-    #FIXME_AB: locale=en should not be in the URL as this is the default. also every url has locale=en. Once the language is set, you should save this in session and use from there.. I mean use locale in url for changing language. Once it is changed save it in session.
-    #FIXED: Removed locale from default url options
 
 end

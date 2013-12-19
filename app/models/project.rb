@@ -67,6 +67,7 @@ class Project < ActiveRecord::Base
   scope :live, -> { approved.published(Time.current).still_active }
   scope :live_for_user, ->(user) { live.where(owner_id: user.id) }
   scope :pending_for_approval, -> { submitted.still_active.order('created_at ASC') }
+  #FIXME_AB: Since this scope is taking approved published in to the account so should be named as live_this_week or something like this. Do you
   scope :this_week, -> { approved.published_between(Time.current, 1.week.ago).still_active }
 
   sphinx_scope(:been_approved) { { :conditions => { :project_state => 'approved' } } }
@@ -115,9 +116,6 @@ class Project < ActiveRecord::Base
 
   end
 
-  #FIXME_AB: This is a youtube specific, so same should reflect in the method name
-  #FIXED: Changed method name
-  #FIXME_AB: also add a comment what it is actually doing with example
   # Converts any standard youtube link to equivalent embed link
   # eg. Youtube Link: http://www.youtube.com/watch?v=8SbUC-UaAxE&list=TLzRodY7MxKM0Hs7zgM0ueePM1_MzGI3h5
   # Embed Link: http://www.youtube.com/embed/8SbUC-UaAxE
@@ -126,9 +124,8 @@ class Project < ActiveRecord::Base
   end
 
   def set_deadline
+    #FIXME_AB: I guess you have step method defined?
     if step == 4
-      #FIXME_AB: why self.duration?
-      #FIXED: Removed self
       self.deadline = Time.current + duration.to_i.days
     end
   end

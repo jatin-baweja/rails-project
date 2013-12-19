@@ -35,14 +35,12 @@ class Message < ActiveRecord::Base
     if parent.present?
       self.subject = parent.subject
       self.unread = true
-      #FIXME_AB: Shouldn't this be a default value
-      #FIXED: Set unread's default value as true
-      #FIXME_AB: Should extract this condition as a method
-      #FIXED: Added method for extracting id
+      #FIXME_AB: Shouldn't this be a default value, if you  have it set as default, then do you need to set it here
       self.to_user_id = receiving_user_id
     end
   end
 
+  #FIXME_AB: receiving_user_id as method name is little confusing, can be named better
   def receiving_user_id
     parent.from_user_id == from_user_id ? parent.to_user_id : parent.from_user_id
   end
