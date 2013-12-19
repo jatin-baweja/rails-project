@@ -1,6 +1,6 @@
 <div class="highlight high300">
   <div class="highlight-inner">
-    <%= image_tag project.images.where(primary: true)[0].picture.url(:thumb), class: 'project-thumbnail' if !project.images.where(primary: true)[0].nil?%>
+    <%= image_tag project.images[0].picture.url(:thumb), class: 'project-thumbnail' if !project.images[0].nil? %>
     <% project_title = project.title %>
     <% project_title = "Untitled Project" if project.title == "" %>
     <% if project.permalink.present? %>

@@ -124,8 +124,9 @@ class Project < ActiveRecord::Base
   end
 
   def set_deadline
-    #FIXME_AB: I guess you have step method defined?
-    if step == 4
+    if fourth_step?
+      #FIXME_AB: why self.duration?
+      #FIXED: Removed self
       self.deadline = Time.current + duration.to_i.days
     end
   end
@@ -156,7 +157,7 @@ class Project < ActiveRecord::Base
   end
 
   def step?(number)
-    step == number
+    step == number || step.nil?
   end
 
   def first_step?

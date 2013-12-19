@@ -2,10 +2,10 @@
   <% if !project.rejected? %>
     <% if !project.approved? %>
       <div id="approve-button" class="large-button text-center">
-        <%= link_to "Approve Project", approve_admin_project_path(project), remote: true %>
+        <%= link_to "Approve Project", approve_admin_project_path(project.id), remote: true %>
       </div>
       <div id="reject-button" class="large-button text-center">
-        <%= link_to "Reject Project", reject_admin_project_path(project), remote: true %>
+        <%= link_to "Reject Project", reject_admin_project_path(project.id), remote: true %>
       </div>
     <% else %>
       <div id="approve-button" class="text-center">

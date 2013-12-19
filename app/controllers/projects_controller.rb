@@ -5,6 +5,7 @@ class ProjectsController < ApplicationController
   before_action :validate_owner, only: [:edit, :update, :destroy]
   before_action :check_accessibility, only: [:show]
   before_action :validate_deadline, only: [:show]
+  before_action :validate_not_owner, only: [:pledge, :create_pledge]
 
   def this_week
     @projects = Project.this_week.page(params[:page]).per_page(15)
@@ -34,8 +35,10 @@ class ProjectsController < ApplicationController
   def show
     #FIXME_AB: @sum_of_pledges vs @total_pledged_amont
     #FIXME_AB: Also here you are finding out the amount pledged by a user for a project, now can you recall a better way?
-    @sum_of_pledges = Pledge.where([ "user_id = ? AND project_id = ?", current_user.id, @project.id]).sum(:amount)
 
+    if logged_in?
+      @sum_of_pledges = @project.pledges.by_user(current_user).sum(:amount)
+    end
   end
 
   #FIXME_AB: Shuld be accessible by /projects/mine or /projects/owned
@@ -77,31 +80,23 @@ class ProjectsController < ApplicationController
 
   #FIXME_AB: This action can be made better. You improved, but I still see some scope
   def create_pledge
-    if !blank_rewards?
-      ActiveRecord::Base.transaction do
-        @pledge = @project.pledges.build(pledge_params)
-        @pledge.user = current_user
-        @pledge.save
-        params[:rewards].each do |key, reward|
-          if reward_present[key]
-            @pledge.requested_rewards.create!(reward_id: reward[:id], quantity: reward[:quantity])
-            chosen_reward = Reward.find(reward[:id])
-            chosen_reward.lock!
-            chosen_reward.update(remaining_quantity: (chosen_reward.remaining_quantity - reward[:quantity])) if chosen_reward.remaining_quantity
-          end
-        end
+    ActiveRecord::Base.transaction do
+      @pledge = @project.pledges.build(pledge_params)
+      @pledge.user = current_user
+      @pledge.save
+      params[:rewards].each do |key, reward|
+        @pledge.requested_rewards.create!(reward_id: reward[:id], quantity: reward[:quantity])
+        chosen_reward = Reward.find(reward[:id])
+        chosen_reward.lock!
+        chosen_reward.update(remaining_quantity: (chosen_reward.remaining_quantity - reward[:quantity])) if chosen_reward.remaining_quantity
       end
-      if params[:payment_mode] == "Paypal"
-        redirect_to @project.paypal_url(project_url(@project), @pledge)
-      else
-        redirect_to payment_stripe_charges_new_card_url(project: @project.id, pledge: @pledge.id)
-      end
+    end
+    if params[:payment_mode] == "Paypal"
+      redirect_to @project.paypal_url(project_url(@project), @pledge)
     else
-      @rewards = @project.rewards
-      render action: :pledge, alert: "Please don't leave empty rewards"
+      redirect_to payment_stripe_charges_new_card_url(project: @project.id, pledge: @pledge.id)
     end
   rescue ActiveRecord::RecordInvalid
-    @rewards = @project.rewards
     render action: :pledge
   end
 
@@ -191,28 +186,26 @@ class ProjectsController < ApplicationController
   end
 
   def validate_owner
-    #FIXME_AB: we have a better way to do the same which you have done in the following condition
-    if(@project.owner_id != current_user.id)
+    if(!@project.owner?(current_user))
       redirect_to project_path(@project), notice: "Only Project Owner can edit this Project"
     end
   end
 
   def check_accessibility
     #FIXME_AB: we have a better way to do the same which you have done in the following condition
-    if(!@project.approved? && @project.owner_id != current_user.id && !current_user.admin?)
+    if(!@project.approved? && anonymous? && !@project.owner?(current_user) && !current_user.admin?)
       redirect_to projects_path, notice: "Access Denied"
     end
   end
 
   def validate_deadline
-    #FIXME_AB: we have a better way to do this
-    if(@project.deadline != nil)
-      #FIXME_AB: we have a better way to do the same which you have done in the following condition
-      if(logged_in? && @project.owner_id != current_user.id && current_user.admin? && @project.deadline <= Time.current)
+    if(@project.deadline != nil && @project.deadline <= Time.current)
+      if !(logged_in? && (@project.owner?(current_user) || current_user.admin?))
         redirect_to projects_path, notice: "Outdated project"
       end
     end
   end
+
 
   def blank_rewards?
     reward_present = {}
@@ -223,6 +216,9 @@ class ProjectsController < ApplicationController
         val.each do |attr_key, attr_val|
           reward_present[key] = false if attr_val.blank?
         end
+      end
+      if reward_present.any? { |key, value| value == false }
+        render action: :pledge, alert: "Please don't leave empty rewards"
       end
     end
     reward_present.any? { |key, value| value == false }
@@ -239,6 +235,12 @@ class ProjectsController < ApplicationController
 
   def pledge_params
     params.require(:pledge).permit(:amount, :requested_rewards_attributes => [:id])
+  end
+
+  def validate_not_owner
+    if(@project.owner?(current_user))
+      redirect_to project_path(@project), notice: "You cannot pledge for your own project"
+    end
   end
 
 end

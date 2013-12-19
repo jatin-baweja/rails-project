@@ -1,5 +1,5 @@
 <div class="image-container">
-  <%= image_tag @project.images.where(primary: true)[0].picture if !@project.images.empty? %>
+  <%= image_tag @project.images[0].picture if !@project.images.empty? %>
 </div>
 
 <% if !@story.nil? %>

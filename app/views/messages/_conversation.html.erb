@@ -1,0 +1,36 @@
+<div id="messages">
+  <% if !@messages.nil? %>
+    <% @messages.each do |message| %>
+      <div class="row">
+        <div class="span3">
+          <% if !admin_signed_in? %>
+            <% if message.from_user_id == @project.owner_id %>
+              <p>You:</p>
+            <% else %>
+              <p>Admin:</p>
+            <% end %>
+          <% else %>
+            <% if message.from_user_id == @project.owner_id %>
+              <p>Project Creator:</p>
+            <% else %>
+              <p>You:</p>
+            <% end %>
+          <% end %>
+        </div>
+        <div class="span8 highlight">
+          <p><%= message.content %></p>
+        </div>
+      </div>
+    <% end %>
+  <% end %>
+</div>
+<div class="row">
+  <div id="new-message" class="span8 offset3">
+    <%= form_for @project, url: create_admin_conversation_project_path, remote: true do |f| %>
+      <%= f.fields_for :messages, @message do |message| %>
+        <%= message.text_area :content %>
+      <% end %>
+      <%= f.submit "Send" %>
+    <% end %>
+  </div>
+</div>

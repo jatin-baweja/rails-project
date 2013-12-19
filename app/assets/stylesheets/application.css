@@ -11,3 +11,22 @@
  *= require_self
  *= require_tree .
  */
+
+html, body {
+  height: 100%;
+}
+
+#wrap {
+  min-height: 100%;
+  height: auto !important;
+  height: 100%;
+  margin: 0 auto -20px;
+}
+
+#footer {
+  height: 30px;
+}
+
+.footer-container {
+  float: left;
+}

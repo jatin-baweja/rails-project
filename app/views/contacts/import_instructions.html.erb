@@ -1,0 +1,15 @@
+<h2><%= @project.title %></h2>
+<h3>Promote your Project</h3>
+<h5>Step 1</h5>
+<p>Click on the 'Import Contacts' button below</p>
+<p>You will be redirected to an Google authentication page asking you to allow this app to manage your contacts.</p>
+<h5>Step 2</h5>
+<p>Click on the 'Accept' button on the authentication page</p>
+<p>You will be redirected back to our website where you will see all the contacts.</p>
+<h5>Step 3</h5>
+<p>Select the email contacts whom you would like to message about your project</p>
+<h5>Step 4</h5>
+<p>Type in a message for your contacts to see and click on 'Send Message' button</p>
+<hr>
+<p>That's it. Click the button and off you go.</p>
+<p><%= link_to "Import Contacts", get_gmail_contacts_project_path(@project), :class => 'btn btn-primary' %></p>

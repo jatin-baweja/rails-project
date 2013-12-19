@@ -1,4 +1,6 @@
-<%- model_class = Project -%>
+<%-  @story = @project.story -%>
+<%- @rewards = @project.rewards -%>
+<%- @user = @project.user -%>
   <div class="page-header center">
     <% project_title = @project.title %>
     <% project_title = "Untitled Project" if @project.title == "" %>
@@ -7,7 +9,7 @@
     <div class="container-fluid navbar">
       <ul class="nav pull-left">
         <li><%= link_to "Description", description_project_path(@project.id), remote: true %></li>
-        <% if (current_user.admin? || (@project.owner_id == current_user.id) ) %>
+        <% if logged_in? && (current_user.admin? || (@project.owner?(current_user)) ) %>
           <%= menu_divider %>
           <li><%= link_to "Messages", admin_conversation_project_path(@project.id), remote: true  %></li>
         <% end %>
@@ -16,10 +18,13 @@
       </ul>
       <ul class="nav pull-right">
         <li class="no-link"><%= @project.location_name %></li>
-        <% if !@project.rejected? && !@project.approved? %>
-          <% if(@project.owner_id == session[:user_id]) %>
+        <% if(@project.owner?(current_user)) %>
+          <% if !@project.rejected? && !@project.approved? %>
             <%= menu_divider %>
             <li><%= link_to "Edit Project", edit_project_path(@project.id)  %></li>
+          <% elsif @project.approved? %>
+            <%= menu_divider %>
+            <li><%= link_to "Promote Project", contacts_import_instructions_project_path(@project) %></li>
           <% end %>
         <% end %>
       </ul>
@@ -33,7 +38,7 @@
   <% end %>
 </div>
 <div class="span3">
-  <% if current_user.admin? %>
+  <% if logged_in? && current_user.admin? %>
     <%= render partial: 'admin/projects/details', locals: { :project => @project } %>
   <% else %>
     <%= render partial: 'details', locals: { :project => @project } %>

@@ -13,10 +13,13 @@
 
 class User < ActiveRecord::Base
 
-  validates :email, confirmation: true, uniqueness: true, format: { with: REGEX_PATTERN[:email], message: 'is not in correct format' }, allow_blank: true, if: "provider.nil?"
+  validates :email, uniqueness: true, format: { with: REGEX_PATTERN[:email], message: 'is not in correct format' }, allow_blank: true, if: "provider.nil?"
+  validates :email, confirmation: true, if: "provider.nil?"
   validates :email_confirmation, presence: true, on: :create, if: "provider.nil?"
-  validates :name, presence: true, format: { with: REGEX_PATTERN[:name], message: 'only allows letters and spaces' }, allow_blank: true
-  validates :password, confirmation: true, length: { in: 6..30 }, on: :create, if: "provider.nil?"
+  validates :name, format: { with: REGEX_PATTERN[:name], message: 'only allows letters and spaces' }, allow_blank: true
+  validates :name, presence: true
+  validates :password, confirmation: true, if: "provider.nil?"
+  validates :password, length: { in: 6..30 }, allow_blank: true, if: "provider.nil?"
   validates :password_confirmation, presence: true, on: :create, if: "provider.nil?"
 
   #FIXME_AB: owned_projects

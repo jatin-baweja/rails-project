@@ -1,35 +1,60 @@
+<% if @user.errors.any? %>
+  <div id="error_explanation" class="alert alert-error">
+    <h2><%= pluralize(@user.errors.count, "error") %> prohibited this user from being created:</h2>
+
+    <ul>
+    <% @user.errors.full_messages.each do |msg| %>
+      <li><%= msg %></li>
+    <% end %>
+    </ul>
+  </div>
+<% end %>
 <%= form_for @user, :html => { :class => 'form-horizontal' } do |f| %>
 <div class="row">
   <div class="span5">
 
   <div class="control-group">
     <%= f.label :name, :class => 'control-label' %>
+    <span class='required'>*</span>
     <div class="controls">
       <%= f.text_field :name, :class => 'text_field' %>
+      <p class="help-block">Only alphabets and spaces allowed in name</p>
     </div>
   </div>
   <div class="control-group">
     <%= f.label :email, :class => 'control-label' %>
+    <span class='required'>*</span>
     <div class="controls">
       <%= f.email_field :email, :class => 'text_field' %>
+      <p class="help-block">Enter your email address</p>
     </div>
   </div>
   <div class="control-group">
     <%= f.label :email_confirmation, "Confirm Email", :class => 'control-label' %>
+    <span class='required'>*</span>
     <div class="controls">
       <%= f.email_field :email_confirmation, :class => 'text_field' %>
     </div>
   </div>
   <div class="control-group">
     <%= f.label :password, :class => 'control-label' %>
+    <span class='required'>*</span>
     <div class="controls">
       <%= f.password_field :password, :class => 'text_field' %>
+      <p class="help-block">Password must be 6-30 characters long</p>
     </div>
   </div>
   <div class="control-group">
     <%= f.label :password_confirmation, "Confirm Password", :class => 'control-label' %>
+    <span class='required'>*</span>
     <div class="controls">
       <%= f.password_field :password_confirmation, :class => 'text_field' %>
+    </div>
+  </div>
+
+  <div class="control-group">
+    <div class="controls">
+      <span class='required'>*</span><span> marks required fields</span>
     </div>
   </div>
 
