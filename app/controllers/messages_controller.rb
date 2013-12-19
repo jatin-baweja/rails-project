@@ -33,7 +33,6 @@ class MessagesController < ApplicationController
   end
 
   def create_admin_conversation
-    @messages = @project.messages.order(:created_at)
     @from = current_user
     @to = User.find(@project.owner_id)
     @message = @project.messages.build(conversation_params)
@@ -48,7 +47,7 @@ class MessagesController < ApplicationController
   private
 
     def set_message
-      @message = Message.parent_messages.find_by(params[:id])
+      @message = Message.parent_messages.find_by(id: params[:id])
       #FIXME_AB: Better use find_by and use if @message.nil? instead of active record RecordNotFound
       #FIXED: Using find_by and message.nil?
       if @message.nil?

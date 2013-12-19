@@ -18,6 +18,8 @@ class Pledge < ActiveRecord::Base
   has_many :requested_rewards, inverse_of: :pledge
   has_one :transaction
 
+  scope :by_user, ->(user) { where(['user_id = ?', user.id]) }
+
   acts_as_paranoid
 
   #FIXME_AB: I may have to look the need of this function

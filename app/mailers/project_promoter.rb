@@ -6,11 +6,11 @@ class ProjectPromoter < ActionMailer::Base
   #
   #   en.project_promoter.promote.subject
   #
-  def promote(to_list, message, user, project)
+  def promote(email, message, user, project)
     @message = message
     @user = user
     @project = project
 
-    mail to: to_list, subject: "#{user.name} wants you to know about his new Project"
+    mail to: email, subject: "#{user.name} wants you to know about his new Project"
   end
 end

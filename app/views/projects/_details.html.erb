@@ -9,6 +9,7 @@
   <p>amount funded</p>
   <div class="text-center">
     <% #FIXME_AB: Is this the right way to check owner. How about project.owner?(current_user) -%>
+    <% #FIXED: created owner? method -%>
     <% if logged_in? && !project.owner?(current_user) %>
       <% if @sum_of_pledges != 0 %>
         <div id="pledge-info" class="text-center">

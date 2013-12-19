@@ -26,7 +26,7 @@ class Message < ActiveRecord::Base
   belongs_to :from_user, class_name: 'User'
   belongs_to :to_user, class_name: 'User'
 
-  before_validation :set_parent_params
+  before_validation :set_parent_params, on: :create
   scope :parent_messages, -> { where(parent_id: nil) }
 
   acts_as_paranoid
@@ -45,6 +45,10 @@ class Message < ActiveRecord::Base
 
   def receiving_user_id
     parent.from_user_id == from_user_id ? parent.to_user_id : parent.from_user_id
+  end
+
+  def project
+    Project.unscoped { super }
   end
 
 end

@@ -1,7 +1,7 @@
 class UsersController < ApplicationController
   cache_sweeper :user_sweeper, only: [:update, :destroy]
   before_action :set_user, only: [:show, :edit, :update, :destroy]
-  before_action :user_is_current_user, only: [:edit, :update, :destroy]
+  before_action :verify_owner, only: [:edit, :update, :destroy]
   skip_before_action :authorize, only: [:new, :create]
   caches_action :show
 
@@ -71,7 +71,7 @@ class UsersController < ApplicationController
 
     #FIXME_AB: Method name verify_owner, suits better
     #FIXED: Changed method name to verify_owner
-    def user_is_current_user
+    def verify_owner
       #FIXME_AB: !logged_in? => anonymous?
       #FIXED: Changed !logged_in? to anonymous?
       if anonymous? || current_user.id != @user.id

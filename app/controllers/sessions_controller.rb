@@ -14,7 +14,7 @@ class SessionsController < ApplicationController
       #FIXED: Made a private method
       redirect_to_admin_or_home
     else
-      redirect_to login_url, notice: "Invalid user/password combination"
+      redirect_to login_url, alert: "Invalid user/password"
     end
   end
 

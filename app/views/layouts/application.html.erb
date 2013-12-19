@@ -37,6 +37,7 @@
     <%= javascript_include_tag "application" %>
   </head>
   <body>
+    <div id="wrap">
 
     <div class="navbar navbar-fluid-top">
       <div class="navbar-inner">
@@ -56,15 +57,13 @@
               <%= menu_divider %>
               <li><%= link_to t(".new_project"), new_project_path %></li>
               <%= menu_divider %>
-              <li><%= link_to "Spread the Word", "/contacts/gmail" %></li>
-              <%= menu_divider %>
               <li class='no-link'>Signed in as <%= current_user.name %></li>
               <%= menu_divider %>
               <li><%= link_to t(".messages"), messages_path %></li>
               <%= menu_divider %>
               <li><%= link_to "Log Out", logout_path %></li>
             <% elsif logged_in? && current_user.admin? %>
-              <li><%= link_to "Pending Projects", admin_projects_pending_for_approval_path %></li>
+              <li><%= link_to "Projects", admin_projects_pending_for_approval_path %></li>
               <%= menu_divider %>
               <li><%= link_to "Users", admin_users_path %></li>
               <%= menu_divider %>
@@ -72,7 +71,7 @@
               <%= menu_divider %>
               <li><%= link_to "Log Out", logout_path %></li>
             <% else %>
-              <li><%= link_to "Signup", signup_path  %></li>
+              <li><%= link_to "Signup", signup_users_path  %></li>
               <%= menu_divider %>
               <li><%= link_to "Login", login_path  %></li>
             <% end %>
@@ -83,18 +82,22 @@
     </div>
 
     <div class="container-fluid">
-      <div class="row-fluid">
+      <div class="row-fluid full-page">
         <div class="span10 offset1">
           <%= bootstrap_flash %>
           <%= yield %> 
         </div>
       </div><!--/row-->
 
-      <footer class="span3 offset1">
-        <p>&copy; Company 2013 <a href='/subscriptions/weekly'>Subscribe</a></p>
-      </footer>
 
     </div> <!-- /container -->
+
+  </div> <!-- wrap -->
+      <div id="footer">
+        <div class="container footer-container offset1">
+          <p>&copy; Company 2013 <%= link_to "Subscribe", new_subscription_path %></p>
+        </div>
+      </div>
 
   </body>
 </html>

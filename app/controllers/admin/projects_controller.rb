@@ -4,7 +4,7 @@ class Admin::ProjectsController < Admin::BaseController
   def pending_for_approval
     #FIXME_AB: Project.pending_for_approval. add scope
     #FIXED: scope used
-    @projects = Project.pending_for_approval
+    @projects = Project.order('updated_at DESC').group_by(&:project_state)
   end
 
   def approve

@@ -36,7 +36,7 @@ class RewardsController < ApplicationController
     end
 
     def validate_owner
-      if(@project.owner_id != current_user.id)
+      if(!@project.owner?(current_user))
         redirect_to project_path(@project), notice: "Only Project Owner can edit this Project"
       end
     end
