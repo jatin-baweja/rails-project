@@ -1,5 +1,5 @@
 class SearchesController < ApplicationController
-  skip_before_action :authorize, only: [:search]
+  skip_before_action :authorize
 
   def search
     if params[:q].present?

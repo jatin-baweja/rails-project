@@ -7,46 +7,46 @@
     <h1>Payment</h1>
   </div>
 <% end %>
-  <%= form_tag payment_stripe_charges_path, :class => 'form-horizontal' do %>
-<% if @user.account.nil? %>
-    <div class="control-group">
-      <%= label_tag :name_on_card, "Name on card", :class => 'control-label' %>
-      <div class="controls">
-        <%= text_field_tag :name_on_card, nil, :class => 'text_field' %>
+<%= form_tag payment_stripe_charges_path, :class => 'form-horizontal' do %>
+  <% if @user.account.nil? %>
+      <div class="control-group">
+        <%= label_tag :name_on_card, "Name on card", :class => 'control-label' %>
+        <div class="controls">
+          <%= text_field_tag :name_on_card, nil, :class => 'text_field' %>
+        </div>
       </div>
-    </div>
-    <div class="control-group">
-      <%= label_tag :card_number, "Card Number", :class => 'control-label' %>
-      <div class="controls">
-        <%= text_field_tag :card_number, nil, :class => 'text_field' %>
+      <div class="control-group">
+        <%= label_tag :card_number, "Card Number", :class => 'control-label' %>
+        <div class="controls">
+          <%= text_field_tag :card_number, nil, :class => 'text_field' %>
+        </div>
       </div>
-    </div>
-    <div class="control-group">
-      <%= label_tag :expiry_date, "Expires", :class => 'control-label' %>
-      <div class="controls">
-        <%= date_select :expiry_date, nil, {:use_two_digit_numbers => true, discard_day: true }, {:class => 'text_field'} %>
+      <div class="control-group">
+        <%= label_tag :expiry_date, "Expires", :class => 'control-label' %>
+        <div class="controls">
+          <%= date_select :expiry_date, nil, {:use_two_digit_numbers => true, discard_day: true }, {:class => 'text_field'} %>
+        </div>
       </div>
-    </div>
-    <div class="control-group">
-      <%= label_tag :cvc_number, "CVC", :class => 'control-label' %>
-      <div class="controls">
-        <%= password_field_tag :cvc_number, nil, :class => 'password_field input-small' %>
+      <div class="control-group">
+        <%= label_tag :cvc_number, "CVC", :class => 'control-label' %>
+        <div class="controls">
+          <%= password_field_tag :cvc_number, nil, :class => 'password_field input-small' %>
+        </div>
       </div>
-    </div>
 
-   
-<% else %>
-  <div class="container-fluid" >
-    <div class="row-fluid" >
-      <p>You will be charged <%= number_to_currency(@pledge.amount) %> on your card ending with <%= @cust_card["last4"] %> expiring in <%= @cust_card["exp_month"] %>/<%= @cust_card["exp_year"] %></p>
-    <div class="control-group" style="display:none">
-      <%= hidden_field_tag :pay_with_existing_card, 1 %>
-    </div>
-<% end %>
-    <div class="control-group" style="display:none">
-      <%= hidden_field_tag :pledge_id, @pledge.id %>
-    </div>
-    <div class="form-actions">
-      <%= submit_tag "Pay #{number_to_currency(@pledge.amount)}", :class => 'btn btn-primary' %>
-    </div>
+     
+  <% else %>
+    <div class="container-fluid" >
+      <div class="row-fluid" >
+        <p>You will be charged <%= number_to_currency(@pledge.amount) %> on your card ending with <%= @cust_card["last4"] %> expiring in <%= @cust_card["exp_month"] %>/<%= @cust_card["exp_year"] %></p>
+      <div class="control-group" style="display:none">
+        <%= hidden_field_tag :pay_with_existing_card, 1 %>
+      </div>
   <% end %>
+  <div class="control-group" style="display:none">
+    <%= hidden_field_tag :pledge_id, @pledge.id %>
+  </div>
+  <div class="form-actions">
+    <%= submit_tag "Pay #{number_to_currency(@pledge.amount)}", :class => 'btn btn-primary' %>
+  </div>
+<% end %>

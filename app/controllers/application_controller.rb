@@ -22,7 +22,8 @@ class ApplicationController < ActionController::Base
 
     def authorize
       #FIXME_AB: You have anonymous? so You can use that here :)
-      unless (logged_in?)
+      #FIXED: using anonymous?
+      if anonymous?
         redirect_to login_url, notice: "Please log in"
       end
     end
@@ -38,9 +39,11 @@ class ApplicationController < ActionController::Base
         end
       elsif session[:locale]
         I18n.locale = session[:locale]
+      else
+        I18n.locale = I18n.default_locale
       end
       #FIXME_AB: what if locale is not in params and not in session too
+      #FIXED: Setting to I18n.default_locale if locale not in params or session
     end
-
 
 end

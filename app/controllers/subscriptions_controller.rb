@@ -1,30 +1,23 @@
 class SubscriptionsController < ApplicationController
   skip_before_action :authorize
-  before_action :check_params, only: [:create]
 
   def new
-    if logged_in?
-      @email = current_user.email
-    end
+    @subscriber = Subscriber.new
   end
 
   def create
-    Delayed::Job.enqueue(SubscribeUserJob.new(params[:email], params[:first_name], params[:last_name]))
-    redirect_to root_path, notice: 'You have successfully subscribed to our mailing list'
+    @subscriber = Subscriber.new(subscriber_params)
+    if @subscriber.valid?
+      redirect_to root_path, notice: 'You have successfully subscribed to our mailing list'
+    else
+      render action: :new
+    end
   end
 
   private
 
-    def check_params
-      redirect = false
-      if !params[:email].match(REGEX_PATTERN[:email])
-        flash[:alert] = 'Email format incorrect'
-        redirect = true
-      elsif params[:first_name].blank? || params[:last_name].blank?
-        flash[:alert] = 'Name fields cannot be empty'
-        redirect = true
-      end
-      redirect_to action: :weekly if redirect
+    def subscriber_params
+      params.require(:subscriber).permit(:email, :first_name, :last_name)
     end
 
 end

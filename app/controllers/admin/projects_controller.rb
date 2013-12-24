@@ -1,4 +1,6 @@
 class Admin::ProjectsController < Admin::BaseController
+  include Projects::Setter
+
   before_action :set_project, only: [:approve, :reject]
 
   def pending_for_approval
@@ -22,10 +24,10 @@ class Admin::ProjectsController < Admin::BaseController
 
   private
 
-    def set_project
-      @project = Project.find(params[:id])
-    rescue ActiveRecord::RecordNotFound
-      redirect_to projects_path, alert: "No project found with id #{ params[:id] }"
-    end
+    # def set_project
+    #   unless @project = Project.find_by(id: params[:id])
+    #     redirect_to projects_path, alert: "No project found with id #{ params[:id] }"
+    #   end
+    # end
 
 end

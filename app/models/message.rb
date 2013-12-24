@@ -11,7 +11,8 @@
 #  project_id   :integer
 #  from_user_id :integer
 #  to_user_id   :integer
-#  unread       :boolean          default(TRUE)
+#  unread       :boolean          default(TRUE), not null
+#  deleted_at   :time
 #
 
 class Message < ActiveRecord::Base
@@ -26,27 +27,40 @@ class Message < ActiveRecord::Base
   belongs_to :from_user, class_name: 'User'
   belongs_to :to_user, class_name: 'User'
 
+  after_save :inform_receiver
+
   before_validation :set_parent_params, on: :create
   scope :parent_messages, -> { where(parent_id: nil) }
 
   acts_as_paranoid
 
+  def inform_receiver
+    MessageNotifier.sent(to_user, from_user, project, self).deliver
+  end
+
   def set_parent_params
     if parent.present?
       self.subject = parent.subject
-      self.unread = true
       #FIXME_AB: Shouldn't this be a default value, if you  have it set as default, then do you need to set it here
-      self.to_user_id = receiving_user_id
+      #FIXED: Set true as default value for unread
+      self.to_user = receiver
     end
   end
 
   #FIXME_AB: receiving_user_id as method name is little confusing, can be named better
-  def receiving_user_id
-    parent.from_user_id == from_user_id ? parent.to_user_id : parent.from_user_id
+  #FIXED: Changed name to receiver
+  def receiver
+    parent.from_user_id == from_user_id ? parent.to_user : parent.from_user
   end
 
   def project
     Project.unscoped { super }
+  end
+
+  def sent(from, to)
+    self.from_user = from
+    self.to_user = to
+    save
   end
 
 end

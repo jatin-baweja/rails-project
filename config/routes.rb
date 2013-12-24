@@ -28,14 +28,14 @@ Kickstarter::Application.routes.draw do
   resources :projects do
     get "/contacts_import_instructions", controller: "contacts", action: "import_instructions", on: :member
     get "/get_gmail_contacts", controller: "contacts", action: "get_gmail_contacts", on: :member
-    match 'category/:category', action: 'index', via: [:get, :post]
-    match 'place/:place', action: 'index', via: [:get, :post]
+    match 'category/:category', action: 'category', via: [:get, :post], on: :collection
+    match 'location/:location', action: 'location', via: [:get, :post], on: :collection
     get 'rewards/choose', on: :member, controller: 'rewards', action: 'choose'
     get 'this_week', on: :collection
     get 'new_message', on: :member, as: :new_message
     get 'back', on: :member
-    get 'pledge', on: :member
-    post 'create_pledge', on: :member
+    get 'pledge', controller: 'pledges', action: 'new', on: :member
+    post 'create_pledge', controller: 'pledges', action: 'create', on: :member
     get 'new_reward', on: :collection
     get 'story', controller: 'stories', action: 'new', on: :member
     get 'info', on: :member
@@ -43,8 +43,8 @@ Kickstarter::Application.routes.draw do
     patch 'create_story', controller: 'stories', action: 'create', on: :member
     patch 'create_info', on: :member
     patch 'create_rewards', controller: 'rewards', action: 'create', on: :member
-    get 'admin_conversation', controller: 'messages', on: :member
-    patch 'create_admin_conversation', controller: 'messages', on: :member
+    get 'admin_conversation', controller: 'admin/messages', on: :member
+    post 'create_admin_conversation', controller: 'admin/messages', on: :member
     get 'description', on: :member
     get 'backers', on: :member
   end
@@ -66,7 +66,7 @@ Kickstarter::Application.routes.draw do
     post "create", on: :member, as: :create
   end
 
-  resources :users, only: [:create, :show, :destroy, :update] do
+  resources :users, only: [:create, :show, :update] do
     get "signup", to: 'users#new', on: :collection
     get "/edit_profile", to: 'users#edit', as: :edit, on: :member
   end

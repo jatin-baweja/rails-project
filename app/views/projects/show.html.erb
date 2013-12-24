@@ -1,27 +1,27 @@
 <%-  @story = @project.story -%>
 <%- @rewards = @project.rewards -%>
-<%- @user = @project.user -%>
+<%- @owner = @project.owner -%>
   <div class="page-header center">
     <% project_title = @project.title %>
     <% project_title = "Untitled Project" if @project.title == "" %>
     <h2 class="text-center"><%= project_title %></h2>
-    <h5 class="text-center">By <%= @project.user.name %></h5>
+    <h5 class="text-center">By <%= @project.owner.name %></h5>
     <div class="container-fluid navbar">
       <ul class="nav pull-left">
-        <li><%= link_to "Description", description_project_path(@project.id), remote: true %></li>
+        <li><%= link_to "Description", description_project_path(@project), remote: true %></li>
         <% if logged_in? && (current_user.admin? || (@project.owner?(current_user)) ) %>
           <%= menu_divider %>
-          <li><%= link_to "Messages", admin_conversation_project_path(@project.id), remote: true  %></li>
+          <li><%= link_to "Messages", admin_conversation_project_path(@project), remote: true  %></li>
         <% end %>
         <%= menu_divider %>
-        <li><%= link_to "Pledgers", backers_project_path(@project.id), remote: true  %></li>
+        <li><%= link_to "Pledges", backers_project_path(@project), remote: true  %></li>
       </ul>
       <ul class="nav pull-right">
         <li class="no-link"><%= @project.location_name %></li>
-        <% if(@project.owner?(current_user)) %>
+        <% if logged_in? && (@project.owner?(current_user)) %>
           <% if !@project.rejected? && !@project.approved? %>
             <%= menu_divider %>
-            <li><%= link_to "Edit Project", edit_project_path(@project.id)  %></li>
+            <li><%= link_to "Edit Project", edit_project_path(@project)  %></li>
           <% elsif @project.approved? %>
             <%= menu_divider %>
             <li><%= link_to "Promote Project", contacts_import_instructions_project_path(@project) %></li>
@@ -42,6 +42,6 @@
     <%= render partial: 'admin/projects/details', locals: { :project => @project } %>
   <% else %>
     <%= render partial: 'details', locals: { :project => @project } %>
-    <%= render partial: 'users/fields', locals: { :user => @user } %>
+    <%= render partial: 'users/fields', locals: { :user => @owner } %>
   <% end %>
 </div>

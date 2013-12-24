@@ -2,13 +2,18 @@
 #
 # Table name: users
 #
-#  id              :integer          not null, primary key
-#  email           :string(255)
-#  password_digest :string(255)
-#  created_at      :datetime
-#  updated_at      :datetime
-#  admin           :boolean          default(FALSE)
-#  name            :string(255)
+#  id               :integer          not null, primary key
+#  email            :string(255)
+#  password_digest  :string(255)
+#  created_at       :datetime
+#  updated_at       :datetime
+#  admin            :boolean          default(FALSE)
+#  name             :string(255)
+#  provider         :string(255)
+#  uid              :string(255)
+#  oauth_token      :string(255)
+#  oauth_expires_at :datetime
+#  deleted_at       :time
 #
 
 class User < ActiveRecord::Base
@@ -23,7 +28,8 @@ class User < ActiveRecord::Base
   validates :password_confirmation, presence: true, on: :create, if: "provider.nil?"
 
   #FIXME_AB: owned_projects
-  has_many :created_projects, class_name: "Project", foreign_key: "owner_id"
+  #FIXED: Changed to owned_projects
+  has_many :owned_projects, class_name: "Project", foreign_key: "owner_id"
   has_many :backed_projects, -> { uniq }, through: :pledges, source: :project
   has_one :account
   has_many :pledges
@@ -51,6 +57,10 @@ class User < ActiveRecord::Base
 
   def messages
     sent_messages + received_messages
+  end
+
+  def pledge_amount_for_project(project)
+    pledges.for_project(project).sum(:amount)
   end
 
   has_secure_password validations: false

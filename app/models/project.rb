@@ -13,38 +13,37 @@
 #  updated_at    :datetime
 #  owner_id      :integer
 #  category_id   :integer
-#  approved      :boolean          default(TRUE)
-#  rejected      :boolean          default(FALSE)
 #  published_at  :datetime
-#  editing       :boolean          default(TRUE)
 #  video_url     :string(255)
 #  project_state :string(255)
+#  permalink     :string(255)
+#  deleted_at    :time
+#  location_id   :integer
 #
 
 class Project < ActiveRecord::Base
   include ThinkingSphinx::Scopes
-  attr_accessor :step
+  # attr_accessor :step
 
-  with_options if: :first_step? do |project|
-    project.validates :title, uniqueness: { case_sensitive: false }
+  with_options if: -> { first_step? || step_not_set? } do |project|
+    project.validates :title, uniqueness: { case_sensitive: false }, length: { maximum: 60 }
     project.validates :title, :summary, presence: true
-    project.validates :title, length: { maximum: 60 }
     project.validates :summary, length: { maximum: 300 }
   end
 
-  with_options if: :third_step? do |project|
+  with_options if: -> { third_step? || step_not_set? } do |project|
     project.validates :goal, :duration, :published_at, presence: true
     project.validates :goal, numericality: { only_integer: true, greater_than_or_equal_to: 1 }, allow_blank: true
     project.validates :duration, numericality: { only_integer: true, greater_than_or_equal_to: 1, less_than_or_equal_to: PAYMENT_HOLDING_PERIOD }, allow_blank: true
     project.validate :future_publish_date
   end
   
-  validates_associated :story, if: :second_step?
-  validates_associated :rewards, if: :fourth_step?
+  validates_associated :story, if: -> { second_step? || step_not_set? }
+  validates_associated :rewards, if: -> { fourth_step? || step_not_set? }
 
   has_many :rewards
   has_one :story, validate: false
-  belongs_to :user, foreign_key: "owner_id"
+  belongs_to :owner, foreign_key: "owner_id", class_name: 'User'
   belongs_to :category
   has_many :messages
   belongs_to :location
@@ -62,13 +61,15 @@ class Project < ActiveRecord::Base
   scope :published, ->(time) { where(['published_at <= ?', time]) }
   scope :published_between, ->(start_time, end_time) { where(['published_at <= ? OR published_at >= ?', start_time, end_time]) }
   scope :still_active, -> { where(['deadline >= ?', Time.current]) }
-  scope :located_in, ->(place) { joins(:location).where(:location => { name: place}) }
+  scope :located_in, ->(place) { joins(:location).where(:locations => { name: place}) }
   scope :owned_by, ->(user) { where(owner_id: user.id) }
   scope :live, -> { approved.published(Time.current).still_active }
   scope :live_for_user, ->(user) { live.where(owner_id: user.id) }
   scope :pending_for_approval, -> { submitted.still_active.order('created_at ASC') }
   #FIXME_AB: Since this scope is taking approved published in to the account so should be named as live_this_week or something like this. Do you
-  scope :this_week, -> { approved.published_between(Time.current, 1.week.ago).still_active }
+  #FIXED: Changed to live_this_week
+  scope :live_this_week, -> { approved.published_between(Time.current, 1.week.ago).still_active }
+  scope :for_page, ->(page_number) { page(page_number).per_page(DEFAULT_PER_PAGE_RESULT_COUNT) }
 
   sphinx_scope(:been_approved) { { :conditions => { :project_state => 'approved' } } }
   sphinx_scope(:active) { { :with => { :deadline => Time.current..1.month.from_now, :published_at => 1.month.ago..Time.current } } }
@@ -155,7 +156,11 @@ class Project < ActiveRecord::Base
   end
 
   def step?(number)
-    step == number || step.nil?
+    step == number
+  end
+
+  def step_not_set?
+    step.nil?
   end
 
   def first_step?
@@ -174,12 +179,12 @@ class Project < ActiveRecord::Base
     step?(4)
   end
 
-  def admin_approve
+  def approved_by_admin
     generate_permalink!
     self.published_at = Time.current if published_at.nil? || published_at < Time.current
     self.deadline = published_at + duration.days
-    approve
-    save
+    approve!
+    # save
   end
 
   def set_publishing_delayed_job
@@ -190,13 +195,35 @@ class Project < ActiveRecord::Base
     Delayed::Job.enqueue(ProjectFundingJob.new(self), 0, deadline)
   end
 
-  def admin_reject
+  def rejected_by_admin
     reject
     save
   end
 
   def owner?(user)
     owner_id == user.id
+  end
+
+  def save_primary_details(project_creator)
+    self.owner = project_creator
+    self.step = 1
+    save
+  end
+
+  def save_story(params)
+    self.step = 2
+    update(params)
+  end
+
+  def save_info(params)
+    self.step = 3
+    update(params)
+  end
+
+  def save_rewards(params)
+    self.step = 4
+    update(params)
+    submit!
   end
 
 end

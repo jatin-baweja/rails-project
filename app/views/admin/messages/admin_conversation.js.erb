@@ -1,0 +1,1 @@
+$('#project-main').html("<% if logged_in? && current_user.admin? %><%= escape_javascript render partial: 'new_message_link' %><% end %><%= escape_javascript render partial: 'messages/message_list' %>")

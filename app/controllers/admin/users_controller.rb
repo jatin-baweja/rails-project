@@ -35,10 +35,11 @@ class Admin::UsersController < Admin::BaseController
   private
 
     def set_user
-      @user = User.find(params[:id])
+      unless (@user = User.find_by(id: params[:id]))
       #FIXME_AB: I would prefer to use 'if' instead of rescue
-    rescue ActiveRecord::RecordNotFound
-      redirect_to admin_users_url, notice: 'Invalid user id'
+      #FIXED: Using if instead of rescue
+        redirect_to admin_users_url, notice: 'Invalid user id'
+      end
     end
 
 end

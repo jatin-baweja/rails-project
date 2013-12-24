@@ -1,7 +1,6 @@
 <%- @pledge = @project.pledges.build if @pledge.nil? -%>
 <%- @rewards = @project.rewards -%>
 <%- @requested_rewards = @pledge.requested_rewards.build -%>
-<%- model_class = Project -%>
   <div class="page-header center">
     <h2 class="text-center"><%= @project.title %></h2>
     <h5 class="text-center">By <%= @project.owner.name %></h5>

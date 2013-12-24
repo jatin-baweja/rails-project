@@ -1,8 +1,8 @@
 class Payment::Stripe::ChargesController < ApplicationController
 
   def new_card
-    @project = Project.find(params[:project])
-    @pledge = Pledge.find(params[:pledge])
+    @project = Project.find_by(id: params[:project])
+    @pledge = Pledge.find_by(id: params[:pledge])
     @user = current_user
     if @user.account.present?
       customer = Stripe::Customer.retrieve(@user.account.customer_id)
@@ -12,8 +12,7 @@ class Payment::Stripe::ChargesController < ApplicationController
 
   def create_card
 
-    @user = current_user
-    email = @user.email
+    email = current_user.email
 
     if params[:pay_with_existing_card] != "1"
       customer = Stripe::Customer.create(
@@ -32,7 +31,7 @@ class Payment::Stripe::ChargesController < ApplicationController
     @pledge = Pledge.find(params[:pledge_id])
     @project = @pledge.project
     @pledge.create_transaction(status: 'uncharged', payment_mode: 'stripe')
-    Delayed::Job.enqueue(PledgeNotifierJob.new(@pledge, @project, @user))
+    Delayed::Job.enqueue(PledgeNotifierJob.new(@pledge, @project, current_user))
     redirect_to project_path(@project), notice: 'Your card has been successfully stored'
 
   rescue Stripe::CardError => e

@@ -42,24 +42,12 @@ class UsersController < ApplicationController
   end
 
   #FIXME_AB: Can I destroy my own account. I think this should not allowed. Do not allow to destroy for now
-  def destroy
-    begin
-      @user.destroy
-      reset_session
-      flash[:notice] = "Your account has been deleted"
-    rescue StandardError => e
-      flash[:notice] = e.message
-    end
-    respond_to do |format|
-      format.html { redirect_to root_url }
-      format.json { head :no_content }
-    end
-  end
+  #FIXED: Removed destroy method
 
   private
 
     def set_user
-      if !(@user = User.find_by(id: params[:id]))
+      unless (@user = User.find_by(id: params[:id]))
         redirect_to root_path, alert: 'No such user found'
       end
     end

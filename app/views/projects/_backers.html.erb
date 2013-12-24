@@ -1,11 +1,14 @@
-<div id="backers">
-  <% if !@pledges.nil? %>
-    <% @pledges.each do |pledge| %>
-      <div class="row">
-        <div class="span8 highlight">
-          <p><%= link_to pledge.user.name, user_path(pledge.user.id) %> pledged <%= number_to_currency(pledge.amount) %> for the project <%= pledge.project.title %> on <%= pledge.created_at.strftime('%v') %>(<%= pledge.created_at.strftime('%I:%M %p') %>)</p>
+<div id="pledges" class="container-fluid">
+  <h3>Pledges</h3>
+  <div id="backers">
+    <% if !@pledges.nil? %>
+      <% @pledges.each do |pledge| %>
+        <div class="row">
+          <div class="span8 highlight">
+            <p><%= link_to pledge.user.name, user_path(pledge.user.id) %> pledged <%= number_to_currency(pledge.amount) %> for the project <%= pledge.project.title %> on <%= pledge.created_at.strftime('%v') %>(<%= pledge.created_at.strftime('%I:%M %p') %>)</p>
+          </div>
         </div>
-      </div>
+      <% end %>
     <% end %>
-  <% end %>
+  </div>
 </div>

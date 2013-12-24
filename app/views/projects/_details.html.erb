@@ -7,9 +7,9 @@
   <p>amount funded</p>
   <div class="text-center">
     <% if logged_in? && !project.owner?(current_user) %>
-      <% if @sum_of_pledges != 0 %>
+      <% if @total_pledged_amount != 0 %>
         <div id="pledge-info" class="text-center">
-          <%= "You have pledged #{number_to_currency(@sum_of_pledges)} for this project." %>
+          <%= "You have pledged #{number_to_currency(@total_pledged_amount)} for this project." %>
         </div>
       <% end %>
         <div id="pledge-button" class="large-button text-center">

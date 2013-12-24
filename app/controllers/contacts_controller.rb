@@ -1,4 +1,6 @@
 class ContactsController < ApplicationController
+  include Projects::Setter
+
   before_action :set_project, only: [:import_instructions, :get_gmail_contacts]
   before_action :set_project_from_session, only: [:gmail_callback, :send_email]
   before_action :check_accessibility, only: [:import_instructions, :get_gmail_contacts, :gmail_callback, :send_email]
@@ -14,7 +16,7 @@ class ContactsController < ApplicationController
   def gmail_callback
     @contacts = request.env['omnicontacts.contacts']
     #FIXME_AB: how about current_user.projects.live or current_user.owned_projects.live
-    @projects = Project.live_for_user(current_user)
+    #FIXED: Removing @projects, @project to be promoted is now stored and received from session
   end
 
   def failure
@@ -36,14 +38,8 @@ class ContactsController < ApplicationController
 
   private
 
-    def set_project
-      if !(@project = Project.find_by_permalink(params[:id]))
-        redirect_to root_path, "No Project Found"
-      end
-    end
-
     def set_project_from_session
-      if !(@project = Project.find_by_permalink(session[:promotion_project_id]))
+      unless (@project = Project.find_by_permalink(session[:promotion_project_id]))
         redirect_to root_path, "Project Not Found"
       end
     end
