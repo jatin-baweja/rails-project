@@ -41,8 +41,6 @@ class UsersController < ApplicationController
     end
   end
 
-  #FIXME_AB: Can I destroy my own account. I think this should not allowed. Do not allow to destroy for now
-  #FIXED: Removed destroy method
 
   private
 

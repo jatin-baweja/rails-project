@@ -66,8 +66,6 @@ class Project < ActiveRecord::Base
   scope :live, -> { approved.published(Time.current).still_active }
   scope :live_for_user, ->(user) { live.where(owner_id: user.id) }
   scope :pending_for_approval, -> { submitted.still_active.order('created_at ASC') }
-  #FIXME_AB: Since this scope is taking approved published in to the account so should be named as live_this_week or something like this. Do you
-  #FIXED: Changed to live_this_week
   scope :live_this_week, -> { approved.published_between(Time.current, 1.week.ago).still_active }
   scope :for_page, ->(page_number) { page(page_number).per_page(DEFAULT_PER_PAGE_RESULT_COUNT) }
 

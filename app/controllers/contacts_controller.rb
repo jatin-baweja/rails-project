@@ -15,8 +15,6 @@ class ContactsController < ApplicationController
 
   def gmail_callback
     @contacts = request.env['omnicontacts.contacts']
-    #FIXME_AB: how about current_user.projects.live or current_user.owned_projects.live
-    #FIXED: Removing @projects, @project to be promoted is now stored and received from session
   end
 
   def failure

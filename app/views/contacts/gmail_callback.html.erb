@@ -3,9 +3,11 @@
   <div class="control-group">
     <%= label_tag 'emails[]', "Select Emails" %>
     <div class="controls">
+      <% #FIXME_AB: Should avoid using inline styles -%>
       <div class="email-selection" style="width:500px;height:300px;overflow-x:scroll;overflow-y:auto;">
         <% @contacts.each do |contact| %>
           <label class='checkbox'>
+            <% #FIXME_AB: Why not using form helpsers -%>
             <input id="email_<%= contact[:email] %>" type="checkbox" name="emails[]" value="<%= contact[:email] %>">
             <%= "#{contact[:name]} <#{contact[:email]}>" %>
           </label>
@@ -20,6 +22,7 @@
       <p>Here's the project link : <%= link_to @project.title, project_url(@project) %>
       Do check it out.</p>
       <p>Here's what <%= @project.user.name %> had to say about his project:</p>
+      <% #FIXME_AB: form helpers? -%>
       <textarea name="message" id="message"></textarea>
     </div>
   </div>

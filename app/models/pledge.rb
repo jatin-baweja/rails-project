@@ -38,6 +38,7 @@ class Pledge < ActiveRecord::Base
 
   #FIXME_AB: I may have to look the need of this function
   def sum_of_requested_rewards
+    #FIXME_AB: Can we optimize this little bit
     amount_of_requested_rewards = requested_rewards.inject(0) do |sum, requested_reward|
       if requested_reward.reward.present?
         sum + (requested_reward.reward.minimum_amount * requested_reward.quantity)

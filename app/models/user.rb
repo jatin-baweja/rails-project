@@ -27,8 +27,6 @@ class User < ActiveRecord::Base
   validates :password, length: { in: 6..30 }, allow_blank: true, if: "provider.nil?"
   validates :password_confirmation, presence: true, on: :create, if: "provider.nil?"
 
-  #FIXME_AB: owned_projects
-  #FIXED: Changed to owned_projects
   has_many :owned_projects, class_name: "Project", foreign_key: "owner_id"
   has_many :backed_projects, -> { uniq }, through: :pledges, source: :project
   has_one :account
@@ -37,6 +35,7 @@ class User < ActiveRecord::Base
   has_many :received_messages, class_name: 'Message', foreign_key: 'to_user_id'
 
   def inbox 
+    #FIXME_AB: How would it work if we have a pagination in place?. Can we do it in a single query
     (sent_messages.parent_messages + received_messages.parent_messages).sort { |x,y| y.updated_at <=> x.updated_at }
   end
 
@@ -63,6 +62,7 @@ class User < ActiveRecord::Base
     pledges.for_project(project).sum(:amount)
   end
 
+  #FIXME_AB: Following two lines are written twice in this model
   has_secure_password validations: false
   acts_as_paranoid
 

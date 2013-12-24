@@ -12,17 +12,12 @@ class ProjectsController < ApplicationController
     render action: :index
   end
 
-  #FIXME_AB: I would prefer URL like: projects/category/mycategory and projects/location/mylocation So we can have it broken in 3 actions?
-  #FIXED: Moved to separate actions
   def index
-      #FIXME_AB: What if params :place or category are blank?
-      #FIXED: Added .present? to both params :place & :category
-      @projects = Project.live.order(:title).page(params[:page]).per_page(DEFAULT_PER_PAGE_RESULT_COUNT)
-      #FIXME_AB: You are repeating per_page 15 here
-      #FIXED: Moved to scopes and set global config for default results_per_page to 15
+    @projects = Project.live.order(:title).page(params[:page]).per_page(DEFAULT_PER_PAGE_RESULT_COUNT)
   end
 
   def category
+    #FIXME_AB: Is the category name unique? I think we should use permalink for category too, as we are using it in url
     if params[:category].present? && @category = Category.find_by(name: params[:category])
       @projects = @category.projects.live.order(:title).page(params[:page]).per_page(DEFAULT_PER_PAGE_RESULT_COUNT)
     end
@@ -31,6 +26,7 @@ class ProjectsController < ApplicationController
 
   def location
     if params[:location].present?
+      #FIXME_AB: should we also use permalink for location?
       @projects = Project.live.located_in(params[:location]).order(:title).page(params[:page]).per_page(DEFAULT_PER_PAGE_RESULT_COUNT)
     end
     render action: :index
@@ -41,8 +37,6 @@ class ProjectsController < ApplicationController
   end
 
   def show
-    #FIXME_AB: @sum_of_pledges vs @total_pledged_amont
-    #FIXED: changed to @total_pledged_amount
     #FIXME_AB: Also here you are finding out the amount pledged by a user for a project, now can you recall a better way?
     if logged_in?
       @total_pledged_amount = current_user.pledge_amount_for_project(@project)
@@ -54,6 +48,7 @@ class ProjectsController < ApplicationController
   end
 
   def edit
+    #FIXME_AB: Lets give this action a thought.
     @project.edit! if !@project.draft?
     redirect_path = case @project.step
     when 1 then story_project_url(@project)
@@ -75,8 +70,6 @@ class ProjectsController < ApplicationController
   def info
   end
 
-  #FIXME_AB: I am not yet very convinced why we need this in this controller
-  #FIXED: create_info creates form fields from 3rd step, i.e., the Project model itself
   def create_info
     respond_to do |format|
       if @project.save_info(project_params)
@@ -90,15 +83,12 @@ class ProjectsController < ApplicationController
   end
 
 
-  #FIXME_AB: This action can be made better. You improved, but I still see some scope
-  #FIXED: Moved to pledges controller
 
   def create
+    #FIXME_AB: Lets revisit this action
     if location_params[:location_name].present?
       if @location = Location.find_or_create_by(name: location_params[:location_name])
         @project = @location.projects.build(project_params)
-    #FIXME_AB: another way is @project.owner = current_user
-    #FIXED: Changed to @project.owner = current_user and moved to model
 
         respond_to do |format|
           if @project.save_primary_details(current_user)
@@ -161,14 +151,14 @@ class ProjectsController < ApplicationController
   private
 
   def check_accessibility
-    #FIXME_AB: we have a better way to do the same which you have done in the following condition
-    #FIXED: Changed condition
+    #FIXME_AB: Using unless with too many conditions
     unless(@project.approved? || (logged_in? && (@project.owner?(current_user) || current_user.admin?)))
       redirect_to projects_path, notice: "Access Denied"
     end
   end
 
   def validate_deadline
+    #FIXME_AB: Something is wrong here too.
     if(@project.deadline != nil && @project.deadline <= Time.current)
       if !(logged_in? && (@project.owner?(current_user) || current_user.admin?))
         redirect_to projects_path, notice: "Outdated project"

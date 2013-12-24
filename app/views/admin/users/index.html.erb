@@ -1,3 +1,4 @@
+<% #FIXME_AB: I have already asked not to use such dynamic thing. Do I need to point it out at every place. Why don't you implement the same thing at all places? -%>
 <%- model_class = User -%>
 <div class="page-header">
   <h1><%=t '.title', :default => model_class.model_name.human.pluralize.titleize %></h1>
@@ -9,6 +10,7 @@
       <th><%= model_class.human_attribute_name(:name) %></th>
       <th><%= model_class.human_attribute_name(:email) %></th>
       <th><%= model_class.human_attribute_name(:admin) %></th>
+      <% #FIXME_AB: Either follow I18n or don't. using 't' function at some places only? -%>
       <th><%=t '.actions', :default => t("helpers.actions") %></th>
     </tr>
   </thead>
