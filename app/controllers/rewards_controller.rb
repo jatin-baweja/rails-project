@@ -11,11 +11,8 @@ class RewardsController < ApplicationController
     respond_to do |format|
       if @project.save_rewards(project_params)
         format.html { redirect_to project_url(@project), notice: "Project #{@project.title} was successfully created/updated." }
-        format.json { render action: :show, status: :created, location: @project }
       else
         format.html { render action: :new }
-        format.json { render json: @project.errors,
-          status: :unprocessable_entity }
       end
     end
   end

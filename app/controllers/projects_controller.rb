@@ -38,7 +38,6 @@ class ProjectsController < ApplicationController
   end
 
   def show
-    #FIXME_AB: Also here you are finding out the amount pledged by a user for a project, now can you recall a better way?
     if logged_in?
       @total_pledged_amount = current_user.pledge_amount_for_project(@project)
     end
@@ -50,6 +49,7 @@ class ProjectsController < ApplicationController
 
   def edit
     #FIXME_AB: Lets give this action a thought.
+    #FIXED: Using step field for redirection to appropriate editing page
     @project.edit! if !@project.draft?
     redirect_path = case @project.step
     when 1 then story_project_url(@project)
@@ -63,9 +63,6 @@ class ProjectsController < ApplicationController
   end
 
   def new_message
-    respond_to do |format|
-      format.js {}
-    end
   end
 
   def info
@@ -75,30 +72,22 @@ class ProjectsController < ApplicationController
     respond_to do |format|
       if @project.save_info(project_params)
         format.html { redirect_to rewards_project_url(@project) }
-        format.json { render action: :show, status: :created, location: @project }
       else
         format.html { render action: :info }
-        format.json { render json: @project.errors, status: :unprocessable_entity }
       end
     end
   end
 
-
-
   def create
     #FIXME_AB: Lets revisit this action
-    if location_params[:location_name].present?
-      if @location = Location.find_or_create_by(name: location_params[:location_name])
-        @project = @location.projects.build(project_params)
-
-        respond_to do |format|
-          if @project.save_primary_details(current_user)
-            format.html { redirect_to story_project_url(@project) }
-            format.json { render action: :show, status: :created, location: @project }
-          else
-            format.html { render action: :new }
-            format.json { render json: @project.errors, status: :unprocessable_entity }
-          end
+    #FIXED: Removed one of the ifs
+    if location_params[:location_name].present? && @location = Location.find_or_create_by(name: location_params[:location_name])
+      @project = @location.projects.build(project_params)
+      respond_to do |format|
+        if @project.save_primary_details(current_user)
+          format.html { redirect_to story_project_url(@project) }
+        else
+          format.html { render action: :new }
         end
       end
     end
@@ -110,10 +99,8 @@ class ProjectsController < ApplicationController
     respond_to do |format|
       if @project.update(project_params)
         format.html { redirect_to story_project_url(@project) }
-        format.json { head :no_content }
       else
         format.html { render action: :edit }
-        format.json { render json: @project.errors, status: :unprocessable_entity }
       end
     end
   end
@@ -127,7 +114,6 @@ class ProjectsController < ApplicationController
     end
     respond_to do |format|
       format.html { redirect_to root_url }
-      format.json { head :no_content }
     end
   end
 
@@ -146,11 +132,11 @@ class ProjectsController < ApplicationController
   def check_accessibility
     #FIXME_AB: Using unless with too many conditions
     #FIXED: Merged check_accessibility and validate_deadline
-    if (logged_in? && (@project.owner?(current_user) || current_user.admin?))
+    if current_user_owner_or_admin?
       continue
     elsif !@project.approved?
       redirect_to projects_path, notice: "Access Denied"
-    elsif @project.deadline == nil || @project.deadline <= Time.current
+    elsif @project.outdated?
       redirect_to projects_path, notice: "Outdated project"
     end
   end
@@ -171,6 +157,10 @@ class ProjectsController < ApplicationController
     if(@project.owner?(current_user))
       redirect_to project_path(@project), notice: "You cannot pledge for your own project"
     end
+  end
+
+  def current_user_owner_or_admin?
+    logged_in? && (@project.owner?(current_user) || current_user.admin?)
   end
 
 end

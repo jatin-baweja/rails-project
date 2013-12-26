@@ -15,7 +15,6 @@ class Admin::UsersController < Admin::BaseController
     end
     respond_to do |format|
       format.html { redirect_to admin_users_url }
-      format.json { head :no_content }
     end
   end
 
@@ -28,7 +27,6 @@ class Admin::UsersController < Admin::BaseController
     end
     respond_to do |format|
       format.html { redirect_to admin_users_url }
-      format.json { head :no_content }
     end
   end
 

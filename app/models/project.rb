@@ -222,4 +222,8 @@ class Project < ActiveRecord::Base
     submit!
   end
 
+  def outdated?
+    deadline <= Time.current
+  end
+
 end
