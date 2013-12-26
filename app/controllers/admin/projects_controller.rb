@@ -1,5 +1,5 @@
 class Admin::ProjectsController < Admin::BaseController
-  include Projects::Setter
+  include Projects::Callbacks
 
   before_action :set_project, only: [:approve, :reject]
 
@@ -8,7 +8,7 @@ class Admin::ProjectsController < Admin::BaseController
   end
 
   def approve
-    if @project.admin_approve
+    if @project.approved_by_admin
       @project.set_publishing_delayed_job
       @project.set_funding_delayed_job
     else
@@ -17,17 +17,9 @@ class Admin::ProjectsController < Admin::BaseController
   end
 
   def reject
-    if !@project.admin_reject
+    if !@project.rejected_by_admin
       redirect_to project_path(@project), alert: 'The project failed to be rejected'
     end
   end
-
-  private
-
-    # def set_project
-    #   unless @project = Project.find_by(id: params[:id])
-    #     redirect_to projects_path, alert: "No project found with id #{ params[:id] }"
-    #   end
-    # end
 
 end

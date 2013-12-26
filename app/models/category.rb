@@ -11,6 +11,8 @@
 class Category < ActiveRecord::Base
   after_commit ThinkingSphinx::RealTime.callback_for(:project, [:projects])
 
-  validates :name, presence: true, format: { with: REGEX_PATTERN[:category_name], message: 'only allows letters, numbers and special characters(not as first letter)' }
+  validates :name, presence: true, format: { with: REGEX_PATTERN[:category_name], message: 'only allows letters, numbers and special characters(not as first letter)' }, uniqueness: true
   has_many :projects, dependent: :restrict_with_exception
+
+  has_permalink :name, true
 end

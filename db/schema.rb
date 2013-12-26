@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20131223135353) do
+ActiveRecord::Schema.define(version: 20131226132748) do
 
   create_table "accounts", force: true do |t|
     t.string   "customer_id"
@@ -25,6 +25,7 @@ ActiveRecord::Schema.define(version: 20131223135353) do
     t.string   "name"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.string   "permalink"
   end
 
   create_table "ckeditor_assets", force: true do |t|
@@ -76,6 +77,7 @@ ActiveRecord::Schema.define(version: 20131223135353) do
     t.string   "name"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.string   "permalink"
   end
 
   create_table "messages", force: true do |t|
@@ -155,6 +157,7 @@ ActiveRecord::Schema.define(version: 20131223135353) do
     t.datetime "updated_at"
     t.integer  "project_id"
     t.integer  "remaining_quantity"
+    t.integer  "lock_version"
   end
 
   add_index "rewards", ["project_id"], name: "index_rewards_on_project_id", using: :btree

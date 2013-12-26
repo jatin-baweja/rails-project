@@ -1,6 +1,5 @@
-<%- model_class = User -%>
 <div class="page-header">
-  <h1><%=t '.title', :default => model_class.model_name.human.titleize %></h1>
+  <h1><%=t '.title', :default => 'User Profile' %></h1>
 </div>
 
 <%= render partial: 'fields', locals: { :user => @user } %>

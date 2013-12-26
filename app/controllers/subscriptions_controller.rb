@@ -8,6 +8,7 @@ class SubscriptionsController < ApplicationController
   def create
     @subscriber = Subscriber.new(subscriber_params)
     if @subscriber.valid?
+      Delayed::Job.enqueue(SubscribeUserJob.new(email, first_name, last_name))
       redirect_to root_path, notice: 'You have successfully subscribed to our mailing list'
     else
       render action: :new

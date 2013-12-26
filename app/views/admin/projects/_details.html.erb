@@ -1,21 +1,20 @@
 <div id="admin-buttons" class="highlight high300">
   <% #FIXME_AB: Can we have simpler if else statements? -%>
-  <% if !project.rejected? %>
-    <% if !project.approved? %>
-      <div id="approve-button" class="large-button text-center">
-        <%= link_to "Approve Project", approve_admin_project_path(project.id), remote: true %>
-      </div>
-      <div id="reject-button" class="large-button text-center">
-        <%= link_to "Reject Project", reject_admin_project_path(project.id), remote: true %>
-      </div>
-    <% else %>
-      <div id="approve-button" class="text-center">
-        Project Approved
-      </div>
-    <% end %>
-  <% else %>
+  <% #FIXED: Changed to simpler if else statements -%>
+  <% if project.approved? %>
+    <div id="approve-button" class="text-center">
+      Project Approved
+    </div>
+  <% elsif project.rejected? %>
     <div id="reject-button" class="text-center">
       Project Rejected
+    </div>
+  <% else %>
+    <div id="approve-button" class="large-button text-center">
+      <%= link_to "Approve Project", approve_admin_project_path(project.id), remote: true %>
+    </div>
+    <div id="reject-button" class="large-button text-center">
+      <%= link_to "Reject Project", reject_admin_project_path(project.id), remote: true %>
     </div>
   <% end %>
 </div>

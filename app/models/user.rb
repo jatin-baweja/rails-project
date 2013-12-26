@@ -63,7 +63,6 @@ class User < ActiveRecord::Base
   end
 
   #FIXME_AB: Following two lines are written twice in this model
-  has_secure_password validations: false
-  acts_as_paranoid
+  #FIXED: Removed repetition
 
 end

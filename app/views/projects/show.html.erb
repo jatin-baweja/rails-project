@@ -8,13 +8,13 @@
     <h5 class="text-center">By <%= @project.owner.name %></h5>
     <div class="container-fluid navbar">
       <ul class="nav pull-left">
-        <li><%= link_to "Description", description_project_path(@project), remote: true %></li>
+        <li id="description-button"><a class="linkable">Description</a></li>
         <% if logged_in? && (current_user.admin? || (@project.owner?(current_user)) ) %>
           <%= menu_divider %>
-          <li><%= link_to "Messages", admin_conversation_project_path(@project), remote: true  %></li>
+          <li id="messages-button"><a class="linkable">Messages</a></li>
         <% end %>
         <%= menu_divider %>
-        <li><%= link_to "Pledges", backers_project_path(@project), remote: true  %></li>
+        <li id="pledges-button"><a class="linkable">Pledges</a></li>
       </ul>
       <ul class="nav pull-right">
         <li class="no-link"><%= @project.location_name %></li>
@@ -33,9 +33,11 @@
 
 
 <div class="span8" id="project-main">
-  <%= cache @project do %>
-    <%= render partial: 'description' %>
-  <% end %>
+  <div id="description">
+    <%= cache @project do %>
+      <%= render partial: 'description' %>
+    <% end %>
+  </div>
 </div>
 <div class="span3">
   <% if logged_in? && current_user.admin? %>

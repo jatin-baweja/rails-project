@@ -1,5 +1,5 @@
 class StoriesController < ApplicationController
-  include Projects::Setter
+  include Projects::Callbacks
 
   before_action :set_project, only: [:new, :create]
   before_action :validate_owner, only: [:new, :create]

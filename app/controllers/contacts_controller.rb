@@ -1,5 +1,5 @@
 class ContactsController < ApplicationController
-  include Projects::Setter
+  include Projects::Callbacks
 
   before_action :set_project, only: [:import_instructions, :get_gmail_contacts]
   before_action :set_project_from_session, only: [:gmail_callback, :send_email]

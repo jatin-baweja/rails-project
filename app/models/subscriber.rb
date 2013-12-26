@@ -2,7 +2,6 @@ class Subscriber
 
   include ActiveModel::Validations
   include ActiveModel::Conversion
-  extend ActiveModel::Naming
 
   attr_accessor :email, :first_name, :last_name
 
@@ -13,11 +12,6 @@ class Subscriber
     attributes.each do |name, value|
       send("#{name}=", value)
     end
-    Delayed::Job.enqueue(SubscribeUserJob.new(email, first_name, last_name))
-  end
-
-  def persisted?
-    false
   end
 
 end

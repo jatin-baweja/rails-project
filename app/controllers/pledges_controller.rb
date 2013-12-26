@@ -1,5 +1,5 @@
 class PledgesController < ApplicationController
-  include Projects::Setter
+  include Projects::Callbacks
 
   before_action :set_project
   before_action :validate_not_owner

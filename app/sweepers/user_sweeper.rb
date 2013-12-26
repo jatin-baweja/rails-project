@@ -10,7 +10,7 @@ class UserSweeper < ActionController::Caching::Sweeper
   end
 
   def expire_cache(user)
-    expire_action user_url
+    expire_action controller: :users, action: :show, id: user
   end
 
 end

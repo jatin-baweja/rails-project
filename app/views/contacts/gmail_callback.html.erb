@@ -4,13 +4,15 @@
     <%= label_tag 'emails[]', "Select Emails" %>
     <div class="controls">
       <% #FIXME_AB: Should avoid using inline styles -%>
-      <div class="email-selection" style="width:500px;height:300px;overflow-x:scroll;overflow-y:auto;">
+      <% #FIXED: Moved to external stylesheet -%>
+      <div class="email-selection">
         <% @contacts.each do |contact| %>
-          <label class='checkbox'>
+          <%= label_tag nil, class: :checkbox do %>
             <% #FIXME_AB: Why not using form helpsers -%>
-            <input id="email_<%= contact[:email] %>" type="checkbox" name="emails[]" value="<%= contact[:email] %>">
+            <% #FIXED: Using form helpers -%>
+            <%= check_box_tag :"emails[]", contact[:email], nil, id: "emails_#{ contact[:email] }" %>
             <%= "#{contact[:name]} <#{contact[:email]}>" %>
-          </label>
+          <% end %>
         <% end %>
       </div>
     </div>
@@ -18,12 +20,13 @@
   <div class="control-group">
     <%= label_tag :message, "Type a message for your contacts" %>
     <div class="controls">
-      <p><%= @project.user.name %> would like you to know that he has started a new project on kicklone and wants you to check it out.</p>
+      <p><%= @project.owner.name %> would like you to know that he has started a new project on kicklone and wants you to check it out.</p>
       <p>Here's the project link : <%= link_to @project.title, project_url(@project) %>
       Do check it out.</p>
-      <p>Here's what <%= @project.user.name %> had to say about his project:</p>
+      <p>Here's what <%= @project.owner.name %> had to say about his project:</p>
       <% #FIXME_AB: form helpers? -%>
-      <textarea name="message" id="message"></textarea>
+      <% #FIXED: Using form helpers -%>
+      <%= text_area_tag :message %>
     </div>
   </div>
   <div class="form-actions">

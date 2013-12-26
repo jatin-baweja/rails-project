@@ -1,5 +1,5 @@
 module Projects
-  module Setter
+  module Callbacks
 
     private
 

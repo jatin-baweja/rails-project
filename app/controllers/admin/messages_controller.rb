@@ -1,5 +1,5 @@
 class Admin::MessagesController < Admin::BaseController
-  include Projects::Setter
+  include Projects::Callbacks
 
   before_action :set_project, only: [:admin_conversation, :create_admin_conversation]
   skip_before_action :admin_authorize, only: [:admin_conversation]
@@ -8,7 +8,7 @@ class Admin::MessagesController < Admin::BaseController
   def admin_conversation
     @messages = @project.messages.parent_messages.order('updated_at DESC')
     respond_to do |format|
-      format.js {}
+      format.json { render json: @messages.to_json(:include => { :child_messages => { :only => :unread }, :from_user => { :only => :name }, :project => { :only => :title } }, :only => [:id, :subject, :updated_at]) }
     end
   end
 
@@ -16,7 +16,8 @@ class Admin::MessagesController < Admin::BaseController
     to = User.find(@project.owner_id)
     @message = @project.messages.build(conversation_params)
     @message.sent(current_user, to)
-    redirect_to admin_conversation_project_url
+    @messages = @project.messages.parent_messages.order('updated_at DESC')
+    render action: :admin_conversation
   end
 
   private

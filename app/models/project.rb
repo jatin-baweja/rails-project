@@ -77,7 +77,7 @@ class Project < ActiveRecord::Base
 
   acts_as_paranoid
 
-  has_permalink :title
+  has_permalink :title, true
 
   include AASM
 

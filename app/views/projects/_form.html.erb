@@ -49,20 +49,16 @@
     </div>
   </div>
 
-  <%# f.fields_for :location, @location do |location| %>
     <div class="control-group">
-      <%# location.label :name, "Location", :class => 'control-label' %>
       <%= f.label :location_name, "Location", :class => 'control-label' %>
       <div class="controls">
-        <%# f.text_field :name, :class => 'text_field' %>
         <%= f.text_field :location_name, :class => 'text_field' %>
           <p class="help-block">Enter the location of your project</p>
       </div>
     </div>
-  <%# end %>
 
   <div class="form-actions">
-    <%= link_to t('.cancel', :default => t("helpers.links.cancel")), projects_path, :class => 'btn' %>
+    <%= link_to 'Cancel', projects_path, :class => 'btn' %>
     <%= f.submit "Next >", :class => 'btn btn-primary' %>
   </div>
 <% end %>

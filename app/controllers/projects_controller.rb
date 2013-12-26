@@ -1,11 +1,10 @@
 class ProjectsController < ApplicationController
-  include Projects::Setter
+  include Projects::Callbacks
 
-  before_action :set_project, only: [:show, :destroy, :back, :description, :backers, :new_message, :edit, :update, :info, :create_info]
+  before_action :set_project, only: [:show, :destroy, :description, :backers, :new_message, :edit, :update, :info, :create_info]
   skip_before_action :authorize, only: [:show, :index, :this_week]
   before_action :validate_owner, only: [:edit, :update, :destroy]
   before_action :check_accessibility, only: [:show]
-  before_action :validate_deadline, only: [:show]
 
   def this_week
     @projects = Project.this_week.page(params[:page]).per_page(DEFAULT_PER_PAGE_RESULT_COUNT)
@@ -18,16 +17,18 @@ class ProjectsController < ApplicationController
 
   def category
     #FIXME_AB: Is the category name unique? I think we should use permalink for category too, as we are using it in url
-    if params[:category].present? && @category = Category.find_by(name: params[:category])
+    #FIXED: Category permalink added
+    if params[:category].present? && @category = Category.find_by_permalink(params[:category])
       @projects = @category.projects.live.order(:title).page(params[:page]).per_page(DEFAULT_PER_PAGE_RESULT_COUNT)
     end
     render action: :index
   end
 
   def location
-    if params[:location].present?
+    if params[:location].present? && @location = Location.find_by_permalink(params[:location])
       #FIXME_AB: should we also use permalink for location?
-      @projects = Project.live.located_in(params[:location]).order(:title).page(params[:page]).per_page(DEFAULT_PER_PAGE_RESULT_COUNT)
+      #FIXED: Added permalink for location
+      @projects = @location.projects.live.order(:title).page(params[:page]).per_page(DEFAULT_PER_PAGE_RESULT_COUNT)
     end
     render action: :index
   end
@@ -131,40 +132,31 @@ class ProjectsController < ApplicationController
   end
 
   def new_reward
-    respond_to do |format|
-      format.js {}
-    end
-  end
-
-  def description
-    respond_to do |format|
-      format.js {}
-    end
   end
 
   def backers
     respond_to do |format|
-      format.js {}
+      format.json { render json: @project.pledges.to_json(:include => { :user => { :only => :name } }, :only => ["amount", "created_at"]) }
     end
   end
 
   private
 
+
   def check_accessibility
     #FIXME_AB: Using unless with too many conditions
-    unless(@project.approved? || (logged_in? && (@project.owner?(current_user) || current_user.admin?)))
+    #FIXED: Merged check_accessibility and validate_deadline
+    if (logged_in? && (@project.owner?(current_user) || current_user.admin?))
+      continue
+    elsif !@project.approved?
       redirect_to projects_path, notice: "Access Denied"
+    elsif @project.deadline == nil || @project.deadline <= Time.current
+      redirect_to projects_path, notice: "Outdated project"
     end
   end
 
-  def validate_deadline
     #FIXME_AB: Something is wrong here too.
-    if(@project.deadline != nil && @project.deadline <= Time.current)
-      if !(logged_in? && (@project.owner?(current_user) || current_user.admin?))
-        redirect_to projects_path, notice: "Outdated project"
-      end
-    end
-  end
+    #FIXED: Combined check_accessibility and validate_deadline
 
   # Never trust parameters from the scary internet, only allow the white list through.
   def project_params
