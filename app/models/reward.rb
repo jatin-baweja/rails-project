@@ -41,6 +41,6 @@ class Reward < ActiveRecord::Base
   end
 
   #FIXME_AB: association between methods
-  belongs_to :project
+  #FIXED: Moved association before methods
 
 end

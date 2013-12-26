@@ -34,13 +34,15 @@ class User < ActiveRecord::Base
   has_many :sent_messages, class_name: 'Message', foreign_key: 'from_user_id'
   has_many :received_messages, class_name: 'Message', foreign_key: 'to_user_id'
 
-  def inbox 
-    #FIXME_AB: How would it work if we have a pagination in place?. Can we do it in a single query
-    (sent_messages.parent_messages + received_messages.parent_messages).sort { |x,y| y.updated_at <=> x.updated_at }
-  end
-
   has_secure_password validations: false
   acts_as_paranoid
+
+  def inbox 
+    #FIXME_AB: How would it work if we have a pagination in place?. Can we do it in a single query
+    #FIXED: Using a single query
+    user_id = self.id
+    Message.parent_messages.where("from_user_id = ? OR to_user_id = ?", user_id, user_id).order('updated_at DESC')
+  end
 
   def self.from_omniauth(auth)
     where(auth.slice(:provider, :uid)).first_or_initialize.tap do |user|

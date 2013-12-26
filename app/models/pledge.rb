@@ -13,18 +13,6 @@
 
 class Pledge < ActiveRecord::Base
 
-  def save_with_associated_rewards(rewards)
-    ActiveRecord::Base.transaction do
-      save
-      rewards.each do |key, reward|
-        requested_rewards.create!(reward_id: reward[:id], quantity: reward[:quantity])
-        chosen_reward = Reward.find(reward[:id])
-        chosen_reward.lock!
-        chosen_reward.update(remaining_quantity: (chosen_reward.remaining_quantity - reward[:quantity])) if chosen_reward.remaining_quantity
-      end
-    end
-  end
-
   validates :amount, presence: true, numericality: { only_integer: true, greater_than_or_equal_to: 1 }
   belongs_to :project
   belongs_to :user
@@ -45,6 +33,18 @@ class Pledge < ActiveRecord::Base
         sum + (requested_reward.reward.minimum_amount * requested_reward.quantity)
       else
         sum
+      end
+    end
+  end
+
+  def save_with_associated_rewards(rewards)
+    ActiveRecord::Base.transaction do
+      save
+      rewards.each do |key, reward|
+        requested_rewards.create!(reward_id: reward[:id], quantity: reward[:quantity])
+        chosen_reward = Reward.find(reward[:id])
+        chosen_reward.lock!
+        chosen_reward.update(remaining_quantity: (chosen_reward.remaining_quantity - reward[:quantity])) if chosen_reward.remaining_quantity
       end
     end
   end

@@ -23,7 +23,6 @@
 
 class Project < ActiveRecord::Base
   include ThinkingSphinx::Scopes
-  # attr_accessor :step
 
   with_options if: -> { first_step? || step_not_set? } do |project|
     project.validates :title, uniqueness: { case_sensitive: false }, length: { maximum: 60 }
@@ -182,7 +181,6 @@ class Project < ActiveRecord::Base
     self.published_at = Time.current if published_at.nil? || published_at < Time.current
     self.deadline = published_at + duration.days
     approve!
-    # save
   end
 
   def set_publishing_delayed_job
