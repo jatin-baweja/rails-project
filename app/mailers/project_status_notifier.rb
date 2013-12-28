@@ -8,7 +8,7 @@ class ProjectStatusNotifier < ActionMailer::Base
   #
   def published(project)
     @project = project
-    mail to: project.owner.email, subject: "Project #{project.title} published on #{ APP_NAME }"
+    mail_with_subject("Project #{project.title} published on #{ APP_NAME }", project)
   end
 
   # Subject can be set in your I18n file at config/locales/en.yml
@@ -18,7 +18,7 @@ class ProjectStatusNotifier < ActionMailer::Base
   #
   def failed(project)
     @project = project
-    mail to: project.owner.email, subject: "Project #{project.title} failed to generate funding on #{ APP_NAME }"
+    mail_with_subject("Project #{project.title} failed to generate funding on #{ APP_NAME }", project)
   end
 
   # Subject can be set in your I18n file at config/locales/en.yml
@@ -28,6 +28,13 @@ class ProjectStatusNotifier < ActionMailer::Base
   #
   def funded(project)
     @project = project
-    mail to: project.owner.email, subject: "Congratulations! Your project #{project.title} was successfully funded on #{ APP_NAME }"
+    mail_with_subject("Congratulations! Your project #{project.title} was successfully funded on #{ APP_NAME }", project)
   end
+
+  private
+
+    def mail_with_subject(subject, project)
+      mail to: project.owner.email, subject: subject
+    end
+
 end
