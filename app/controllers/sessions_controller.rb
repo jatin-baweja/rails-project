@@ -29,7 +29,7 @@ class SessionsController < ApplicationController
 
     def redirect_to_admin_or_home
       if current_user.admin?
-        redirect_to admin_projects_pending_for_approval_url
+        redirect_to admin_projects_url
       else
         redirect_to root_url
       end

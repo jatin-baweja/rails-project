@@ -5,7 +5,7 @@ module Projects
 
       def set_project
         unless (@project = Project.find_by_permalink(params[:id]))
-          redirect_to root_path, "No Project Found"
+          redirect_to root_path, alert: "No Project Found"
         end
       end
 

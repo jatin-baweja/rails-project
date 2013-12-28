@@ -18,22 +18,18 @@ class UsersController < ApplicationController
   def create
     @user = User.new(user_params)
 
-    respond_to do |format|
-      if @user.save
-        format.html { redirect_to user_url(@user), notice: "Dear #{@user.name}, you have been successfully registered." }
-      else
-        format.html { render action: :new }
-      end
+    if @user.save
+      redirect_to user_url(@user), notice: "Dear #{@user.name}, you have been successfully registered."
+    else
+      render action: :new
     end
   end
 
   def update
-    respond_to do |format|
-      if @user.update(user_params)
-        format.html { redirect_to user_url(@user), notice: "Your profile has been successfully updated." }
-      else
-        format.html { render action: :edit }
-      end
+    if @user.update(user_params)
+      redirect_to user_url(@user), notice: "Your profile has been successfully updated."
+    else
+      render action: :edit
     end
   end
 

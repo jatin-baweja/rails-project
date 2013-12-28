@@ -8,12 +8,10 @@ class RewardsController < ApplicationController
   end
 
   def create
-    respond_to do |format|
-      if @project.save_rewards(project_params)
-        format.html { redirect_to project_url(@project), notice: "Project #{@project.title} was successfully created/updated." }
-      else
-        format.html { render action: :new }
-      end
+    if @project.save_rewards(project_params)
+      redirect_to project_url(@project), notice: "Project #{@project.title} was successfully created/updated."
+    else
+      render action: :new
     end
   end
 

@@ -13,9 +13,7 @@ class Admin::UsersController < Admin::BaseController
     rescue StandardError => e
       flash[:notice] = e.message
     end
-    respond_to do |format|
-      format.html { redirect_to admin_users_url }
-    end
+    redirect_to admin_users_url
   end
 
   def make_admin
@@ -25,9 +23,7 @@ class Admin::UsersController < Admin::BaseController
     else
       flash[:alert] = "User #{@user.name} could not be promoted to admin status"
     end
-    respond_to do |format|
-      format.html { redirect_to admin_users_url }
-    end
+    redirect_to admin_users_url
   end
 
   private

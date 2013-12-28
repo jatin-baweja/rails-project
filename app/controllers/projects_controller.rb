@@ -1,7 +1,7 @@
 class ProjectsController < ApplicationController
   include Projects::Callbacks
 
-  before_action :set_project, only: [:show, :destroy, :description, :backers, :new_message, :edit, :update, :info, :create_info]
+  before_action :set_project, only: [:show, :destroy, :backers, :new_message, :edit, :update, :info, :create_info]
   skip_before_action :authorize, only: [:show, :index, :this_week]
   before_action :validate_owner, only: [:edit, :update, :destroy]
   before_action :check_accessibility, only: [:show]
@@ -44,7 +44,7 @@ class ProjectsController < ApplicationController
   end
 
   def user_owned
-    @user_projects = current_user.owned_projects.group_by(&:project_state)
+    @projects = current_user.owned_projects.group_by(&:project_state)
   end
 
   def edit
@@ -69,12 +69,10 @@ class ProjectsController < ApplicationController
   end
 
   def create_info
-    respond_to do |format|
-      if @project.save_info(project_params)
-        format.html { redirect_to rewards_project_url(@project) }
-      else
-        format.html { render action: :info }
-      end
+    if @project.save_info(project_params)
+      redirect_to rewards_project_url(@project)
+    else
+      render action: :info
     end
   end
 
@@ -83,12 +81,10 @@ class ProjectsController < ApplicationController
     #FIXED: Removed one of the ifs
     if location_params[:location_name].present? && @location = Location.find_or_create_by(name: location_params[:location_name])
       @project = @location.projects.build(project_params)
-      respond_to do |format|
-        if @project.save_primary_details(current_user)
-          format.html { redirect_to story_project_url(@project) }
-        else
-          format.html { render action: :new }
-        end
+      if @project.save_primary_details(current_user)
+        redirect_to story_project_url(@project)
+      else
+        render action: :new
       end
     end
   end
@@ -96,12 +92,10 @@ class ProjectsController < ApplicationController
   def update
     @project.step = 1;
 
-    respond_to do |format|
-      if @project.update(project_params)
-        format.html { redirect_to story_project_url(@project) }
-      else
-        format.html { render action: :edit }
-      end
+    if @project.update(project_params)
+      redirect_to story_project_url(@project)
+    else
+      render action: :edit
     end
   end
 
@@ -112,9 +106,7 @@ class ProjectsController < ApplicationController
     rescue StandardError => e
       flash[:notice] = e.message
     end
-    respond_to do |format|
-      format.html { redirect_to root_url }
-    end
+    redirect_to root_url
   end
 
   def new_reward
@@ -128,12 +120,11 @@ class ProjectsController < ApplicationController
 
   private
 
-
   def check_accessibility
     #FIXME_AB: Using unless with too many conditions
     #FIXED: Merged check_accessibility and validate_deadline
     if current_user_owner_or_admin?
-      continue
+      nil
     elsif !@project.approved?
       redirect_to projects_path, notice: "Access Denied"
     elsif @project.outdated?

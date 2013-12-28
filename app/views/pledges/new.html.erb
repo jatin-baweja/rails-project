@@ -45,7 +45,6 @@
 
           <% if !@rewards.empty? %> 
             <div class="highlight">
-              <%# counter = 0 %>
               <% @rewards.each_with_index do |reward, index| %>
                 <label class='checkbox' style="width:300px;display: inline-block;">
                   <input type='checkbox' id='reward_<%= reward.id %>' name='rewards[<%= index %>][id]' value="<%= reward.id %>" />

@@ -192,8 +192,7 @@ class Project < ActiveRecord::Base
   end
 
   def rejected_by_admin
-    reject
-    save
+    reject!
   end
 
   def owner?(user)

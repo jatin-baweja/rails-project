@@ -1,5 +1,5 @@
 <% counter = 0 %>
-<% if !projects.nil? %>
+<% if projects.present? %>
   <% cache projects do %>
     <% projects.each do |project| %>
       <% if counter%3 == 0 %>

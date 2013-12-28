@@ -6,7 +6,7 @@ class MessagesController < ApplicationController
   end
 
   def show
-    @child_message = @message.child_messages.build
+    @reply_message = Message.new
   end
 
   def create

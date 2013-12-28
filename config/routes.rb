@@ -52,11 +52,10 @@ Kickstarter::Application.routes.draw do
 
   get '/admin', controller: 'sessions', action: 'new', as: :admin_root
   namespace :admin do
-    get "projects/pending_for_approval"
     get "users", action: 'index', controller: :users
     delete "users", action: 'destroy', controller: :users
     post "users/:id/make_admin", action: 'make_admin', controller: :users, as: :make_admin
-    resources :projects, except: :all do
+    resources :projects, only: [:index] do
       get "approve", on: :member
       get "reject", on: :member
     end

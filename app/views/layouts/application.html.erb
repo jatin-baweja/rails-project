@@ -63,11 +63,11 @@
               <%= menu_divider %>
               <li><%= link_to "Log Out", logout_path %></li>
             <% elsif logged_in? && current_user.admin? %>
-              <li><%= link_to "Projects", admin_projects_pending_for_approval_path %></li>
+              <li><%= link_to "Projects", admin_projects_path %></li>
               <%= menu_divider %>
               <li><%= link_to "Users", admin_users_path %></li>
               <%= menu_divider %>
-              <li><%= link_to "Messages", messages_path %></li>
+              <li><%= link_to t(".messages"), messages_path %></li>
               <%= menu_divider %>
               <li><%= link_to "Log Out", logout_path %></li>
             <% else %>

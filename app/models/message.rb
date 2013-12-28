@@ -57,4 +57,12 @@ class Message < ActiveRecord::Base
     save
   end
 
+  def to?(user)
+    to_user_id == user.id
+  end
+
+  def from?(user)
+    from_user_id == user.id
+  end
+
 end

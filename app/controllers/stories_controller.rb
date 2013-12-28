@@ -8,12 +8,10 @@ class StoriesController < ApplicationController
   end
 
   def create
-    respond_to do |format|
-      if @project.save_story(project_params)
-        format.html { redirect_to info_project_url(@project) }
-      else
-        format.html { render action: :new }
-      end
+    if @project.save_story(project_params)
+      redirect_to info_project_url(@project)
+    else
+      render action: :new
     end
   end
 

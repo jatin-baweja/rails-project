@@ -1,13 +1,18 @@
 class SearchesController < ApplicationController
   skip_before_action :authorize
+  before_action :search_parameter_available
 
   def search
-    if params[:q].present?
-      @projects = Project.been_approved.active.search Riddle::Query.escape(params[:q]), :page => params[:page], :per_page => 15
-    else
-      @projects = Project.live.order(:title).page(params[:page]).per_page(15)
-    end
-    render template: 'projects/index' 
+    @projects = Project.been_approved.active.search Riddle::Query.escape(params[:q]), :page => params[:page], :per_page => 15
+    render template: 'projects/index'
   end
 
+  private
+
+    def search_parameter_available
+      if params[:q].blank?
+        redirect_to root_path
+      end
+    end
+      
 end

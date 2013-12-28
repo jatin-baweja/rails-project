@@ -1,6 +1,6 @@
 <div class="highlight high300">
   <div class="highlight-inner">
-    <%= image_tag project.images[0].picture.url(:thumb), class: 'project-thumbnail' if !project.images[0].nil? %>
+    <%= image_tag project.images[0].picture.url(:thumb), class: 'project-thumbnail' if project.images.present? %>
     <h5 class='text-center'><%= link_to project.title, project_path(project) %></h5>
     <p><%= truncate(project.summary, length: 125) %></p>
   </div>

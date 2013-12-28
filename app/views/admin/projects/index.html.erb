@@ -1,4 +1,4 @@
-<%- @pending_projects = @projects["submitted"].select { |project| project.deadline > Time.current } -%>
+<%- @pending_projects = @projects["submitted"].select { |project| !project.outdated? } -%>
 <%- @rejected_projects = @projects["rejected"] -%>
 <%- @approved_projects = @projects["approved"] -%>
 <div class="page-header">

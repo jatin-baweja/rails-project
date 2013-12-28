@@ -17,7 +17,7 @@
     <%= f.label :duration, :class => 'control-label' %>
     <div class="controls">
       <%= f.text_field :duration, :class => 'text_field' %>
-      <p class="help-block">Enter the duration to achieve your funding in days: 1-29</p>
+      <p class="help-block">Enter the duration to achieve your funding in days: 1-<%= PAYMENT_HOLDING_PERIOD %></p>
     </div>
   </div>
   <div class="control-group">

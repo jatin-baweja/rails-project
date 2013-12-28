@@ -3,20 +3,19 @@ class PledgesController < ApplicationController
 
   before_action :set_project
   before_action :validate_not_owner
+  before_action :check_blank_rewards, only[:create]
 
   def new
   end
 
   def create
-    if !blank_rewards?
-      @pledge = @project.pledges.build(pledge_params)
-      @pledge.user = current_user
-      @pledge.save_with_associated_rewards(params[:rewards])
-      if params[:payment_mode] == "Paypal"
-        redirect_to @project.paypal_url(project_url(@project), @pledge)
-      else
-        redirect_to payment_stripe_charges_new_card_url(project: @project.id, pledge: @pledge.id)
-      end
+    @pledge = @project.pledges.build(pledge_params)
+    @pledge.user = current_user
+    @pledge.save_with_associated_rewards(params[:rewards])
+    if params[:payment_mode] == "Paypal"
+      redirect_to @project.paypal_url(project_url(@project), @pledge)
+    else
+      redirect_to payment_stripe_charges_new_card_url(project: @project.id, pledge: @pledge.id)
     end
   rescue ActiveRecord::RecordInvalid
     render action: :new
@@ -36,6 +35,13 @@ class PledgesController < ApplicationController
       end
     end
 
+    def check_blank_rewards
+      if blank_rewards?
+        flash.now[:alert] = "Rewards should be selected"
+        render action: :new
+      end
+    end
+
     def blank_rewards?
       reward_present = {}
       if params[:rewards]
@@ -45,9 +51,6 @@ class PledgesController < ApplicationController
           val.each do |attr_key, attr_val|
             reward_present[key] = false if attr_val.blank?
           end
-        end
-        if reward_present.any? { |key, value| value == false }
-          render action: :new, alert: "Please don't leave empty rewards"
         end
       end
       reward_present.any? { |key, value| value == false }

@@ -20,7 +20,7 @@
   <div class="control-group">
     <%= label_tag :message, "Type a message for your contacts" %>
     <div class="controls">
-      <p><%= @project.owner.name %> would like you to know that he has started a new project on kicklone and wants you to check it out.</p>
+      <p><%= @project.owner.name %> would like you to know that he has started a new project on <%= APP_NAME %> and wants you to check it out.</p>
       <p>Here's the project link : <%= link_to @project.title, project_url(@project) %>
       Do check it out.</p>
       <p>Here's what <%= @project.owner.name %> had to say about his project:</p>
