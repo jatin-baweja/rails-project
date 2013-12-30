@@ -1,5 +1,6 @@
 class ProjectFundingJob < Struct.new(:project)
 
+  #FIXME_AB: We can improve this method.
   def perform
     if project.approved?
       @pledges = project.pledges

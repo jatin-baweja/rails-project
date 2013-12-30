@@ -16,8 +16,6 @@ class ProjectsController < ApplicationController
   end
 
   def category
-    #FIXME_AB: Is the category name unique? I think we should use permalink for category too, as we are using it in url
-    #FIXED: Category permalink added
     if params[:category].present? && @category = Category.find_by_permalink(params[:category])
       @projects = @category.projects.live.order(:title).page(params[:page]).per_page(DEFAULT_PER_PAGE_RESULT_COUNT)
     end
@@ -26,8 +24,6 @@ class ProjectsController < ApplicationController
 
   def location
     if params[:location].present? && @location = Location.find_by_permalink(params[:location])
-      #FIXME_AB: should we also use permalink for location?
-      #FIXED: Added permalink for location
       @projects = @location.projects.live.order(:title).page(params[:page]).per_page(DEFAULT_PER_PAGE_RESULT_COUNT)
     end
     render action: :index
@@ -77,8 +73,6 @@ class ProjectsController < ApplicationController
   end
 
   def create
-    #FIXME_AB: Lets revisit this action
-    #FIXED: Removed one of the ifs
     if location_params[:location_name].present? && @location = Location.find_or_create_by(name: location_params[:location_name])
       @project = @location.projects.build(project_params)
       if @project.save_primary_details(current_user)
@@ -121,8 +115,6 @@ class ProjectsController < ApplicationController
   private
 
   def check_accessibility
-    #FIXME_AB: Using unless with too many conditions
-    #FIXED: Merged check_accessibility and validate_deadline
     if current_user_owner_or_admin?
       nil
     elsif !@project.approved?
@@ -132,8 +124,6 @@ class ProjectsController < ApplicationController
     end
   end
 
-    #FIXME_AB: Something is wrong here too.
-    #FIXED: Combined check_accessibility and validate_deadline
 
   # Never trust parameters from the scary internet, only allow the white list through.
   def project_params

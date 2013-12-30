@@ -1,3 +1,4 @@
+#FIXME_AB: I am concerned about the action names in this controller.
 class Admin::MessagesController < Admin::BaseController
   include Projects::Callbacks
 
@@ -12,9 +13,12 @@ class Admin::MessagesController < Admin::BaseController
   end
 
   def create_admin_conversation
+    #FIXME_AB: Isn't it project.owner
     to_user = User.find(@project.owner_id)
     message = @project.messages.build(conversation_params)
+    #FIXME_AB: I am not convinced by the Message#sent method. Here we could simply do @project.messages.create
     message.sent(current_user, to_user)
+    #FIXME_AB: What if the message is not created successfully or there is any error/exception
     render action: :admin_conversation
   end
 

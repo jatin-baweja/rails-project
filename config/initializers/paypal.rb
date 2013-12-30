@@ -12,6 +12,7 @@ PAYPAL = {
   :redirect_url => "https://www.paypal.com/cgi-bin/webscr?"
   }
 }
+#FIXME_AB: These methods doesn't belong to this place. Ideally we should be having a Paypal class and these method should go in there. 
 def paypal_merchant_email
   PAYPAL[Rails.env.to_sym][:merchant_email]
 end

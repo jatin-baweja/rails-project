@@ -1,3 +1,5 @@
+// #FIXME_AB: Can we follow object oriented concepts here too. 
+// #FIXME_AB: Can we also add detailed comment. It will help us to understand the working of JS code.  
 $(document).ready(function() {
   $('#pledges-button').on('click', function() {
     $.ajax({

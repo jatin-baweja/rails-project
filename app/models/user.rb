@@ -38,8 +38,7 @@ class User < ActiveRecord::Base
   acts_as_paranoid
 
   def inbox 
-    #FIXME_AB: How would it work if we have a pagination in place?. Can we do it in a single query
-    #FIXED: Using a single query
+    #FIXME_AB: we can easily avoid defining the local variable below, and use just id instead of user_id in the query below.
     user_id = self.id
     Message.parent_messages.where("from_user_id = ? OR to_user_id = ?", user_id, user_id).order('updated_at DESC')
   end
@@ -57,6 +56,7 @@ class User < ActiveRecord::Base
   end
 
   def messages
+    #FIXME_AB: How would it work if we have a pagination in place?. Can we do it in a single query
     sent_messages + received_messages
   end
 
@@ -64,7 +64,5 @@ class User < ActiveRecord::Base
     pledges.for_project(project).sum(:amount)
   end
 
-  #FIXME_AB: Following two lines are written twice in this model
-  #FIXED: Removed repetition
 
 end
