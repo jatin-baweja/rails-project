@@ -8,19 +8,19 @@ class Admin::ProjectsController < Admin::BaseController
   end
 
   def approve
-    if @project.approved_by_admin
+    if @project.approve!
       #FIXME_AB: These two things also be the part of model, in callback of the AASM
-      @project.set_publishing_delayed_job
-      @project.set_funding_delayed_job
+      #FIXED: Added to after callback for approve event
     else
       flash[:alert] = 'The project could not be approved'
       #FIXME_AB: Why do we need render js in these two actions, we have the erb.js files for these actions
+      #FIXED: In case project fails to be accepted or rejected, it should display error message and not js.erb file
       render js: %(window.location.href = '#{ project_path(@project) }')
     end
   end
 
   def reject
-    if !@project.rejected_by_admin
+    if !@project.reject!
       flash[:alert] = 'The project failed to be rejected'
       render js: %(window.location.href = '#{ project_path(@project) }')
     end

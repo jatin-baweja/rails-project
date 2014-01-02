@@ -1,7 +1,8 @@
 <div class="highlight high300">
   <div class="highlight-inner">
     <% #FIXME_AB: project.images[0].picture.url(:thumb) belongs to model. Now tell me which model? -%>
-    <%= image_tag project.images[0].picture.url(:thumb), class: 'project-thumbnail' if project.images.present? %>
+    <% #FIXED: Added thumbnail method to Project Model %>
+    <%= image_tag project.thumbnail, class: 'project-thumbnail' %>
     <h5 class='text-center'><%= link_to project.title, project_path(project) %></h5>
     <p><%= truncate(project.summary, length: 125) %></p>
   </div>

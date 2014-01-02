@@ -39,8 +39,8 @@ class User < ActiveRecord::Base
 
   def inbox 
     #FIXME_AB: we can easily avoid defining the local variable below, and use just id instead of user_id in the query below.
-    user_id = self.id
-    Message.parent_messages.where("from_user_id = ? OR to_user_id = ?", user_id, user_id).order('updated_at DESC')
+    #FIXED: Removed local variable
+    Message.parent_messages.where("from_user_id = ? OR to_user_id = ?", id, id).order('updated_at DESC')
   end
 
   def self.from_omniauth(auth)
@@ -55,10 +55,8 @@ class User < ActiveRecord::Base
     end
   end
 
-  def messages
     #FIXME_AB: How would it work if we have a pagination in place?. Can we do it in a single query
-    sent_messages + received_messages
-  end
+    #FIXED: Removing messages and adding inbox method
 
   def pledge_amount_for_project(project)
     pledges.for_project(project).sum(:amount)

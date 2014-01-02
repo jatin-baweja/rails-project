@@ -93,7 +93,16 @@ class Project < ActiveRecord::Base
     end
 
     event :approve do
+      before do
+        generate_permalink! if permalink.blank?
+        self.published_at = Time.current if published_at.nil? || published_at < Time.current
+        self.deadline = published_at + duration.days
+      end
       transitions :from => :submitted, :to => :approved
+      after do
+        set_publishing_delayed_job
+        set_funding_delayed_job
+      end
     end
 
     event :edit do
@@ -127,25 +136,6 @@ class Project < ActiveRecord::Base
     end
   end
 
-  def paypal_url(return_url, pledge)
-
-    values = {
-      :business => paypal_merchant_email,
-      :cmd => '_cart',
-      :upload => 1,
-      :return => return_url,
-      :invoice => pledge.id,
-      :paymentaction => "authorization"
-    }
-    values.merge!({
-      "amount_1" => pledge.amount,
-      "item_name_1" => title,
-      "item_number_1" => id,
-      "quantity_1" => '1'
-    })
-    paypal_redirect_url + values.to_query
-  end
-
   def future_publish_date
     if published_at.nil? || published_at < Time.current
       errors.add :published_at, 'has to be after today'
@@ -177,23 +167,14 @@ class Project < ActiveRecord::Base
   end
 
   #FIXME_AB: who else can approve the project? What I see is, this is the perfect case of the callback method of approve state change
-  def approved_by_admin
-    generate_permalink!
-    self.published_at = Time.current if published_at.nil? || published_at < Time.current
-    self.deadline = published_at + duration.days
-    approve!
-  end
+  #FIXED: Added to before callback for approve event
 
   def set_publishing_delayed_job
-    Delayed::Job.enqueue(PublishProjectJob.new(self), 0, published_at)
+    Delayed::Job.enqueue(PublishProjectJob.new(self), run_at: published_at)
   end
 
   def set_funding_delayed_job
-    Delayed::Job.enqueue(ProjectFundingJob.new(self), 0, deadline)
-  end
-
-  def rejected_by_admin
-    reject!
+    Delayed::Job.enqueue(ProjectFundingJob.new(self), run_at: deadline)
   end
 
   def owner?(user)
@@ -224,6 +205,10 @@ class Project < ActiveRecord::Base
 
   def outdated?
     deadline <= Time.current
+  end
+
+  def thumbnail
+    images[0].picture.url(:thumb) if images.present?
   end
 
 end

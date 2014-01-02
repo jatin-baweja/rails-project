@@ -1,9 +1,10 @@
 class PledgesController < ApplicationController
   include Projects::Callbacks
+  require 'paypal'
 
   before_action :set_project
   before_action :validate_not_owner
-  before_action :check_blank_rewards, only[:create]
+  before_action :check_blank_rewards, only: [:create]
 
   def new
   end
@@ -13,7 +14,7 @@ class PledgesController < ApplicationController
     @pledge.user = current_user
     @pledge.save_with_associated_rewards(params[:rewards])
     if params[:payment_mode] == "Paypal"
-      redirect_to @project.paypal_url(project_url(@project), @pledge)
+      redirect_to Paypal.url(@project, project_url(@project), @pledge)
     else
       redirect_to payment_stripe_charges_new_card_url(project: @project.id, pledge: @pledge.id)
     end
