@@ -1,0 +1,83 @@
+development:
+  app_name: XYZ
+  email:
+    default_sender: abc@xyz.com
+  payment_holding_period: 29
+  default_per_page_result_count: 6
+  mailchimp:
+    api_key: 0000000aaa0000a00aa0aa00a0000a00-us0
+    timeout: 15
+    throws_exception: true
+    subscription:
+      list_id: 00a00a0000
+  stripe:
+    publishable_key: pk_test_AxAxxAAAAAxxAxxx1xAAAxxA
+    secret_key: sk_test_xxxxAAxxAxxAxAA1xAAAx11A
+  omniauth:
+    facebook:
+      app_id: "0000000000000000"
+      secret: 00a000aaaa000aaa0000aaaaaa00a000
+  omnicontacts:
+    gmail:
+      client_id: 00000000000.apps.googleusercontent.com
+      client_secret: 1xxA1xx1x1-xxA1AA1xAAAxA
+      redirect_path: /contacts/gmail
+  paypal:
+    merchant_email: abcd@xyz.com
+    redirect_url: https://www.sandbox.paypal.com/cgi-bin/webscr?
+
+test:
+  app_name: XYZ
+  email:
+    default_sender: abc@xyz.com
+  payment_holding_period: 29
+  default_per_page_result_count: 6
+  mailchimp:
+    api_key: 0000000aaa0000a00aa0aa00a0000a00-us0
+    timeout: 15
+    throws_exception: true
+    subscription:
+      list_id: 00a00a0000
+  stripe:
+    publishable_key: pk_test_AxAxxAAAAAxxAxxx1xAAAxxA
+    secret_key: sk_test_xxxxAAxxAxxAxAA1xAAAx11A
+  omniauth:
+    facebook:
+      app_id: "0000000000000000"
+      secret: 00a000aaaa000aaa0000aaaaaa00a000
+  omnicontacts:
+    gmail:
+      client_id: 00000000000.apps.googleusercontent.com
+      client_secret: 1xxA1xx1x1-xxA1AA1xAAAxA
+      redirect_path: /contacts/gmail
+  paypal:
+    merchant_email: abcd@xyz.com
+    redirect_url: https://www.sandbox.paypal.com/cgi-bin/webscr?
+
+production:
+  app_name: XYZ
+  email:
+    default_sender: abc@xyz.com
+  payment_holding_period: 29
+  default_per_page_result_count: 6
+  mailchimp:
+    api_key: 0000000aaa0000a00aa0aa00a0000a00-us0
+    timeout: 15
+    throws_exception: true
+    subscription:
+      list_id: 00a00a0000
+  stripe:
+    publishable_key: pk_test_AxAxxAAAAAxxAxxx1xAAAxxA
+    secret_key: sk_test_xxxxAAxxAxxAxAA1xAAAx11A
+  omniauth:
+    facebook:
+      app_id: "0000000000000000"
+      secret: 00a000aaaa000aaa0000aaaaaa00a000
+  omnicontacts:
+    gmail:
+      client_id: 00000000000.apps.googleusercontent.com
+      client_secret: 1xxA1xx1x1-xxA1AA1xAAAxA
+      redirect_path: /contacts/gmail
+  paypal:
+    merchant_email: abcd@xyz.com
+    redirect_url: https://www.sandbox.paypal.com/cgi-bin/webscr?

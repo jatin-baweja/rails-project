@@ -1,2 +1,0 @@
-#FIXME_AB: You should have environment based has like paypal. And instead of having several files for such settings. YOu can have only one generic file.
-DEFAULT_FROM_EMAIL = 'abc@xyz.com'
