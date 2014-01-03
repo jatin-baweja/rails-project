@@ -1,10 +1,10 @@
 <div id="message" class="container-fluid">
   <h4><%= "[#{@message.project.title}] #{@message.subject}" %></h4>
   <p class='collapsed'>
-    <div class="row <%= (@message.to?(current_user)) && @message.unread? ? "unread" : "read" %>">
+    <div class="row <%= (@message.receiver?(current_user)) && @message.unread? ? "unread" : "read" %>">
       <div class="span8">
-        <p>From: <%= "#{ @message.from_user.name }" %></p>
-        <p>To:<%= "#{ @message.to_user.name }" %></p>
+        <p>From: <%= "#{ @message.sender.name }" %></p>
+        <p>To:<%= "#{ @message.receiver.name }" %></p>
       </div>
       <div class="span3 offset1">
         <%= @message.created_at.strftime("%Y-%m-%d %I:%M:%S %p %Z") %>
@@ -14,16 +14,16 @@
       </div>
     </div>
     <hr>
-    <% if (@message.unread? && (@message.to?(current_user))) %>
+    <% if (@message.unread? && (@message.receiver?(current_user))) %>
       <% @message.update_columns(unread: false) %>
     <% end %>
   <% if !@message.child_messages.empty? %>
     <% @message.child_messages.each do |message| %>
       <% if message.present? && message.id.present? %>
-        <div class="row <%= (message.to?(current_user)) && message.unread? ? "unread" : "read" %>">
+        <div class="row <%= (message.receiver?(current_user)) && message.unread? ? "unread" : "read" %>">
           <div class="span8">
-            <p>From: <%= "#{ message.from_user.name }" if message.from_user.present? %></p>
-            <p>To:<%= "#{ message.to_user.name }" if message.to_user.present? %></p>
+            <p>From: <%= "#{ message.sender.name }" if message.sender.present? %></p>
+            <p>To:<%= "#{ message.receiver.name }" if message.receiver.present? %></p>
           </div>
           <div class="span3 offset1">
             <%= message.created_at.strftime("%Y-%m-%d %I:%M:%S %p %Z") %>
@@ -33,7 +33,7 @@
           </div>
         </div>
         <hr>
-        <% message.update(unread: false) if ((message.to?(current_user)) && message.unread?) %>
+        <% message.update(unread: false) if ((message.receiver?(current_user)) && message.unread?) %>
       <% end %>
     <% end %>
   <% end %>

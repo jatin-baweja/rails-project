@@ -10,7 +10,8 @@ class MessagesController < ApplicationController
   end
 
   def create
-    if current_user.sent_messages.create(message_params.merge(parent_id: @message.id.to_s))
+    message = current_user.sent_messages.create(message_params.merge(parent_id: @message.id.to_s))
+    if message.new_record?
       redirect_to message_path(@message)
     else
       redirect_to messages_url, alert: "There was an error sending that message"

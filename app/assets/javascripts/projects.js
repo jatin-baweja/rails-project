@@ -25,6 +25,7 @@ function AjaxMenuButton(buttonId, containerId, heading, appendPath) {
       success: function(responseData, returnStatus, xhr) {
         var $mainContainer = $('#project-main');
         var $subContainer = $mainContainer.children('#' + containerId);
+        // Create sub-container if it does not exist already
         if ($subContainer.length == 0) {
           $subContainer = $("<div id='" + containerId + "' class='container-fluid'></div>").appendTo($mainContainer);
         }
@@ -55,9 +56,10 @@ $(document).ready(function() {
   var messagesButton = new AjaxMenuButton('messages-button', 'messages', 'Messages', 'admin_conversation');
   //Parse response data to display messages
   messagesButton.displayData = function(responseData, container) {
+    container.append("<a href='" + window.location.href + "/new_message' data-remote='true'>+ New Message</a>")
     $.each(responseData, function(index, message) {
       var message_time = new Date(message['updated_at']).toLocaleString();
-      container.append("<div class='row read-highlight'><div class='span2'>" + message['from_user']['name'] + " </div><div class='span6'><a href='/messages/" + message["id"] + "'>[" + message['project']['title'] + "] " + message['subject'] + "</a></div><div class='span3'>" + message_time + " </div></div>");
+      container.append("<div class='row read-highlight'><div class='span2'>" + message['sender']['name'] + " </div><div class='span6'><a href='/messages/" + message["id"] + "'>[" + message['project']['title'] + "] " + message['subject'] + "</a></div><div class='span3'>" + message_time + " </div></div>");
     });
   }
   var descriptionButton = new MenuButton('description-button', 'description')

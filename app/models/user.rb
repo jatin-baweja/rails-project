@@ -31,8 +31,8 @@ class User < ActiveRecord::Base
   has_many :backed_projects, -> { uniq }, through: :pledges, source: :project
   has_one :account
   has_many :pledges
-  has_many :sent_messages, class_name: 'Message', foreign_key: 'from_user_id'
-  has_many :received_messages, class_name: 'Message', foreign_key: 'to_user_id'
+  has_many :sent_messages, class_name: 'Message', foreign_key: 'sender_id'
+  has_many :received_messages, class_name: 'Message', foreign_key: 'receiver_id'
 
   has_secure_password validations: false
   acts_as_paranoid
@@ -40,7 +40,7 @@ class User < ActiveRecord::Base
   def inbox 
     #FIXME_AB: we can easily avoid defining the local variable below, and use just id instead of user_id in the query below.
     #FIXED: Removed local variable
-    Message.parent_messages.where("from_user_id = ? OR to_user_id = ?", id, id).order('updated_at DESC')
+    Message.parent_messages.where("sender_id = ? OR receiver_id = ?", id, id).order('updated_at DESC')
   end
 
   def self.from_omniauth(auth)

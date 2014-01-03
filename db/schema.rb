@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20131226132748) do
+ActiveRecord::Schema.define(version: 20140103110041) do
 
   create_table "accounts", force: true do |t|
     t.string   "customer_id"
@@ -87,11 +87,14 @@ ActiveRecord::Schema.define(version: 20131226132748) do
     t.integer  "parent_id"
     t.string   "subject"
     t.integer  "project_id"
-    t.integer  "from_user_id"
-    t.integer  "to_user_id"
-    t.boolean  "unread",       default: true, null: false
+    t.boolean  "unread",      default: true, null: false
     t.time     "deleted_at"
+    t.integer  "sender_id"
+    t.integer  "receiver_id"
   end
+
+  add_index "messages", ["receiver_id"], name: "index_messages_on_receiver_id", using: :btree
+  add_index "messages", ["sender_id"], name: "index_messages_on_sender_id", using: :btree
 
   create_table "pledges", force: true do |t|
     t.integer  "project_id"

@@ -1,7 +1,8 @@
 <% #FIXME_AB: This logic can go to helper methods -%>
-<%- @pending_projects = @projects["submitted"].select { |project| !project.outdated? } -%>
-<%- @rejected_projects = @projects["rejected"] -%>
-<%- @approved_projects = @projects["approved"] -%>
+<% #FIXED: Changed to individual queries to support pagination %>
+<%- @pending_projects = @projects.submitted -%>
+<%- @rejected_projects = @projects.rejected -%>
+<%- @approved_projects = @projects.approved -%>
 <div class="page-header">
   <h1><%=t '.title', :default => "Projects" %></h1>
 </div>

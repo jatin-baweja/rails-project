@@ -43,8 +43,8 @@ Kickstarter::Application.routes.draw do
     patch 'create_story', controller: 'stories', action: 'create', on: :member
     patch 'create_info', on: :member
     patch 'create_rewards', controller: 'rewards', action: 'create', on: :member
-    get 'admin_conversation', controller: 'admin/messages', on: :member
-    post 'create_admin_conversation', controller: 'admin/messages', on: :member
+    get 'admin_conversation', controller: 'admin/messages', action: 'index', on: :member
+    post 'create_admin_conversation', controller: 'admin/messages', action: 'create', on: :member
     get 'description', on: :member
     get 'backers', on: :member
   end

@@ -21,8 +21,22 @@ class Transaction < ActiveRecord::Base
   validates :status, inclusion: { in: PAYPAL_PAYMENT_STATUS, message: 'is invalid' }, if: -> { payment_mode?("paypal") }
   belongs_to :pledge
 
+  after_commit :inform_pledger, on: :create
+
+  def inform_pledger
+    if status?("charged")
+      PledgeNotifier.charged(pledge.user, pledge.amount, pledge.project).deliver
+    elsif status?("uncharged")
+      Delayed::Job.enqueue(PledgeNotifierJob.new(pledge, pledge.project, pledge.user))
+    end
+  end
+
   def payment_mode?(mode)
     payment_mode == mode
+  end
+
+  def status?(transaction_status)
+    status == transaction_status
   end
 
 end

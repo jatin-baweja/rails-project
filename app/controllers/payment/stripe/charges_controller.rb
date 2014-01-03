@@ -11,9 +11,7 @@ class Payment::Stripe::ChargesController < ApplicationController
   end
 
   def create_card
-
     email = current_user.email
-
     if params[:pay_with_existing_card] != "1"
       customer = Stripe::Customer.create(
         :email => email,
@@ -25,14 +23,11 @@ class Payment::Stripe::ChargesController < ApplicationController
           :name => params[:name_on_card]
         }
       )
-
       @user.create_account(customer_id: customer.id, card_id: customer.default_card)
     end
-    @pledge = Pledge.find(params[:pledge_id])
-    @project = @pledge.project
-    @pledge.create_transaction(status: 'uncharged', payment_mode: 'stripe')
-    Delayed::Job.enqueue(PledgeNotifierJob.new(@pledge, @project, current_user))
-    redirect_to project_path(@project), notice: 'Your card has been successfully stored'
+    pledge = Pledge.find(params[:pledge_id])
+    pledge.create_transaction(status: 'uncharged', payment_mode: 'stripe')
+    redirect_to project_path(pledge.project), notice: 'Your card has been successfully stored'
 
   rescue Stripe::CardError => e
     flash[:error] = e.message

@@ -30,3 +30,11 @@ html, body {
 .footer-container {
   float: left;
 }
+
+.small-box {
+  width: 215px;
+  margin-left: 0;
+  display: block;
+  float: left;
+  padding-left: 10px;
+}

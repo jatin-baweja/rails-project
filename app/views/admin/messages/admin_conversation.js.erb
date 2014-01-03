@@ -1,9 +1,0 @@
-// #FIXME_AB: I think we can do most of the job through JS file itself and don' need to write js in erb file. Lets discuss when you are available. 
-var $mainContainer = $('#project-main');
-var $messageContainer = $mainContainer.children('#messages');
-if ($messageContainer.length == 0) {
-  $messageContainer = $("<div id='messages' class='container-fluid'></div>").appendTo($mainContainer);
-}
-$messageContainer.html("<h3>Messages</h3><% if logged_in? && current_user.admin? %><%= escape_javascript render partial: 'new_message_link' %><% end %><%= escape_javascript render partial: 'messages/message_list' %>");
-$mainContainer.children().not($messageContainer).hide();
-$messageContainer.show();

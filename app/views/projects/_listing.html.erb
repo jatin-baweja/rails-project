@@ -1,24 +1,16 @@
 <% #FIXME_AB: YOur are doing too much with logic to display 3 project in one line. Can be done with CSS only -%>
-<% counter = 0 %>
+<% #FIXED: Changed CSS and removed counter %>
 <% if projects.present? %>
   <% cache projects do %>
+    <div class="row-fluid">
     <% projects.each do |project| %>
-      <% if counter%3 == 0 %>
-        <div class="row-fluid">
-      <% end %>
-      <div class="span4">
+      <div class="small-box">
         <% cache project do %>
           <%= render partial: 'projects/short_description', locals: { :project => project } %>
         <% end %>
       </div>
-      <% if counter%3 == 2 %>
-        </div>
-      <% end %>
-      <% counter = counter + 1 %>
     <% end %>
-    <% if counter%3 != 0 %>
-      </div>
-    <% end %>
+    </div>
   <% end %>
 <% else %>
   <p>No projects here.</p>

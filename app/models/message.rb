@@ -24,11 +24,13 @@ class Message < ActiveRecord::Base
   belongs_to :parent, class_name: 'Message', touch: true
 
   #FIXME_AB: How about naming this association as sender
-  belongs_to :from_user, class_name: 'User'
+  #FIXED: Changed association name to sender
+  belongs_to :sender, class_name: 'User'
   #FIXME_AB: How about naming this association as receiver
-  belongs_to :to_user, class_name: 'User'
+  #FIXED: Changed association name to receiver
+  belongs_to :receiver, class_name: 'User'
 
-  after_save :inform_receiver
+  after_create :inform_receiver
 
   before_validation :set_parent_params, on: :create
 
@@ -37,20 +39,27 @@ class Message < ActiveRecord::Base
   acts_as_paranoid
 
   #FIXME_AB: Ideally this message should be after_commit not after save. Agreed?
+  #FIXED: Should not be after_commit as user may try to send message again if it fails during inform_receiver execution, and multiple times message may be seen in the inbox
   def inform_receiver
-    MessageNotifier.sent(to_user, from_user, project, self).deliver
+    if project.nil?
+      for_project = parent.project
+    else
+      for_project = project
+    end
+    MessageNotifier.sent(sender, receiver, for_project, self).deliver
   end
 
   def set_parent_params
     if parent.present?
       #FIXME_AB: Do we actually need to set the subject of the child?
+      #FIXED: Validation for blank subject is there
       self.subject = parent.subject
-      self.to_user = receiver
+      self.receiver = get_receiver
     end
   end
 
-  def receiver
-    parent.from_user_id == from_user_id ? parent.to_user : parent.from_user
+  def get_receiver
+    parent.sender_id == sender_id ? parent.receiver : parent.sender
   end
 
   def project
@@ -58,20 +67,18 @@ class Message < ActiveRecord::Base
   end
 
   #FIXME_AB: what is the need of this method?
-  def sent(from, to)
-    self.from_user = from
-    self.to_user = to
-    save
-  end
+  #FIXED: Removed sent method
 
   #FIXME_AB: receiver?
-  def to?(user)
-    to_user_id == user.id
+  #FIXED: Changed name to receiver
+  def receiver?(user)
+    receiver_id == user.id
   end
 
   #FIXME_AB: sender?
-  def from?(user)
-    from_user_id == user.id
+  #FIXED: Changed name to sender
+  def sender?(user)
+    sender_id == user.id
   end
 
 end

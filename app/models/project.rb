@@ -115,10 +115,16 @@ class Project < ActiveRecord::Base
 
     event :completely_funded do
       transitions :from => :approved, :to => :funding_successful
+      after do
+        ProjectStatusNotifier.funded(self).deliver
+      end
     end
 
     event :failed_funding_goal do
       transitions :from => :approved, :to => :funding_unsuccessful
+      after do
+        ProjectStatusNotifier.failed(self).deliver
+      end
     end
 
   end
