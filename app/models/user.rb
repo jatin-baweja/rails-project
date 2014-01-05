@@ -38,8 +38,6 @@ class User < ActiveRecord::Base
   acts_as_paranoid
 
   def inbox 
-    #FIXME_AB: we can easily avoid defining the local variable below, and use just id instead of user_id in the query below.
-    #FIXED: Removed local variable
     Message.parent_messages.where("sender_id = ? OR receiver_id = ?", id, id).order('updated_at DESC')
   end
 
@@ -54,9 +52,6 @@ class User < ActiveRecord::Base
       user.save!
     end
   end
-
-    #FIXME_AB: How would it work if we have a pagination in place?. Can we do it in a single query
-    #FIXED: Removing messages and adding inbox method
 
   def pledge_amount_for_project(project)
     pledges.for_project(project).sum(:amount)

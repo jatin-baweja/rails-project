@@ -1,7 +1,3 @@
-// #FIXME_AB: Can we follow object oriented concepts here too. 
-// #FIXED: Object-Oriented approach used
-// #FIXME_AB: Can we also add detailed comment. It will help us to understand the working of JS code.  
-// #FIXED: Added comments
 function MenuButton(buttonId, containerId) {
   var that = this;
   this.buttonId = buttonId;

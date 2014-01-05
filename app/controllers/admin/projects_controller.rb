@@ -8,8 +8,6 @@ class Admin::ProjectsController < Admin::BaseController
   end
 
   def approve
-      #FIXME_AB: These two things also be the part of model, in callback of the AASM
-      #FIXED: Added to after callback for approve event
     unless @project.approve!
       flash[:alert] = 'The project could not be approved'
       #FIXME_AB: Why do we need render js in these two actions, we have the erb.js files for these actions
