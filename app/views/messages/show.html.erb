@@ -1,3 +1,4 @@
+<% #FIXME_AB: Too much duplication in this view file. -%>
 <div id="message" class="container-fluid">
   <h4><%= "[#{@message.project.title}] #{@message.subject}" %></h4>
   <p class='collapsed'>
@@ -7,6 +8,7 @@
         <p>To:<%= "#{ @message.receiver.name }" %></p>
       </div>
       <div class="span3 offset1">
+        <% #FIXME_AB: Do we have a better way to use datetime formats like this. -%>
         <%= @message.created_at.strftime("%Y-%m-%d %I:%M:%S %p %Z") %>
       </div>
       <div class="span8">
@@ -15,11 +17,14 @@
     </div>
     <hr>
     <% if (@message.unread? && (@message.receiver?(current_user))) %>
+    <% #FIXME_AB: This doesn't belongs here -%>
       <% @message.update_columns(unread: false) %>
     <% end %>
+    <% #FIXME_AB: @message.child_messages.present? -%>
   <% if !@message.child_messages.empty? %>
     <% @message.child_messages.each do |message| %>
       <% if message.present? && message.id.present? %>
+      <% #FIXME_AB: following line is written twice in the same file -%>
         <div class="row <%= (message.receiver?(current_user)) && message.unread? ? "unread" : "read" %>">
           <div class="span8">
             <p>From: <%= "#{ message.sender.name }" if message.sender.present? %></p>

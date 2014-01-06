@@ -3,6 +3,7 @@
 <%- @owner = @project.owner -%>
   <div class="page-header center">
     <% project_title = @project.title %>
+    <% #FIXME_AB: When you would have title nil or blank -%>
     <% project_title = "Untitled Project" if @project.title == "" %>
     <h2 class="text-center"><%= project_title %></h2>
     <h5 class="text-center">By <%= @project.owner.name %></h5>

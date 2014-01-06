@@ -19,6 +19,7 @@ class Message < ActiveRecord::Base
 
   validates :content, presence: true
   validates :subject, presence: true
+  #FIXME_AB: child_messages vs replies
   has_many :child_messages, foreign_key: 'parent_id', class_name: 'Message'
   belongs_to :project
   belongs_to :parent, class_name: 'Message', touch: true
