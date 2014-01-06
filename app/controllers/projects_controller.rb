@@ -7,7 +7,7 @@ class ProjectsController < ApplicationController
   before_action :check_accessibility, only: [:show]
 
   def this_week
-    @projects = Project.this_week.page(params[:page]).per_page(DEFAULT_PER_PAGE_RESULT_COUNT)
+    @projects = Project.live_this_week.page(params[:page]).per_page(DEFAULT_PER_PAGE_RESULT_COUNT)
     render action: :index
   end
 
@@ -40,7 +40,7 @@ class ProjectsController < ApplicationController
   end
 
   def user_owned
-    @projects = current_user.owned_projects.group_by(&:project_state)
+    @projects = current_user.owned_projects
   end
 
   def edit

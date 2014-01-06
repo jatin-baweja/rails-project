@@ -20,7 +20,8 @@ class Message < ActiveRecord::Base
   validates :content, presence: true
   validates :subject, presence: true
   #FIXME_AB: child_messages vs replies
-  has_many :child_messages, foreign_key: 'parent_id', class_name: 'Message'
+  #FIXED: Changed to replies
+  has_many :replies, foreign_key: 'parent_id', class_name: 'Message'
   belongs_to :project
   belongs_to :parent, class_name: 'Message', touch: true
 
@@ -67,6 +68,27 @@ class Message < ActiveRecord::Base
 
   def sender?(user)
     sender_id == user.id
+  end
+
+  def mark_thread_as_read
+    update(unread: false)
+    replies.update_all(unread: false)
+  end
+
+  def last_receiver?(user)
+    if replies.empty?
+      receiver?(user)
+    else
+      replies.last.receiver?(user)
+    end
+  end
+
+  def last_unread?
+    if replies.empty?
+      unread?
+    else
+      replies.last.unread?
+    end
   end
 
 end

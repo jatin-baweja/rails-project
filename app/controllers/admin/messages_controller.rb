@@ -9,7 +9,7 @@ class Admin::MessagesController < Admin::BaseController
  #FIXED: Removed admin_conversation js erb file
   def index
     respond_to do |format|
-      format.json { render json: @messages.to_json(:include => { :child_messages => { :only => :unread }, :sender => { :only => :name }, :project => { :only => :title } }, :only => [:id, :subject, :updated_at]) }
+      format.json { render json: @messages.to_json(:include => { :replies => { :only => :unread }, :sender => { :only => :name }, :project => { :only => :title } }, :only => [:id, :subject, :updated_at]) }
     end
   end
 

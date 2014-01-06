@@ -1,13 +1,13 @@
-<%- @pending_projects = @projects["submitted"] -%>
-<%- @approved_projects = @projects["approved"] -%>
-<%- @draft_projects = @projects["draft"] -%>
-<%- @rejected_projects = @projects["rejected"] -%>
+<%- @pending_projects = @projects.submitted -%>
+<%- @approved_projects = @projects.approved -%>
+<%- @draft_projects = @projects.draft -%>
+<%- @rejected_projects = @projects.rejected -%>
 <div class="page-header">
   <h1>My <%=t '.title', :default => "Projects" %></h1>
 </div>
 <div class="container-fluid">
   <div class="row-fluid">
-    <div class="span9">
+    <div class="span12">
       <div class="container-fluid">
         <h3>Draft Projects</h3>
         <%= render partial: 'projects/listing', locals: { :projects => @draft_projects } %>
@@ -27,8 +27,6 @@
         <h3>Approved Projects</h3>
         <%= render partial: 'projects/listing', locals: { :projects => @approved_projects } %>
       </div>
-    </div>
-    <div class="span3">
     </div>
   </div>
 </div>

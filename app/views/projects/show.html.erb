@@ -2,17 +2,16 @@
 <%- @rewards = @project.rewards -%>
 <%- @owner = @project.owner -%>
   <div class="page-header center">
-    <% project_title = @project.title %>
     <% #FIXME_AB: When you would have title nil or blank -%>
-    <% project_title = "Untitled Project" if @project.title == "" %>
-    <h2 class="text-center"><%= project_title %></h2>
+    <% #FIXED: Removed nil case, not required %>
+    <h2 class="text-center"><%= @project.title %></h2>
     <h5 class="text-center">By <%= @project.owner.name %></h5>
     <div class="container-fluid navbar">
       <ul class="nav pull-left">
         <li id="description-button"><a class="linkable">Description</a></li>
         <% if logged_in? && (current_user.admin? || (@project.owner?(current_user)) ) %>
           <%= menu_divider %>
-          <li id="messages-button"><a class="linkable">Messages</a></li>
+          <li id="messages-button" data-new-message-link="<%= new_message_project_url(@project) %>"><a class="linkable">Messages</a></li>
         <% end %>
         <%= menu_divider %>
         <li id="pledges-button"><a class="linkable">Pledges</a></li>

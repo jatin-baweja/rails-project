@@ -8,6 +8,9 @@ def default_sender_email
   SETTINGS["email"]["default_sender"]
 end
 
+# Datetime Settings
+Time::DATE_FORMATS[:message_date] = "%B %d, %Y (%I:%M %p)"
+
 # Mailchimp Settings
 mailchimp_settings = SETTINGS["mailchimp"]
 Gibbon::API.api_key = mailchimp_settings["api_key"]

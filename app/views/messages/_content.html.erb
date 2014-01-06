@@ -1,0 +1,14 @@
+<div class="row <%= (message.receiver?(current_user)) && message.unread? ? "unread" : "read" %>">
+  <div class="span8">
+    <p>From: <%= "#{ message.sender.name }" %></p>
+    <p>To:<%= "#{ message.receiver.name }" %></p>
+  </div>
+  <div class="span3 offset1">
+    <% #FIXME_AB: Do we have a better way to use datetime formats like this. -%>
+    <% #FIXED: Format added in initializers -%>
+    <%= message.created_at.to_s(:message_date) %>
+  </div>
+  <div class="span8">
+    <p><%= message.content %></p>
+  </div>
+</div>

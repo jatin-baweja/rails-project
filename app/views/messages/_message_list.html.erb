@@ -1,11 +1,7 @@
   <% if @messages.present? %>
     <% @messages.each do |message_set| %>
       <% if message_set.present? %>
-        <% if message_set.child_messages.present? %>
-        <div class="row <%= (message_set.child_messages.last.receiver?(current_user)) && message_set.child_messages.last.unread? ? "unread-highlight" : "read-highlight" %>">
-        <% else %>
-        <div class="row <%= (message_set.receiver?(current_user)) && message_set.unread? ? "unread-highlight" : "read-highlight" %>">
-        <% end %>
+        <div class="row <%= (message_set.last_receiver?(current_user)) && message_set.last_unread? ? "unread-highlight" : "read-highlight" %>">
           <div class="span2">
             <% if message_set.receiver?(current_user) %>
               <%= message_set.sender.name %>
@@ -17,7 +13,7 @@
             <%= link_to "[#{message_set.project.title}] #{message_set.subject}", message_path(message_set) %>
           </div>
           <div class="span3">
-            <%= message_set.updated_at.strftime("%Y-%m-%d %I:%M:%S %p %Z") %>
+            <%= message_set.updated_at.to_s(:message_date) %>
           </div>
         </div>
       <% end %>

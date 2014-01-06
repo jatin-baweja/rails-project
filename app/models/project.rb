@@ -73,6 +73,7 @@ class Project < ActiveRecord::Base
 
   before_save :set_deadline
   before_save :convert_to_youtube_embed_link
+  before_save :move_to_next_step
 
   acts_as_paranoid
 
@@ -186,22 +187,22 @@ class Project < ActiveRecord::Base
 
   def save_primary_details(project_creator)
     self.owner = project_creator
-    self.step = 1
+    # self.step = 1
     save
   end
 
   def save_story(params)
-    self.step = 2
+    # self.step = 2
     update(params)
   end
 
   def save_info(params)
-    self.step = 3
+    # self.step = 3
     update(params)
   end
 
   def save_rewards(params)
-    self.step = 4
+    # self.step = 4
     update(params)
     submit!
   end
@@ -212,6 +213,18 @@ class Project < ActiveRecord::Base
 
   def thumbnail
     images[0].picture.url(:thumb) if images.present?
+  end
+
+  def move_to_next_step
+    if step
+      self.step = step % 4 + 1
+    else
+      self.step = 1
+    end
+  end
+
+  def youtube_video?
+    video_url.present? && video_url.match(/youtube\.com/)
   end
 
 end

@@ -39,7 +39,8 @@ class User < ActiveRecord::Base
 
   def inbox 
     #FIXME_AB: You can also pass hash, specially when you have to pass same argument more than onec, Message.parent_messages.where("sender_id = :id OR receiver_id = :id", id: id).order('updated_at DESC')
-    Message.parent_messages.where("sender_id = ? OR receiver_id = ?", id, id).order('updated_at DESC')
+    #FIXED: Changed to hash format
+    Message.parent_messages.where("sender_id = :id OR receiver_id = :id", id: id).order('updated_at DESC')
   end
 
   def self.from_omniauth(auth)
