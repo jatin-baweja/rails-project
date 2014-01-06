@@ -1,4 +1,5 @@
 <div class="image-container">
+  <% #FIXME_AB: Since you have multiple images for a project. Implement a slider for images. -%>
   <%= image_tag @project.images[0].picture if !@project.images.empty? %>
 </div>
 
@@ -16,6 +17,7 @@
       <h4>FAQs</h4>
       <p><%=raw @story.faq %></p>
     <% end %>
+    <% #FIXME_AB: @project.youtube_video? -%>
     <% if !@project.video_url.nil? && @project.video_url.match(/youtube\.com/) %>
       <p><iframe title="YouTube video player" class="youtube-player" type="text/html" width="640" height="390" src="<%= @project.video_url %>" frameborder="0" allowFullScreen></iframe></p>
     <% end %>
@@ -24,6 +26,7 @@
   <% if !@rewards.empty? %>
   <div class="highlight">
     <h4>Rewards</h4>
+    <% #FIXME_AB: Get rid of counter -%>
     <% counter = 0 %>
     <% @rewards.each do |reward| %>
       <div class="reward-info">

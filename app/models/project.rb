@@ -172,9 +172,6 @@ class Project < ActiveRecord::Base
     step?(4)
   end
 
-  #FIXME_AB: who else can approve the project? What I see is, this is the perfect case of the callback method of approve state change
-  #FIXED: Added to before callback for approve event
-
   def set_publishing_delayed_job
     Delayed::Job.enqueue(PublishProjectJob.new(self), run_at: published_at)
   end

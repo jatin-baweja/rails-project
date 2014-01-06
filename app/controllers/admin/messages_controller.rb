@@ -1,5 +1,3 @@
-#FIXME_AB: I am concerned about the action names in this controller.
-#FIXED: Renamed actions
 class Admin::MessagesController < Admin::BaseController
   include Projects::Callbacks
 
@@ -16,13 +14,7 @@ class Admin::MessagesController < Admin::BaseController
   end
 
   def create
-    #FIXME_AB: Isn't it project.owner
-    #FIXED: Changed to project.owner
     message = @project.messages.create(conversation_params.merge({sender: current_user, receiver: @project.owner}))
-    #FIXME_AB: I am not convinced by the Message#sent method. Here we could simply do @project.messages.create
-    #FIXED: Changed to @project.messages.create
-    #FIXME_AB: What if the message is not created successfully or there is any error/exception
-    #FIXED: Added error message if message is not created.
     if message.valid?
       render js: %($('#messages-button').click();)
     else

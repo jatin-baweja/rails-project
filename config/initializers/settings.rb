@@ -1,5 +1,3 @@
-#FIXME_AB: You should have environment based has like paypal. And instead of having several files for such settings. YOu can have only one generic file.
-#FIXED: One file for all project settings, loaded from YAML
 
 # General Settings
 SETTINGS = YAML.load_file("#{Rails.root}/config/initializers/settings.yml")[Rails.env]
