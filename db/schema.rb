@@ -87,14 +87,11 @@ ActiveRecord::Schema.define(version: 20140103110041) do
     t.integer  "parent_id"
     t.string   "subject"
     t.integer  "project_id"
-    t.boolean  "unread",      default: true, null: false
-    t.time     "deleted_at"
     t.integer  "sender_id"
     t.integer  "receiver_id"
+    t.boolean  "unread",      default: true, null: false
+    t.time     "deleted_at"
   end
-
-  add_index "messages", ["receiver_id"], name: "index_messages_on_receiver_id", using: :btree
-  add_index "messages", ["sender_id"], name: "index_messages_on_sender_id", using: :btree
 
   create_table "pledges", force: true do |t|
     t.integer  "project_id"
