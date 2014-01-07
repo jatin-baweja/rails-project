@@ -3,7 +3,7 @@
 SETTINGS = YAML.load_file("#{Rails.root}/config/initializers/settings.yml")[Rails.env]
 APP_NAME = SETTINGS["app_name"]
 PAYMENT_HOLDING_PERIOD = SETTINGS["payment_holding_period"]
-DEFAULT_PER_PAGE_RESULT_COUNT = SETTINGS["default_per_page_result_count"]
+PER_PAGE = SETTINGS["default_per_page_result_count"]
 def default_sender_email
   SETTINGS["email"]["default_sender"]
 end

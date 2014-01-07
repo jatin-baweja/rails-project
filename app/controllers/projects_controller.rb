@@ -7,24 +7,24 @@ class ProjectsController < ApplicationController
   before_action :check_accessibility, only: [:show]
 
   def this_week
-    @projects = Project.live_this_week.page(params[:page]).per_page(DEFAULT_PER_PAGE_RESULT_COUNT)
+    @projects = Project.live_this_week.page(params[:page]).per_page(PER_PAGE)
     render action: :index
   end
 
   def index
-    @projects = Project.live.order(:title).page(params[:page]).per_page(DEFAULT_PER_PAGE_RESULT_COUNT)
+    @projects = Project.live.order(:title).page(params[:page]).per_page(PER_PAGE)
   end
 
   def category
     if params[:category].present? && @category = Category.find_by_permalink(params[:category])
-      @projects = @category.projects.live.order(:title).page(params[:page]).per_page(DEFAULT_PER_PAGE_RESULT_COUNT)
+      @projects = @category.projects.live.order(:title).page(params[:page]).per_page(PER_PAGE)
     end
     render action: :index
   end
 
   def location
     if params[:location].present? && @location = Location.find_by_permalink(params[:location])
-      @projects = @location.projects.live.order(:title).page(params[:page]).per_page(DEFAULT_PER_PAGE_RESULT_COUNT)
+      @projects = @location.projects.live.order(:title).page(params[:page]).per_page(PER_PAGE)
     end
     render action: :index
   end
