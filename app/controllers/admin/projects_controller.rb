@@ -4,7 +4,7 @@ class Admin::ProjectsController < Admin::BaseController
   before_action :set_project, only: [:approve, :reject]
 
   def index
-    @projects = Project.includes(:images).order('updated_at DESC').page(params[:page]).per_page(DEFAULT_PER_PAGE_RESULT_COUNT)
+    @projects = Project.includes(:images).order('updated_at DESC').page(params[:page]).per_page(PER_PAGE)
   end
 
   def approve

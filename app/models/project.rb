@@ -66,7 +66,7 @@ class Project < ActiveRecord::Base
   scope :live_for_user, ->(user) { live.where(owner_id: user.id) }
   scope :pending_for_approval, -> { submitted.still_active.order('created_at ASC') }
   scope :live_this_week, -> { approved.published_between(Time.current, 1.week.ago).still_active }
-  scope :for_page, ->(page_number) { page(page_number).per_page(DEFAULT_PER_PAGE_RESULT_COUNT) }
+  scope :for_page, ->(page_number) { page(page_number).per_page(PER_PAGE) }
 
   sphinx_scope(:been_approved) { { :conditions => { :project_state => 'approved' } } }
   sphinx_scope(:active) { { :with => { :deadline => Time.current..1.month.from_now, :published_at => 1.month.ago..Time.current } } }
