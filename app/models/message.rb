@@ -19,8 +19,6 @@ class Message < ActiveRecord::Base
 
   validates :content, presence: true
   validates :subject, presence: true
-  #FIXME_AB: child_messages vs replies
-  #FIXED: Changed to replies
   has_many :replies, foreign_key: 'parent_id', class_name: 'Message'
   belongs_to :project
   belongs_to :parent, class_name: 'Message', touch: true
@@ -47,8 +45,6 @@ class Message < ActiveRecord::Base
 
   def set_parent_params
     if parent.present?
-      #FIXME_AB: Do we actually need to set the subject of the child?
-      #FIXED: Validation for blank subject is there
       self.subject = parent.subject
       self.receiver = get_receiver
     end

@@ -5,8 +5,6 @@ class Admin::MessagesController < Admin::BaseController
   skip_before_action :admin_authorize, only: [:index]
   before_action :set_messages, only: [:index, :create]
 
- #FIXME_AB: I think we can do most of the job through JS file itself and don' need to write js in erb file. Lets discuss when you are available. 
- #FIXED: Removed admin_conversation js erb file
   def index
     respond_to do |format|
       format.json { render json: @messages.to_json(:include => { :replies => { :only => :unread }, :sender => { :only => :name }, :project => { :only => :title } }, :only => [:id, :subject, :updated_at]) }

@@ -1,5 +1,3 @@
-<% #FIXME_AB: Too much duplication in this view file. -%>
-<% #FIXED: Added partial to remove duplication %>
 <% if @reply_message.errors.any? %>
   <div id="error_explanation" class="alert alert-error">
     <h2><%= pluralize(@reply_message.errors.count, "error") %> prohibited this message from being sent:</h2>
@@ -15,10 +13,6 @@
   <h4><%= "[#{@message.project.title}] #{@message.subject}" %></h4>
   <%= render partial: 'content', locals: { :message => @message } %>
     <hr>
-    <% #FIXME_AB: This doesn't belongs here -%>
-    <% #FIXED: Moved to after_action callback -%>
-    <% #FIXME_AB: @message.child_messages.present? -%>
-    <% #FIXED: Changed -%>
   <% if @message.replies.present? %>
     <% @message.replies.each do |message| %>
       <% if message.present? && message.id.present? %>
