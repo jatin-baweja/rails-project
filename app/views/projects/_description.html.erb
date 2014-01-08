@@ -1,6 +1,15 @@
 <div class="image-container">
   <% #FIXME_AB: Since you have multiple images for a project. Implement a slider for images. -%>
-  <%= image_tag @project.images[0].picture if !@project.images.empty? %>
+  <% #FIXED: Added images slider %>
+  <% if @project.images.present? %>
+    <div class="theme-default">
+      <div id="slider" class="ramblingSlider">
+        <% @project.images.each do |image| %>
+          <%= image_tag image.picture %>
+        <% end %>
+      </div>
+    </div>
+  <% end %>
 </div>
 
 <% if !@story.nil? %>

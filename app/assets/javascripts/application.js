@@ -12,6 +12,7 @@
 //
 //= require jquery
 //= require jquery_ujs
+//= require jquery.rambling.slider
 //= require twitter/bootstrap
 //= require turbolinks
 //= require ckeditor/init

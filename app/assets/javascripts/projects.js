@@ -63,3 +63,6 @@ $(document).ready(function() {
   }
   var descriptionButton = new MenuButton('description-button', 'description')
 });
+$(window).load(function(){
+  $('#slider').ramblingSlider();
+});
