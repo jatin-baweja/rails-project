@@ -2,8 +2,6 @@
 <%- @rewards = @project.rewards -%>
 <%- @owner = @project.owner -%>
   <div class="page-header center">
-    <% #FIXME_AB: When you would have title nil or blank -%>
-    <% #FIXED: Removed nil case, not required %>
     <h2 class="text-center"><%= @project.title %></h2>
     <h5 class="text-center">By <%= @project.owner.name %></h5>
     <div class="container-fluid navbar">

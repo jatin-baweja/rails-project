@@ -8,20 +8,14 @@ class MessagesController < ApplicationController
   end
 
   def show
-    #FIXME_AB: I think it should be current_user.sent_messages.build
-    #FIXED: Changed
     @reply_message = current_user.sent_messages.build
   end
 
   def create
-    #FIXME_AB: Please check the logic of this action. There is something wrong
-    #FIXED: Corrected logic
     @reply_message = current_user.sent_messages.create(message_params.merge(parent_id: @message.id.to_s))
     if @reply_message.persisted?
       redirect_to message_path(@message)
     else
-      #FIXME_AB: I should remain on the same page where I was and see the actual error.
-      #FIXED: Same page and actual error shown
       render action: :show
     end
   end

@@ -26,8 +26,6 @@
       <h4>FAQs</h4>
       <p><%=raw @story.faq %></p>
     <% end %>
-    <% #FIXME_AB: @project.youtube_video? -%>
-    <% #FIXED: changed to @project.youtube_video? %>
     <% if @project.youtube_video? %>
       <p><iframe title="YouTube video player" class="youtube-player" type="text/html" width="640" height="390" src="<%= @project.video_url %>" frameborder="0" allowFullScreen></iframe></p>
     <% end %>
@@ -36,8 +34,6 @@
   <% if !@rewards.empty? %>
   <div class="highlight">
     <h4>Rewards</h4>
-    <% #FIXME_AB: Get rid of counter -%>
-    <% #FIXED: Got rid of counter %>
     <% @rewards.each_with_index do |reward, index| %>
       <div class="reward-info">
         <h5>Reward #<%= index + 1 %></h5>

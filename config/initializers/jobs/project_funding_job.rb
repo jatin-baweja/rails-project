@@ -1,7 +1,5 @@
 class ProjectFundingJob < Struct.new(:project)
 
-  #FIXME_AB: We can improve this method.
-  #FIXED: Added callbacks and hooks
   def perform
     pledges = project.pledges
     if pledges.sum(:amount) >= project.goal
