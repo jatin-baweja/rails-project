@@ -9,7 +9,7 @@
 #
 
 class Location < ActiveRecord::Base
-  validates :name, uniqueness: { case_sensitive: false }, format: { with: REGEX_PATTERN[:name] }
+  validates :name, uniqueness: { case_sensitive: false }, format: { with: REGEX_PATTERN[:name], message: 'only allows letters and spaces' }
   has_many :projects
 
   has_permalink :name, true

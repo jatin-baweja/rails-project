@@ -26,7 +26,7 @@ class Project < ActiveRecord::Base
 
   with_options if: -> { first_step? || step_not_set? } do |project|
     project.validates :title, uniqueness: { case_sensitive: false }, length: { maximum: 60 }
-    project.validates :title, :summary, presence: true
+    project.validates :title, :summary, :location, presence: true
     project.validates :summary, length: { maximum: 300 }
   end
 

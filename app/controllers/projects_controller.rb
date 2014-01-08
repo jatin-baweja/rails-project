@@ -5,6 +5,7 @@ class ProjectsController < ApplicationController
   skip_before_action :authorize, only: [:show, :index, :this_week]
   before_action :validate_owner, only: [:edit, :update, :destroy]
   before_action :check_accessibility, only: [:show]
+  before_action :set_location, only: [:create]
 
   def this_week
     @projects = Project.live_this_week.page(params[:page]).per_page(PER_PAGE)
@@ -73,11 +74,12 @@ class ProjectsController < ApplicationController
   end
 
   def create
-    if location_params[:location_name].present? && @location = Location.find_or_create_by(name: location_params[:location_name])
-      @project = @location.projects.build(project_params)
-      if @project.save_primary_details(current_user)
-        redirect_to story_project_url(@project)
-      else
+    @project = build_project_from_location(@location, project_params)
+    if @project.present? && @project.save_primary_details(current_user)
+      redirect_to story_project_url(@project)
+    else
+      @project = Project.new(project_params.merge(location_params))
+      if @project.invalid?
         render action: :new
       end
     end
@@ -127,11 +129,11 @@ class ProjectsController < ApplicationController
 
   # Never trust parameters from the scary internet, only allow the white list through.
   def project_params
-    params.require(:project).permit(:title, :image, :category_id, :summary, :video_url, :duration, :deadline, :goal, :published_at, :location_attributes => [:id, :name], :images_attributes => [:id, :picture])
+    params.require(:project).permit(:title, :image, :category_id, :summary, :video_url, :duration, :deadline, :goal, :published_at, :images_attributes => [:id, :picture])
   end
 
   def location_params
-    params.require(:project).permit(:location_name)
+    params.require(:project).permit(:location_attributes => [:id, :name])
   end
 
   def validate_not_owner
@@ -142,6 +144,18 @@ class ProjectsController < ApplicationController
 
   def current_user_owner_or_admin?
     logged_in? && (@project.owner?(current_user) || current_user.admin?)
+  end
+
+  def set_location
+    if location_params[:location_attributes][:name].present?
+      @location = Location.find_or_create_by(name: location_params[:location_attributes][:name])
+    end
+  end
+
+  def build_project_from_location(location, build_params)
+    if location.present? && location.persisted?
+      @project = location.projects.build(build_params)
+    end
   end
 
 end
