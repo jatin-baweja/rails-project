@@ -12,7 +12,7 @@ class PledgesController < ApplicationController
   def create
     @pledge = @project.pledges.build(pledge_params)
     @pledge.user = current_user
-    @pledge.save_with_associated_rewards(params[:rewards])
+    @pledge.save_with_associated_rewards
     if params[:payment_mode] == "Paypal"
       redirect_to Paypal.url(@project, project_url(@project), @pledge)
     else
@@ -27,7 +27,7 @@ class PledgesController < ApplicationController
   private
 
     def pledge_params
-      params.require(:pledge).permit(:amount, :requested_rewards_attributes => [:id])
+      params.require(:pledge).permit(:amount, :requested_rewards_attributes => [:id, :reward_id, :quantity, :_destroy])
     end
 
     def validate_not_owner
@@ -38,20 +38,23 @@ class PledgesController < ApplicationController
 
     def check_blank_rewards
       if blank_rewards?
-        flash.now[:alert] = "Rewards should be selected"
+        flash.now[:alert] = "Please check the reward checkbox and fill quantity to select rewards."
+        @pledge = @project.pledges.build(pledge_params)
         render action: :new
       end
     end
 
     def blank_rewards?
       reward_present = {}
-      if params[:rewards]
-        params[:rewards].each do |key, val|
+      params[:pledge][:requested_rewards_attributes].each do |key, val|
+        reward_present[key] = true
+        val.each do |attr_key, attr_val|
+          reward_present[key] = false if attr_val.blank?
+        end
+        if (val.key?("reward_id") && !reward_present[key]) || (!val.key?("reward_id") && reward_present[key])
+          reward_present[key] = false
+        else
           reward_present[key] = true
-          reward_present[key] = false if !val.key?("id")
-          val.each do |attr_key, attr_val|
-            reward_present[key] = false if attr_val.blank?
-          end
         end
       end
       reward_present.any? { |key, value| value == false }

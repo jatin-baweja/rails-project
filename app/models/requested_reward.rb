@@ -18,6 +18,12 @@ class RequestedReward < ActiveRecord::Base
   belongs_to :pledge, inverse_of: :requested_rewards
   belongs_to :reward
 
+  after_create :update_reward_quantity
+
+  def update_reward_quantity
+    reward.update(remaining_quantity: (reward.remaining_quantity - quantity)) if reward.remaining_quantity
+  end
+
   def requested_rewards_total
       amount_of_requested_rewards = (reward.minimum_amount * quantity) + pledge.sum_of_requested_rewards
       if amount_of_requested_rewards > pledge.amount

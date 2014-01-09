@@ -28,6 +28,7 @@ class Project < ActiveRecord::Base
     project.validates :title, uniqueness: { case_sensitive: false }, length: { maximum: 60 }
     project.validates :title, :summary, :location, presence: true
     project.validates :summary, length: { maximum: 300 }
+    project.validates_associated :location
   end
 
   with_options if: -> { third_step? || step_not_set? } do |project|
@@ -45,7 +46,7 @@ class Project < ActiveRecord::Base
   belongs_to :owner, foreign_key: "owner_id", class_name: 'User'
   belongs_to :category
   has_many :messages
-  belongs_to :location
+  belongs_to :location, validate: false
   has_many :images, inverse_of: :project
   has_many :pledges
   has_many :backers, -> { uniq },through: :pledges, source: :user
@@ -54,7 +55,7 @@ class Project < ActiveRecord::Base
   accepts_nested_attributes_for :story, update_only: true
   accepts_nested_attributes_for :location, update_only: true
   accepts_nested_attributes_for :messages
-  accepts_nested_attributes_for :images
+  accepts_nested_attributes_for :images, reject_if: proc { |attributes| attributes[:picture].blank? }
   accepts_nested_attributes_for :pledges
 
   scope :published, ->(time) { where(['published_at <= ?', time]) }

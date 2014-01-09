@@ -114,6 +114,9 @@ class ProjectsController < ApplicationController
     end
   end
 
+  def new_image
+  end
+
   private
 
   def check_accessibility

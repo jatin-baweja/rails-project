@@ -46,20 +46,49 @@ $(document).ready(function() {
     //Parse response data to display pledges
     pledgesButton.displayData = function(responseData, container) {
         $.each(responseData, function(index, pledge) {
-            var pledge_time = new Date(pledge['created_at']).toLocaleString();
-            container.append("<div class='row'><div class='span8 highlight'><p>$" + pledge['amount'] + " were pledged by " + pledge["user"]["name"] + " on " + pledge_time + "</p></div></div>");
-        });
+            pledgeBox = this.appendPledgeContainer(container);
+            this.appendPledgeDetails(pledgeBox, pledge);
+        }.bind(this));
     };
+    pledgesButton.appendPledgeContainer = function(container) {
+        var $subContainer = $("<div class='row'></div>").appendTo(container);
+        return $("<div class='span8 highlight'></div>").appendTo($subContainer);
+    }
+    pledgesButton.appendPledgeDetails = function(container, pledge) {
+        var pledge_time = new Date(pledge['created_at']).toLocaleString();
+        return $("<p>$" + pledge['amount'] + " were pledged by " + pledge["user"]["name"] + " on " + pledge_time + "</p>").appendTo(container);
+    }
     var messagesButton = new AjaxMenuButton('messages-button', 'messages', 'Messages', 'admin_conversation');
     //Parse response data to display messages
     messagesButton.displayData = function(responseData, container) {
-        container.append("<a href='" + $('#' + this.buttonId).attr('data-new-message-link') + "' data-remote='true'>+ New Message</a>")
+        this.appendNewMessageLink(container);
         $.each(responseData, function(index, message) {
-            var message_time = new Date(message['updated_at']).toLocaleString();
-            container.append("<div class='row read-highlight'><div class='span2'>" + message['sender']['name'] + " </div><div class='span6'><a href='/messages/" + message["id"] + "'>[" + message['project']['title'] + "] " + message['subject'] + "</a></div><div class='span3'>" + message_time + " </div></div>");
-        });
+            messageBox = this.appendMessageContainer(container);
+            this.appendSenderName(messageBox, message);
+            this.appendSubjectLink(messageBox, message);
+            this.appendDateTime(messageBox, message);
+        }.bind(this));
     }
-    var descriptionButton = new MenuButton('description-button', 'description')
+    messagesButton.appendNewMessageLink = function(container) {
+        return container.append("<a href='" + $('#' + this.buttonId).attr('data-new-message-link') + "' data-remote='true'>+ New Message</a>");
+    }
+    messagesButton.appendMessageContainer = function(container) {
+        return $("<div class='row read-highlight'></div>").appendTo(container);
+    }
+    messagesButton.appendSenderName = function(container, message) {
+        return $("<div class='span2'>" + message['sender']['name'] + " </div>").appendTo(container);
+    }
+    messagesButton.appendSubjectLink = function(container, message) {
+        return $("<div class='span6'><a href='/messages/" + message["id"] + "'>" + this.getSubject(message) + "</a></div>").appendTo(container);
+    }
+    messagesButton.appendDateTime = function(container, message) {
+        var messageTime = new Date(message['updated_at']).toLocaleString();
+        return $("<div class='span3'>" + messageTime + " </div>").appendTo(container);
+    }
+    messagesButton.getSubject = function(message) {
+        return "[" + message['project']['title'] + "] " + message['subject'];
+    }
+    var descriptionButton = new MenuButton('description-button', 'description');
 });
 $(window).load(function(){
   $('#slider').ramblingSlider();

@@ -1,5 +1,5 @@
 class Admin::UsersController < Admin::BaseController
-  cache_sweeper :user_sweeper, only: [:destroy]
+  # cache_sweeper :user_sweeper, only: [:destroy]
   before_action :set_user, only: [:destroy, :make_admin]
 
   def index

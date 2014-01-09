@@ -19,6 +19,8 @@ class Pledge < ActiveRecord::Base
   has_many :requested_rewards, inverse_of: :pledge
   has_one :transaction
 
+  accepts_nested_attributes_for :requested_rewards, reject_if: proc { |attributes| attributes['quantity'].blank? && attributes['reward_id'].blank? }
+
   scope :by_user, ->(user) { where(user: user) }
   scope :for_project, ->(project) { where(['project_id = ?', project.id]) }
 
@@ -35,15 +37,9 @@ class Pledge < ActiveRecord::Base
     end
   end
 
-  def save_with_associated_rewards(rewards)
+  def save_with_associated_rewards
     ActiveRecord::Base.transaction do
       save
-      rewards.each do |key, reward|
-        requested_rewards.create!(reward_id: reward[:id], quantity: reward[:quantity])
-        chosen_reward = Reward.find(reward[:id])
-        chosen_reward.lock!
-        chosen_reward.update(remaining_quantity: (chosen_reward.remaining_quantity - reward[:quantity])) if chosen_reward.remaining_quantity
-      end
     end
   end
 

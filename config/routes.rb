@@ -37,6 +37,7 @@ Kickstarter::Application.routes.draw do
     get 'pledge', controller: 'pledges', action: 'new', on: :member
     post 'create_pledge', controller: 'pledges', action: 'create', on: :member
     get 'new_reward', on: :collection
+    get 'new_image', on: :collection
     get 'story', controller: 'stories', action: 'new', on: :member
     get 'info', on: :member
     get 'rewards', controller: 'rewards', action: 'new', on: :member

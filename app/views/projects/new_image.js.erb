@@ -1,0 +1,2 @@
+var $projectImages = $('.project-image');
+$('<div class="project-image"></div>').insertAfter($projectImages.last()).html("<%= escape_javascript(render partial: 'projects/image_field') %>");

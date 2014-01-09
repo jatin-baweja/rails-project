@@ -1,0 +1,6 @@
+<%- @time = Time.now.to_i -%>
+<div class="project-images">
+  <div class="controls">
+    <input type="file" name="project[images_attributes][<%= @time %>][picture]" id="project_images_attributes_<%= @time %>_picture" class="text_field">
+  </div>
+</div>

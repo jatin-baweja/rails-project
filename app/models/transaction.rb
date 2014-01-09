@@ -26,7 +26,7 @@ class Transaction < ActiveRecord::Base
   def inform_pledger
     if status?("charged")
       PledgeNotifier.charged(pledge.user, pledge.amount, pledge.project).deliver
-    elsif status?("uncharged")
+    elsif status?("stored")
       Delayed::Job.enqueue(PledgeNotifierJob.new(pledge, pledge.project, pledge.user))
     end
   end

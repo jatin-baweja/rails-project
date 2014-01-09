@@ -23,10 +23,10 @@ class Payment::Stripe::ChargesController < ApplicationController
           :name => params[:name_on_card]
         }
       )
-      @user.create_account(customer_id: customer.id, card_id: customer.default_card)
+      current_user.create_account(customer_id: customer.id, card_id: customer.default_card)
     end
-    pledge = Pledge.find(params[:pledge_id])
-    pledge.create_transaction(status: 'uncharged', payment_mode: 'stripe')
+    pledge = Pledge.find_by(id: params[:pledge_id])
+    pledge.create_transaction(status: 'stored', payment_mode: 'stripe')
     redirect_to project_path(pledge.project), notice: 'Your card has been successfully stored'
 
   rescue Stripe::CardError => e

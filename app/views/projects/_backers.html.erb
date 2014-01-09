@@ -1,7 +1,7 @@
 <div id="pledges" class="container-fluid">
   <h3>Pledges</h3>
   <div id="backers">
-    <% if !@pledges.nil? %>
+    <% if @pledges.present? %>
       <% @pledges.each do |pledge| %>
         <div class="row">
           <div class="span8 highlight">
