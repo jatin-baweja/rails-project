@@ -32,7 +32,7 @@ Stripe.api_key = Rails.configuration.stripe[:secret_key]
 omniauth_settings = SETTINGS["omniauth"]
 OmniAuth.config.logger = Rails.logger
 Rails.application.config.middleware.use OmniAuth::Builder do
-  provider :facebook, omniauth_settings["facebook"]["api_id"], omniauth_settings["facebook"]["secret"]
+  provider :facebook, omniauth_settings["facebook"]["app_id"], omniauth_settings["facebook"]["secret"]
 end
 
 # Omnicontacts settings
