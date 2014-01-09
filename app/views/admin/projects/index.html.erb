@@ -4,33 +4,39 @@
 <div class="page-header">
   <h1><%=t '.title', :default => "Projects" %></h1>
 </div>
+<ul class="nav nav-pills tabbable">
+  <li class="active"><a href="#pending-projects" data-toggle="tab">Pending Projects</a></li>
+  <li><a href="#rejected-projects" data-toggle="tab">Rejected Projects</a></li>
+  <li><a href="#approved-projects" data-toggle="tab">Approved Projects</a></li>
+</ul>
 <div class="container-fluid">
   <div class="row-fluid">
-    <div class="span9">
-      <div class="container-fluid">
+    <div class="span12 tab-content">
+      <div id="pending-projects" class="container-fluid tab-pane active">
         <h3>Projects Pending for Approval</h3>
         <% if @pending_projects.empty? %>
-          <p>No Pending Projects for Approval</p>
+          <p>No Pending Projects here</p>
         <% else %>
           <%= render partial: 'projects/listing', locals: { :projects => @pending_projects } %>
+          <%= will_paginate @pending_projects %>
         <% end %>
       </div>
-      <hr>
-      <div class="container-fluid">
+      <div id="rejected-projects" class="container-fluid tab-pane">
         <h3>Rejected Projects</h3>
         <% if @rejected_projects.empty? %>
-          <p>No Rejected Projects till now</p>
+          <p>No Rejected Projects here</p>
         <% else %>
           <%= render partial: 'projects/listing', locals: { :projects => @rejected_projects } %>
+          <%= will_paginate @rejected_projects %>
         <% end %>
       </div>
-      <hr>
-      <div class="container-fluid">
+      <div id="approved-projects" class="container-fluid tab-pane">
         <h3>Approved Projects</h3>
         <% if @approved_projects.empty? %>
           <p>No Approved Projects till now</p>
         <% else %>
           <%= render partial: 'projects/listing', locals: { :projects => @approved_projects } %>
+          <%= will_paginate @approved_projects %>
         <% end %>
       </div>
     </div>
