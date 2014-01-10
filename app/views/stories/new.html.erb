@@ -21,6 +21,9 @@
       <%= render partial: 'stories/fields', :locals => { :f => builder } %>
     <% end %>
   </div>
+
+  <%= render partial: 'projects/steps_covered' %>
+
   <div class="form-actions">
     <%= link_to "< Prev", edit_project_path(@project), :class => 'btn' %>
     <%= f.submit "Next >", :class => 'btn btn-primary' %>

@@ -1,9 +1,9 @@
 class ProjectsController < ApplicationController
   include Projects::Callbacks
 
-  before_action :set_project, only: [:show, :destroy, :backers, :new_message, :edit, :update, :info, :create_info]
+  before_action :set_project, only: [:show, :destroy, :backers, :new_message, :edit, :update, :info, :create_info, :edit_project]
   skip_before_action :authorize, only: [:show, :index, :this_week]
-  before_action :validate_owner, only: [:edit, :update, :destroy]
+  before_action :validate_owner, only: [:edit, :update, :destroy, :edit_project]
   before_action :check_accessibility, only: [:show]
   before_action :set_location, only: [:create]
 
@@ -48,15 +48,6 @@ class ProjectsController < ApplicationController
     #FIXME_AB: Lets give this action a thought.
     #FIXED: Using step field for redirection to appropriate editing page
     @project.edit! if !@project.draft?
-    redirect_path = case @project.step
-    when 1 then story_project_url(@project)
-    when 2 then info_project_url(@project)
-    when 3 then rewards_project_url(@project)
-    else nil
-    end
-    if redirect_path
-      redirect_to redirect_path
-    end
   end
 
   def new_message
@@ -86,8 +77,7 @@ class ProjectsController < ApplicationController
   end
 
   def update
-    @project.step = 1;
-
+    @project.step = 1
     if @project.update(project_params)
       redirect_to story_project_url(@project)
     else

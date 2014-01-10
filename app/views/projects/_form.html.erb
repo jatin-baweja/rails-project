@@ -67,6 +67,8 @@
     </div>
   <% end %>
 
+  <%= render partial: 'projects/steps_covered' %>
+
   <div class="form-actions">
     <%= link_to 'Cancel', projects_path, :class => 'btn' %>
     <%= f.submit "Next >", :class => 'btn btn-primary' %>

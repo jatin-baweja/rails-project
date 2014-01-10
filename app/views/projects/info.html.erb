@@ -35,6 +35,8 @@
     </div>
   </div>
 
+  <%= render partial: 'projects/steps_covered' %>
+
   <div class="form-actions">
     <%= link_to "< Prev", story_project_path(@project), :class => 'btn' %>
     <%= f.submit "Next >", :class => 'btn btn-primary' %>

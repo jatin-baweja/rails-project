@@ -1,0 +1,19 @@
+  <div class="control-group">
+    <div class="controls">
+      <%if @project.persisted? %>
+        Go to:
+        <%if @project.step >= 1 %>
+          <%= link_to 'Step 1', edit_project_path(@project) %>
+        <% end %>
+        <%if @project.step >= 2 %>
+          <%= link_to 'Step 2', story_project_path(@project) %>
+        <% end %>
+        <%if @project.step >= 3 %>
+          <%= link_to 'Step 3', info_project_path(@project) %>
+        <% end %>
+        <%if @project.step == 4 %>
+          <%= link_to 'Step 4', rewards_project_path(@project) %>
+        <% end %>
+      <% end %>
+    </div>
+  </div>
