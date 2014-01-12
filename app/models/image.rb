@@ -16,5 +16,7 @@
 class Image < ActiveRecord::Base
   validates :project, presence: true
   belongs_to :project, inverse_of: :images
+  #FIXME_AB: I would prefer if we name it as 'attachment' so that we can call it like image.attachment instead of image.picture. Which is little less readable. Thoughts?
   has_attached_file :picture, :styles => { :medium => "300x300>", :thumb => "202x135>" }, :default_url => "/images/:style/missing.png"
+  #FIXME_AB: We should also add some validations around the attachment size and types. Also need to show user what formats are allowed and what is the size limit.
 end

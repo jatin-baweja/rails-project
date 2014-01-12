@@ -4,6 +4,7 @@
 <div class="container-fluid">
   <div class="row-fluid">
     <div class="span9">
+      <% #FIXME_AB: Should you form_for helper -%>
       <form action="<%= search_results_path %>" method="get">
         <%= text_field_tag :q, params[:q], placeholder: 'Search projects...', style: 'margin-bottom:0px;' %>
         <%= submit_tag "Search", name: nil, class: 'btn btn-primary' %>

@@ -18,6 +18,7 @@
 
 class User < ActiveRecord::Base
 
+  #FIXME_AB: I am not sure, can we use with_option here with some values.
   validates :email, uniqueness: true, format: { with: REGEX_PATTERN[:email], message: 'is not in correct format' }, allow_blank: true, if: "provider.nil?"
   validates :email, confirmation: true, if: "provider.nil?"
   validates :email_confirmation, presence: true, on: :create, if: "provider.nil?"

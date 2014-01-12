@@ -214,6 +214,7 @@ class Project < ActiveRecord::Base
 
   def thumbnail
     images[0].picture.url(:thumb) if images.present?
+    #FIXME_AB: what if images were not present. You haven't handle this here, and also not in short_description partial. 
   end
 
   def set_step

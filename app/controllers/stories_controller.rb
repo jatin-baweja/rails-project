@@ -5,6 +5,7 @@ class StoriesController < ApplicationController
   before_action :validate_owner, only: [:new, :create]
 
   def new
+    #FIXME_AB: Form doesn't intimate about the required fields
   end
 
   def create
