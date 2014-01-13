@@ -13,7 +13,7 @@
   <div class="control-group">
     <%= f.label :estimated_delivery_on, :class => 'control-label' %>
     <div class="controls">
-      <%= f.date_select :estimated_delivery_on, :class => 'date_field', :start_year => Time.now.year, :order => [:month, :year]  %>
+      <%= f.date_select :estimated_delivery_on, :class => 'date_field', :start_year => Time.current.year, :order => [:month, :year]  %>
     </div>
   </div>
   <div class="control-group">
