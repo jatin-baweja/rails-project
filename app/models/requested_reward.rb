@@ -27,9 +27,8 @@ class RequestedReward < ActiveRecord::Base
   def requested_rewards_total
       amount_of_requested_rewards = (reward.minimum_amount * quantity) + pledge.sum_of_requested_rewards
       if amount_of_requested_rewards > pledge.amount
-        error_message = 'Pledge amount should be greater than amount of requested rewards'
-        errors.add :base, error_message
-        pledge.errors.add :base, error_message
+        error_message = 'should be less than pledge amount'
+        errors.add :amount, error_message
       end
   end
 

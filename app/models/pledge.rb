@@ -39,7 +39,7 @@ class Pledge < ActiveRecord::Base
 
   def save_with_associated_rewards
     ActiveRecord::Base.transaction do
-      save
+      save!
     end
   end
 
