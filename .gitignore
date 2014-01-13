@@ -19,7 +19,7 @@
 # Ignore config files
 /config/database.yml
 /config/environments/development.rb
-/config/initializers/settings.yml
+/config/settings.yml
 /config/development.sphinx.conf
 /lib/tasks/campaign/create.rake
 /db/sphinx/development/
