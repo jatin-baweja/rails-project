@@ -4,11 +4,15 @@ class ApplicationController < ActionController::Base
   protect_from_forgery with: :exception
   before_action :authorize
   before_action :set_i18n_locale
+  #FIXME_AB: Just a thought, anonymous? also looks a candidate of helper_method. 
   helper_method :current_user, :logged_in?
+
+  #FIXME_AB: Settings.yml should be directly in config directory, not under initializers. Also for this yml file you can write it a little better. In this yml file you are repeating many values, There is a way to make default namespace and then include it in other name space. http://stackoverflow.com/questions/6651275/what-do-the-mean-in-this-database-yml-file
 
   protected
 
     def current_user
+      #FIXME_AB: It will fire "SELECT `users`.* FROM `users` WHERE `users`.`id` IS NULL AND (`users`.deleted_at IS NULL) LIMIT 1" when user is not logged in.
       @current_user ||= User.find_by(id: session[:user_id])
     end
 

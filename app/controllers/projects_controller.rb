@@ -13,6 +13,7 @@ class ProjectsController < ApplicationController
   end
 
   def index
+    #FIXME_AB: Can we eager load images to reduce number of queries. short_descriptoin partial fires one query per project to get its images
     @projects = Project.live.order(:title).page(params[:page]).per_page(PER_PAGE)
   end
 
@@ -35,9 +36,11 @@ class ProjectsController < ApplicationController
   end
 
   def show
+    #FIXME_AB: I think we can directly use current_user.pledge_amount_for_project(@project) in the frontend, right
     if logged_in?
       @total_pledged_amount = current_user.pledge_amount_for_project(@project)
     end
+    #FIXME_AB: JS is still not working, unless I reload the page. Looks like the turbolink issue. Check that you are using isReady event to bind event not the dom ready. OR turnoff turbolink
   end
 
   def user_owned
@@ -45,8 +48,6 @@ class ProjectsController < ApplicationController
   end
 
   def edit
-    #FIXME_AB: Lets give this action a thought.
-    #FIXED: Using step field for redirection to appropriate editing page
     @project.edit! if !@project.draft?
   end
 
@@ -63,6 +64,12 @@ class ProjectsController < ApplicationController
       render action: :info
     end
   end
+
+#FIXME_AB: Getting this in log:
+# Unpermitted parameters: title, category_id, summary, video_url
+# Unpermitted parameters: location_attributes
+# Unpermitted parameters: location_attributes
+# Unpermitted parameters: title, category_id, summary, video_url
 
   def create
     @project = build_project_from_location(@location, project_params)

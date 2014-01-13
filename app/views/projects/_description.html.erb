@@ -1,6 +1,4 @@
 <div class="image-container">
-  <% #FIXME_AB: Since you have multiple images for a project. Implement a slider for images. -%>
-  <% #FIXED: Added images slider %>
   <% if @project.images.present? %>
     <div class="theme-default">
       <div id="slider" class="ramblingSlider">
@@ -18,6 +16,7 @@
       <h4>Description</h4>
       <p><%=raw sanitize @story.description, attributes: %w'style class id' %></p>
       <h4>Risks</h4>
+      <% #FIXME_AB: Since these values are entered by user, so we can't rely on it to be safe. So using raw is risky.  -%>
       <p><%=raw @story.risks %></p>
       <h4>Why we need Help</h4>
       <p><%=raw @story.why_we_need_help %></p>

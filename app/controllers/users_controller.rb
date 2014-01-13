@@ -17,8 +17,9 @@ class UsersController < ApplicationController
 
   def create
     @user = User.new(user_params)
-
     if @user.save
+      #FIXME_AB: After signup shouldn;t you redirect it to login page. right now you are redirecting him to show page and then he is being redirected to login page. Or either auto sign in him and then redirect to show page
+
       redirect_to user_url(@user), notice: "Dear #{@user.name}, you have been successfully registered."
     else
       render action: :new
