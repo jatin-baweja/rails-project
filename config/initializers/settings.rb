@@ -1,6 +1,6 @@
 
 # General Settings
-SETTINGS = YAML.load_file("#{Rails.root}/config/initializers/settings.yml")[Rails.env]
+SETTINGS = YAML.load_file("#{Rails.root}/config/settings.yml")[Rails.env]
 APP_NAME = SETTINGS["app_name"]
 PAYMENT_HOLDING_PERIOD = SETTINGS["payment_holding_period"]
 PER_PAGE = SETTINGS["default_per_page_result_count"]
