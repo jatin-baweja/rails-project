@@ -4,7 +4,7 @@ describe Reward do
 
   before(:each) do
     @project = Project.new
-    @reward = @project.rewards.build(:minimum_amount => '20', :description => 'Reward Number 1', :estimated_delivery_on => Time.now + 2.months)
+    @reward = @project.rewards.build(:minimum_amount => '20', :description => 'Reward Number 1', :estimated_delivery_on => Time.current + 2.months)
   end
 
   it "is valid with valid attributes" do

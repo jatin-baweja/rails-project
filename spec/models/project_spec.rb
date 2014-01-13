@@ -5,7 +5,7 @@ describe Project do
   context "after step 1" do
 
     before(:each) do
-      @project = Project.new(:title => 'New Project', :summary => 'Just a short summary', :location_name => 'New Delhi')
+      @project = FactoryGirl.create(:project)
       @project.step = 1
     end
 
@@ -20,11 +20,6 @@ describe Project do
 
     it "is invalid without summary" do
       @project.summary = nil
-      @project.should_not be_valid
-    end
-
-    it "is invalid without location" do
-      @project.location_name = nil
       @project.should_not be_valid
     end
 
@@ -43,7 +38,7 @@ describe Project do
   context "after step 3" do
 
     before(:each) do
-      @project = Project.new(:title => 'New Project', :summary => 'Just a short summary', :location_name => 'New Delhi', :goal => 20000, :duration => 25, :published_at => Time.now + 5.days)
+      @project = Project.new(:title => 'New Project', :summary => 'Just a short summary', :location_name => 'New Delhi', :goal => 20000, :duration => 25, :published_at => Time.current + 5.days)
       @project.step = 3
     end
 

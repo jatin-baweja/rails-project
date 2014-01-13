@@ -3,11 +3,10 @@ require 'spec_helper'
 describe RequestedReward do
 
   before(:each) do
-    @project = Project.new
-    @pledge = @project.pledges.build
-    @requested_reward = @pledge.requested_rewards.build
-    @requested_reward.reward_id = 2;
-    @requested_reward.pledge_id = 3;
+    @requested_reward = RequestedReward.new(quantity: 20)
+    @requested_reward.pledge = FactoryGirl.create(:pledge, amount: 300)
+    @requested_reward.reward = FactoryGirl.create(:reward, minimum_amount: 10, description: "Example", estimated_delivery_on: 2.months.from_now, quantity: 100, remaining_quantity: 40)
+    @requested_reward.stub(:requested_rewards_total).and_return(true)
   end
 
   it "is valid with valid attributes" do

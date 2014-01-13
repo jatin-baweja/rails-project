@@ -3,7 +3,7 @@ require 'spec_helper'
 describe Transaction do
 
   before(:each) do
-    @transaction = Transaction.new(:transaction_id => "tran_122133ede", :payment_mode => 'Stripe', :status => 'charged')
+    @transaction = Transaction.new(:transaction_id => "tran_122133ede", :payment_mode => 'stripe', :status => 'charged')
   end
 
   it "is valid with valid attributes" do
