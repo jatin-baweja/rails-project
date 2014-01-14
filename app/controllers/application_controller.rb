@@ -5,15 +5,18 @@ class ApplicationController < ActionController::Base
   before_action :authorize
   before_action :set_i18n_locale
   #FIXME_AB: Just a thought, anonymous? also looks a candidate of helper_method. 
+  #FIXED: anonymous? does not seem to have use presently. Will add if needed.
   helper_method :current_user, :logged_in?
 
   #FIXME_AB: Settings.yml should be directly in config directory, not under initializers. Also for this yml file you can write it a little better. In this yml file you are repeating many values, There is a way to make default namespace and then include it in other name space. http://stackoverflow.com/questions/6651275/what-do-the-mean-in-this-database-yml-file
+  #FIXED: Improved YAML and shifted to config directory
 
   protected
 
     def current_user
       #FIXME_AB: It will fire "SELECT `users`.* FROM `users` WHERE `users`.`id` IS NULL AND (`users`.deleted_at IS NULL) LIMIT 1" when user is not logged in.
-      @current_user ||= User.find_by(id: session[:user_id])
+      #FIXED: Avoided query if user is not logged in
+      @current_user ||= User.find_by(id: session[:user_id]) if session[:user_id]
     end
 
     def logged_in?
@@ -26,7 +29,7 @@ class ApplicationController < ActionController::Base
 
     def authorize
       if anonymous?
-        redirect_to login_url, notice: "Please log in"
+        redirect_to login_path, notice: "Please log in"
       end
     end
 

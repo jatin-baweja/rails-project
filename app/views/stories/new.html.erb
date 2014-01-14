@@ -1,20 +1,6 @@
 <% #FIXME_AB: This story creation belongs to controller action -%>
-<%- if @project.story.nil? -%>
-  <%- @story = @project.build_story -%>
-<%- else -%>
-  <%- @story = @project.story -%>
-<%- end -%>
-<% if @story.errors.any? %>
-  <div id="error_explanation" class="alert alert-error">
-    <h2><%= pluralize(@story.errors.count, "error") %> prohibited this project from being saved:</h2>
-
-    <ul>
-    <% @story.errors.full_messages.each do |msg| %>
-      <li><%= msg %></li>
-    <% end %>
-    </ul>
-  </div>
-<% end %>
+<% #FIXED: Added to controller %>
+<%= get_errors(@story) %>
 <%= form_for @project, :url => create_story_project_path, :html => { :class => 'form-horizontal' } do |f| %>
   <div class="highlight">
     <h4>Story</h4>

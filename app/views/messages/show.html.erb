@@ -1,23 +1,15 @@
-<% if @reply_message.errors.any? %>
-  <div id="error_explanation" class="alert alert-error">
-    <h2><%= pluralize(@reply_message.errors.count, "error") %> prohibited this message from being sent:</h2>
-
-    <ul>
-    <% @reply_message.errors.full_messages.each do |msg| %>
-      <li><%= msg %></li>
-    <% end %>
-    </ul>
-  </div>
-<% end %>
+<%- error_message = "<h2>" + pluralize(@reply_message.errors.count, "error") + " prohibited this message from being sent:</h2>" -%>
+<%= get_errors(@reply_message, error_message) %>
 <div id="message" class="container-fluid">
   <h4><%= "[#{@message.project.title}] #{@message.subject}" %></h4>
-  <%= render partial: 'content', locals: { :message => @message } %>
+  <%= render_content_partial_for(@message) %>
     <hr>
   <% if @message.replies.present? %>
     <% @message.replies.each do |message| %>
       <% if message.present? && message.id.present? %>
       <% #FIXME_AB: following line is written twice in the same file -%>
-        <%= render partial: 'content', locals: { :message => message } %>
+        <% #FIXED: Added helper method %>
+        <%= render_content_partial_for(message) %>
         <hr>
       <% end %>
     <% end %>

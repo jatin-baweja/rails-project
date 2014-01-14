@@ -1,6 +1,6 @@
   <% if @messages.present? %>
     <% @messages.each do |message_set| %>
-      <% if message_set.present? %>
+      <%# if message_set.present? %>
         <div class="row <%= (message_set.last_receiver?(current_user)) && message_set.last_unread? ? "unread-highlight" : "read-highlight" %>">
           <div class="span2">
             <% if message_set.receiver?(current_user) %>
@@ -16,6 +16,6 @@
             <%= message_set.updated_at.to_s(:message_date) %>
           </div>
         </div>
-      <% end %>
+      <%# end %>
     <% end %>
   <% end %>

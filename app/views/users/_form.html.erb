@@ -1,17 +1,9 @@
 <% #FIXME_AB: I have a strong feeling that we can extract out this as a helper or partial so that it can be used at other places. And we don't have to repeat it. -%>
-<% if @user.errors.any? %>
-  <div id="error_explanation" class="alert alert-error">
-    <h2><%= pluralize(@user.errors.count, "error") %> prohibited this user from being created:</h2>
-
-    <ul>
-    <% @user.errors.full_messages.each do |msg| %>
-      <li><%= msg %></li>
-    <% end %>
-    </ul>
-  </div>
-<% end %>
+<% #FIXED: Extracted as a helper %>
+<%= get_errors(@user) %>
 <%= form_for @user, :html => { :class => 'form-horizontal' } do |f| %>
 <% #FIXME_AB: You can also use html5 required attribute to make a field required. -%>
+<% #FIXED: Using html5 required attribute %>
 <div class="row">
   <div class="span5">
 
@@ -19,7 +11,7 @@
     <%= f.label :name, :class => 'control-label' %>
     <span class='required'>*</span>
     <div class="controls">
-      <%= f.text_field :name, :class => 'text_field' %>
+      <%= f.text_field :name, :class => 'text_field', :required => true %>
       <p class="help-block">Only alphabets and spaces allowed in name</p>
     </div>
   </div>
@@ -27,7 +19,7 @@
     <%= f.label :email, :class => 'control-label' %>
     <span class='required'>*</span>
     <div class="controls">
-      <%= f.email_field :email, :class => 'text_field' %>
+      <%= f.email_field :email, :class => 'text_field', :required => true %>
       <p class="help-block">Enter your email address</p>
     </div>
   </div>
@@ -35,14 +27,14 @@
     <%= f.label :email_confirmation, "Confirm Email", :class => 'control-label' %>
     <span class='required'>*</span>
     <div class="controls">
-      <%= f.email_field :email_confirmation, :class => 'text_field' %>
+      <%= f.email_field :email_confirmation, :class => 'text_field', :required => true %>
     </div>
   </div>
   <div class="control-group">
     <%= f.label :password, :class => 'control-label' %>
     <span class='required'>*</span>
     <div class="controls">
-      <%= f.password_field :password, :class => 'text_field' %>
+      <%= f.password_field :password, :class => 'text_field', :required => true %>
       <p class="help-block">Password must be 6-30 characters long</p>
     </div>
   </div>
@@ -50,7 +42,7 @@
     <%= f.label :password_confirmation, "Confirm Password", :class => 'control-label' %>
     <span class='required'>*</span>
     <div class="controls">
-      <%= f.password_field :password_confirmation, :class => 'text_field' %>
+      <%= f.password_field :password_confirmation, :class => 'text_field', :required => true %>
     </div>
   </div>
 

@@ -1,17 +1,8 @@
 <div class="page-header">
   <h1>Subscribe to our newsletter</h1>
 </div>
-<% if @subscriber.errors.any? %>
-  <div id="error_explanation" class="alert alert-error">
-    <h2>You could not be subscribed because of <%= pluralize(@subscriber.errors.count, "error") %>:</h2>
-
-    <ul>
-    <% @subscriber.errors.full_messages.each do |msg| %>
-      <li><%= msg %></li>
-    <% end %>
-    </ul>
-  </div>
-<% end %>
+<%- error_message = "<h2>You could not be subscribed because of " + pluralize(@subscriber.errors.count, "error") + ":</h2>" -%>
+<%= get_errors(@subscriber, error_message) %>
 <%= form_for @subscriber, url: subscriptions_path, :class => 'form-horizontal' do |f| %>
   <div class="control-group">
     <%= f.label :first_name, "First Name", :class => 'control-label' %>

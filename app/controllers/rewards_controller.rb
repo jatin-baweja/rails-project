@@ -5,11 +5,16 @@ class RewardsController < ApplicationController
   before_action :validate_owner, only: [:new, :create]
 
   def new
+    if @project.rewards.empty?
+      @reward = @project.rewards.build
+    else
+      @reward = @project.rewards
+    end
   end
 
   def create
     if @project.save_rewards(project_params)
-      redirect_to project_url(@project), notice: "Project #{@project.title} was successfully created/updated."
+      redirect_to project_path(@project), notice: "Project #{@project.title} was successfully created/updated."
     else
       render action: :new
     end

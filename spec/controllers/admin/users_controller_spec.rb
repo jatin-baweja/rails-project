@@ -59,7 +59,7 @@ describe Admin::UsersController do
 
       it "redirects to users index page" do
         delete :destroy, id: @user
-        response.should redirect_to admin_users_url
+        response.should redirect_to admin_users_path
       end
 
     end
@@ -72,7 +72,7 @@ describe Admin::UsersController do
 
       it "redirects to users index page" do
         delete :destroy
-        response.should redirect_to admin_users_url
+        response.should redirect_to admin_users_path
       end
 
       it "sets flash message" do
@@ -121,7 +121,7 @@ describe Admin::UsersController do
 
     it "redirects to users index page" do
       get :make_admin, id: @user
-      response.should redirect_to admin_users_url
+      response.should redirect_to admin_users_path
     end
 
   end

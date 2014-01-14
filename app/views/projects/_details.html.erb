@@ -1,16 +1,19 @@
 <div class="highlight high470">
-  <h2 id="backer-count"><%= project.backers.count %></h2>
+  <%- backers_count = project.backers.count -%>
+  <h2 id="backer-count"><%= backers_count %></h2>
   <% #FIXME_AB: Duplicate query project.backers.count -%>
-  <p><%= "backer".pluralize(project.backers.count) %></p>
+  <% #FIXED: Added to a variable %>
+  <p><%= "backer".pluralize(backers_count) %></p>
   <h2 id="goal-required"><%= number_to_currency(project.goal) %></h2>
   <p>funding required</p>
   <h2 id="goal-achieved"><%= number_to_currency(project.pledges.sum(:amount)) %></h2>
   <p>amount funded</p>
   <div class="text-center">
     <% if logged_in? && !project.owner?(current_user) %>
-      <% if @total_pledged_amount != 0 %>
+      <% total_pledged_amount = current_user.pledge_amount_for_project(project) %>
+      <% if total_pledged_amount != 0 %>
         <div id="pledge-info" class="text-center">
-          <%= "You have pledged #{number_to_currency(@total_pledged_amount)} for this project." %>
+          <%= "You have pledged #{number_to_currency(total_pledged_amount)} for this project." %>
         </div>
       <% end %>
         <div id="pledge-button" class="large-button text-center">

@@ -5,12 +5,18 @@ class StoriesController < ApplicationController
   before_action :validate_owner, only: [:new, :create]
 
   def new
+    if @project.story.nil?
+      @story = @project.build_story
+    else
+      @story = @project.story
+    end
     #FIXME_AB: Form doesn't intimate about the required fields
+    #FIXED: Required Fields intimated
   end
 
   def create
     if @project.save_story(project_params)
-      redirect_to info_project_url(@project)
+      redirect_to info_project_path(@project)
     else
       render action: :new
     end

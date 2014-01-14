@@ -5,17 +5,7 @@
     <h5 class="text-center">By <%= @project.owner.name %></h5>
   </div>
 <div class="row">
-<% if @pledge.errors.any? %>
-  <div id="error_explanation" class="alert alert-error">
-    <h2><%= pluralize(@pledge.errors.count, "error") %> prohibited this pledge from being saved:</h2>
-
-    <ul>
-    <% @pledge.errors.full_messages.each do |msg| %>
-      <li><%= msg %></li>
-    <% end %>
-    </ul>
-  </div>
-<% end %>
+<%= get_errors(@pledge) %>
   <div id="new-message" class="span8 offset1">
     <%= form_for @pledge, url: create_pledge_project_path(@project), html: { class: 'form-horizontal' } do |pledge| %>
       <div class="control-group">

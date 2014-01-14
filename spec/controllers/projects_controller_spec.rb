@@ -326,7 +326,7 @@ describe ProjectsController do
   #   context "when valid attributes" do
   #     it "redirects to Project Story Page" do
   #       post :create, project: proj_params
-  #       response.should redirect_to story_project_url(Project.last.id)
+  #       response.should redirect_to story_project_path(Project.last.id)
   #     end
   #   end
 
@@ -408,7 +408,7 @@ describe ProjectsController do
 
     it "redirects to root" do
       delete :destroy, id: @project
-      response.should redirect_to root_url
+      response.should redirect_to root_path
     end
 
   end

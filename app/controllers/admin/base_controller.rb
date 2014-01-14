@@ -6,7 +6,7 @@ class Admin::BaseController < ApplicationController
 
   def admin_authorize
     unless (logged_in? && current_user.admin?)
-      redirect_to login_url, notice: "Please log in"
+      redirect_to login_path, notice: "Please log in"
     end
   end
 

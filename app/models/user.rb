@@ -19,14 +19,18 @@
 class User < ActiveRecord::Base
 
   #FIXME_AB: I am not sure, can we use with_option here with some values.
-  validates :email, uniqueness: true, format: { with: REGEX_PATTERN[:email], message: 'is not in correct format' }, allow_blank: true, if: "provider.nil?"
-  validates :email, confirmation: true, if: "provider.nil?"
-  validates :email_confirmation, presence: true, on: :create, if: "provider.nil?"
+  #FIXED: Using with_options
+  with_options if: -> { provider.nil? } do |user|
+    user.validates :email, uniqueness: true, format: { with: REGEX_PATTERN[:email], message: 'is not in correct format' }, allow_blank: true
+    user.validates :email, confirmation: true
+    user.validates :email_confirmation, presence: true, on: :create
+    user.validates :password, confirmation: true
+    user.validates :password, length: { in: 6..30 }, allow_blank: true
+    user.validates :password_confirmation, presence: true, on: :create
+  end
+
   validates :name, format: { with: REGEX_PATTERN[:name], message: 'only allows letters and spaces' }, allow_blank: true
   validates :name, presence: true
-  validates :password, confirmation: true, if: "provider.nil?"
-  validates :password, length: { in: 6..30 }, allow_blank: true, if: "provider.nil?"
-  validates :password_confirmation, presence: true, on: :create, if: "provider.nil?"
 
   has_many :owned_projects, class_name: "Project", foreign_key: "owner_id"
   has_many :backed_projects, -> { uniq }, through: :pledges, source: :project
@@ -57,6 +61,5 @@ class User < ActiveRecord::Base
   def pledge_amount_for_project(project)
     pledges.for_project(project).sum(:amount)
   end
-
 
 end

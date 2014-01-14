@@ -1,30 +1,41 @@
   <div class="control-group">
     <%= f.label :description, :class => 'control-label' %>
+    <span class='required'>*</span>
     <div class="controls">
       <%= f.cktext_area :description, :class => 'text_field' %>
     </div>
   </div>
   <div class="control-group">
     <%= f.label :why_we_need_help, :class => 'control-label' %>
+    <span class='required'>*</span>
     <div class="controls">
       <%= f.cktext_area :why_we_need_help, :class => 'text_field' %>
     </div>
   </div>
   <div class="control-group">
     <%= f.label :risks, 'Risks and Challenges', :class => 'control-label' %>
+    <span class='required'>*</span>
     <div class="controls">
       <%= f.cktext_area :risks, :class => 'text_field' %>
     </div>
   </div>
   <div class="control-group">
     <%= f.label :about_the_team, :class => 'control-label' %>
+    <span class='required'>*</span>
     <div class="controls">
       <%= f.cktext_area :about_the_team, :class => 'text_field' %>
     </div>
   </div>
   <div class="control-group">
     <%= f.label :faq, 'FAQs', :class => 'control-label' %>
+    <span class='required'>*</span>
     <div class="controls">
       <%= f.cktext_area :faq, :class => 'text_field' %>
+    </div>
+  </div>
+
+  <div class="control-group">
+    <div class="controls">
+      <span class='required'>*</span><span> marks required fields</span>
     </div>
   </div>

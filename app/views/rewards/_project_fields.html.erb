@@ -1,19 +1,22 @@
 <%- @time = Time.current.to_i %>
 <div class="control-group">
     <label class="control-label" for="project_rewards_attributes_<%= @time %>_minimum_amount">Amount</label>
+    <span class='required'>*</span>
     <div class="controls">
-      <input class="text_field" id="project_rewards_attributes_<%= @time %>_minimum_amount" name="project[rewards_attributes][<%= @time %>][minimum_amount]" type="text" />
+      <input class="text_field" id="project_rewards_attributes_<%= @time %>_minimum_amount" name="project[rewards_attributes][<%= @time %>][minimum_amount]" type="text" required="required" />
     </div>
   </div>
   <div class="control-group">
     <label class="control-label" for="project_rewards_attributes_<%= @time %>_description">Description</label>
+    <span class='required'>*</span>
     <div class="controls">
-      <textarea class="text" id="project_rewards_attributes_<%= @time %>_description" name="project[rewards_attributes][<%= @time %>][description]">
+      <textarea class="text" id="project_rewards_attributes_<%= @time %>_description" name="project[rewards_attributes][<%= @time %>][description]" required="required" >
 </textarea>
     </div>
   </div>
   <div class="control-group">
     <label class="control-label" for="project_rewards_attributes_<%= @time %>_estimated_delivery_on">Estimated delivery on</label>
+    <span class='required'>*</span>
     <div class="controls">
       <input id="project_rewards_attributes_<%= @time %>_estimated_delivery_on_3i" name="project[rewards_attributes][<%= @time %>][estimated_delivery_on(3i)]" type="hidden" value="1" />
 <% @months = [] %>

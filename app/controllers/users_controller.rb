@@ -19,8 +19,9 @@ class UsersController < ApplicationController
     @user = User.new(user_params)
     if @user.save
       #FIXME_AB: After signup shouldn;t you redirect it to login page. right now you are redirecting him to show page and then he is being redirected to login page. Or either auto sign in him and then redirect to show page
+      #FIXED: Redirected to login page
 
-      redirect_to user_url(@user), notice: "Dear #{@user.name}, you have been successfully registered."
+      redirect_to login_path(@user), notice: "Dear #{@user.name}, you have been successfully registered. Please log in to continue"
     else
       render action: :new
     end
@@ -28,7 +29,7 @@ class UsersController < ApplicationController
 
   def update
     if @user.update(user_params)
-      redirect_to user_url(@user), notice: "Your profile has been successfully updated."
+      redirect_to user_path(@user), notice: "Your profile has been successfully updated."
     else
       render action: :edit
     end
@@ -45,7 +46,7 @@ class UsersController < ApplicationController
 
     def verify_owner
       if anonymous? || current_user.id != @user.id
-        redirect_to root_url, notice: 'Access Denied'
+        redirect_to root_path, notice: 'Access Denied'
       end
     end
 

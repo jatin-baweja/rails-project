@@ -41,6 +41,38 @@ function AjaxMenuButton(buttonId, containerId, heading, appendPath) {
         });
     });
 }
+function AjaxMessageLink(linkClass, containerId) {
+    var that = this;
+    this.containerId = containerId;
+    $('#project-main').on('click', '.' + linkClass, function() {
+        var $this = $(this);
+        var messagePath = $this.attr('data-link');
+        var subject = $this.attr('data-subject');
+        $.ajax({
+            url: messagePath,
+            dataType: "json",
+            success: function(responseData, returnStatus, xhr) {
+                var $mainContainer = $('#project-main');
+                var $subContainer = $mainContainer.children('#' + containerId);
+                // Create sub-container if it does not exist already
+                if ($subContainer.length == 0) {
+                    $subContainer = $("<div id='" + containerId + "' class='container-fluid'></div>").appendTo($mainContainer);
+                }
+                //Hide siblings and clear container content
+                $mainContainer.children().hide();
+                $subContainer.html("");
+                //Add subject and show container
+                $subContainer.append($('<h4>' + subject + '</h4>'));
+                $subContainer.show();
+                //Parse response data from ajax
+                that.displayData(responseData, $subContainer);
+            },
+            error: function(responseData, returnStatus, xhr) {
+                alert('Server gave the following response:\n' + responseData.status + ' : ' + responseData.statusText);
+            }
+        });
+    });
+}
 $(document).ready(function() {
     var pledgesButton = new AjaxMenuButton('pledges-button', 'pledges', 'Pledges', 'backers');
     //Parse response data to display pledges
@@ -79,7 +111,7 @@ $(document).ready(function() {
         return $("<div class='span2'>" + message['sender']['name'] + " </div>").appendTo(container);
     }
     messagesButton.appendSubjectLink = function(container, message) {
-        return $("<div class='span6'><a href='/messages/" + message["id"] + "'>" + this.getSubject(message) + "</a></div>").appendTo(container);
+        return $("<div class='span6 link-container'><a href='javascript:void(0)' class='message-link' data-link='/messages/" + message["id"] + "' data-subject='" + message['subject'] + "' >" + this.getSubject(message) + "</a></div>").appendTo(container);
     }
     messagesButton.appendDateTime = function(container, message) {
         var messageTime = new Date(message['updated_at']).toLocaleString();
@@ -89,6 +121,36 @@ $(document).ready(function() {
         return "[" + message['project']['title'] + "] " + message['subject'];
     }
     var descriptionButton = new MenuButton('description-button', 'description');
+    var messageLinks = new AjaxMessageLink('message-link', 'message-container');
+    messageLinks.displayData = function(responseData, container) {
+        this.appendBackButton(container);
+        var messageBox = this.appendMessageContainer(container);
+        this.appendMessage(messageBox, responseData);
+        $.each(responseData['replies'], function(index, message) {
+            messageBox = this.appendMessageContainer(container);
+            this.appendMessage(messageBox, message);
+        }.bind(this));
+    }
+    messageLinks.appendBackButton = function(container) {
+        return $("<a href='javascript:void(0)' onclick='\$(\"#messages-button\").click();'>Back</a>").appendTo(container);
+    }
+    messageLinks.appendMessageContainer = function(container) {
+        return $("<div class='row read-highlight'></div>").appendTo(container);
+    }
+    messageLinks.appendMessage = function(container, message) {
+        this.appendSender(container, message);
+        this.appendReceiver(container, message);
+        this.appendContent(container, message);
+    }
+    messageLinks.appendSender = function(container, message) {
+        return $("<p>From: " + message['sender']['name'] + " </p>").appendTo(container);
+    }
+    messageLinks.appendReceiver = function(container, message) {
+        return $("<p>To: " + message['receiver']['name'] + " </p>").appendTo(container);
+    }
+    messageLinks.appendContent = function(container, message) {
+        return $("<p>" + message['content'] + " </p>").appendTo(container);
+    }
 });
 $(window).load(function(){
   $('#slider').ramblingSlider();

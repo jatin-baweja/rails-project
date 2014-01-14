@@ -51,7 +51,7 @@ describe PledgesController do
     context "when payment mode is Credit Card" do
       it "redirects to the Stripe Payment Page" do
         post :create, pledge: pledge_params, payment_mode: "Stripe"
-        response.should redirect_to payment_stripe_charges_new_card_url(project: @project.id, pledge: Pledge.last.id)
+        response.should redirect_to payment_stripe_charges_new_card_path(project: @project.id, pledge: Pledge.last.id)
       end
     end
 

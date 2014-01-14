@@ -1,27 +1,19 @@
 <div class="page-header">
   <h1>Project Info</h1>
 </div>
-<% if @project.errors.any? %>
-  <div id="error_explanation" class="alert alert-error">
-    <h2><%= pluralize(@project.errors.count, "error") %> prohibited this project from being saved:</h2>
-
-    <ul>
-    <% @project.errors.full_messages.each do |msg| %>
-      <li><%= msg %></li>
-    <% end %>
-    </ul>
-  </div>
-<% end %>
+<%= get_errors(@project) %>
 <%= form_for @project, url: create_info_project_path, :html => { :class => 'form-horizontal' } do |f| %>
   <div class="control-group">
     <%= f.label :duration, :class => 'control-label' %>
+    <span class='required'>*</span>
     <div class="controls">
-      <%= f.text_field :duration, :class => 'text_field' %>
+      <%= f.text_field :duration, :class => 'text_field', :required => true %>
       <p class="help-block">Enter the duration to achieve your funding in days: 1-<%= PAYMENT_HOLDING_PERIOD %></p>
     </div>
   </div>
   <div class="control-group">
     <%= f.label :published_at, :class => 'control-label' %>
+    <span class='required'>*</span>
     <div class="controls">
       <%= f.date_select :published_at, { :start_year => Time.current.year }, { :class => 'date_field' } %>
       <p class="help-block">Enter the date to publish your project to start funding.</p>
@@ -29,9 +21,16 @@
   </div>
   <div class="control-group">
     <%= f.label :goal, "Amount of Funding Needed(in USD)", :class => 'control-label' %>
+    <span class='required'>*</span>
     <div class="controls">
-      <%= f.text_field :goal, :class => 'text_field' %>
+      <%= f.text_field :goal, :class => 'text_field', :required => true %>
       <p class="help-block">Enter the funding amount of your project</p>
+    </div>
+  </div>
+
+  <div class="control-group">
+    <div class="controls">
+      <span class='required'>*</span><span> marks required fields</span>
     </div>
   </div>
 

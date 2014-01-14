@@ -1,5 +1,5 @@
 <h2><%= @project.title %></h2>
-<%= form_tag send_email_url, :class => 'form-horizontal' do %>
+<%= form_tag send_email_path, :class => 'form-horizontal' do %>
   <div class="control-group">
     <%= label_tag 'emails[]', "Select Emails" %>
     <div class="controls">

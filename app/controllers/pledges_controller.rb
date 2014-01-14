@@ -16,7 +16,7 @@ class PledgesController < ApplicationController
     if params[:payment_mode] == "Paypal"
       redirect_to Paypal.url(@project, project_url(@project), @pledge)
     else
-      redirect_to payment_stripe_charges_new_card_url(project: @project.id, pledge: @pledge.id)
+      redirect_to payment_stripe_charges_new_card_path(project: @project.id, pledge: @pledge.id)
     end
   rescue ActiveRecord::RecordInvalid
     render action: :new

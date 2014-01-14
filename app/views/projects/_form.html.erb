@@ -1,29 +1,20 @@
-<% if @project.errors.any? %>
-  <div id="error_explanation" class="alert alert-error">
-    <h2><%= pluralize(@project.errors.count, "error") %> prohibited this project from being saved:</h2>
-
-    <ul>
-    <% @project.errors.full_messages.each do |msg| %>
-      <li><%= msg %></li>
-    <% end %>
-    </ul>
-  </div>
-<% end %>
+<%= get_errors(@project) %>
 <%= form_for @project, :url => form_path, :html => { :class => 'form-horizontal' } do |f| %>
   <div class="control-group">
     <%= f.label :title, :class => 'control-label' %>
+    <span class='required'>*</span>
     <div class="controls">
-      <%= f.text_field :title, :class => 'text_field' %>
+      <%= f.text_field :title, :class => 'text_field', :required => true %>
       <p class="help-block">Enter the title of your project</p>
     </div>
   </div>
   <%= f.fields_for :images, @image do |image| %>
     <div class="control-group">
-      <%= image.label :picture, :Image, :class => 'control-label' %>
+      <%= image.label :attachment, :Image, :class => 'control-label' %>
       <div class="project-image">
         <div class="controls">
-          <%= image.file_field :picture, :class => 'text_field' %>
-          <p class="help-block">Select an image that best describes your project</p>
+          <%= image.file_field :attachment, :class => 'text_field' %>
+          <p class="help-block">Formats: JPG, GIF, PNG ; Size: upto 200 kB</p>
         </div>
       </div>
       <div class="controls">
@@ -43,8 +34,9 @@
   </div>
   <div class="control-group">
     <%= f.label :summary, :class => 'control-label' %>
+    <span class='required'>*</span>
     <div class="controls">
-      <%= f.text_area :summary, :class => 'text_field', :maxlength => '300' %>
+      <%= f.text_area :summary, :class => 'text_field', :maxlength => '300', :required => true %>
       <p class="help-block">Enter a short description in about 300 characters about your project</p>
     </div>
   </div>
@@ -60,12 +52,19 @@
   <%= f.fields_for :location, @location do |location| %>
     <div class="control-group">
       <%= location.label :name, :City, :class => 'control-label' %>
+      <span class='required'>*</span>
       <div class="controls">
-        <%= location.text_field :name, :class => 'text_field' %>
+        <%= location.text_field :name, :class => 'text_field', :required => true %>
           <p class="help-block">Enter the location of your project</p>
       </div>
     </div>
   <% end %>
+
+  <div class="control-group">
+    <div class="controls">
+      <span class='required'>*</span><span> marks required fields</span>
+    </div>
+  </div>
 
   <%= render partial: 'projects/steps_covered' %>
 

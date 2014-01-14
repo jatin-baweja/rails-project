@@ -4,11 +4,34 @@ class MessagesController < ApplicationController
 
   def index
     #FIXME_AB: I am seeing /messages as blank page
-    @messages = current_user.inbox
+    @messages = current_user.inbox.includes(:project, :sender, :receiver, :replies)
   end
 
   def show
     @reply_message = current_user.sent_messages.build
+    respond_to do |format|
+      format.js {
+        render json: @message.to_json(
+          :include => {
+            :replies => {
+              :only => [:content, :created_at],
+              :include => {
+                :sender => { :only => [:name] },
+                :receiver => { :only => [:name] }
+                }
+            },
+            :sender => {
+              :only => [:name]
+            },
+            :receiver => {
+              :only => [:name]
+            }
+          },
+          :only => [:id, :subject, :content, :created_at]
+          )
+      }
+      format.html {}
+    end
   end
 
   def create
@@ -23,9 +46,9 @@ class MessagesController < ApplicationController
   private
 
     def set_message
-      @message = Message.parent_messages.find_by(id: params[:id])
+      @message = Message.parent_messages.includes(:replies => [:sender, :receiver]).find_by(id: params[:id])
       if @message.nil?
-        redirect_to messages_url, alert: 'No message to display'
+        redirect_to messages_path, alert: 'No message to display'
       end
     end
 

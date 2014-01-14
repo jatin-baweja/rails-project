@@ -55,7 +55,7 @@ class Project < ActiveRecord::Base
   accepts_nested_attributes_for :story, update_only: true
   accepts_nested_attributes_for :location, update_only: true
   accepts_nested_attributes_for :messages
-  accepts_nested_attributes_for :images, reject_if: proc { |attributes| attributes[:picture].blank? }
+  accepts_nested_attributes_for :images, reject_if: proc { |attributes| attributes[:attachment].blank? }
   accepts_nested_attributes_for :pledges
 
   scope :published, ->(time) { where(['published_at <= ?', time]) }
@@ -74,7 +74,6 @@ class Project < ActiveRecord::Base
 
   before_save :set_deadline
   before_save :convert_to_youtube_embed_link
-  before_save :set_step
 
   acts_as_paranoid
 
@@ -96,7 +95,6 @@ class Project < ActiveRecord::Base
 
     event :approve do
       before do
-        generate_permalink! if permalink.blank?
         self.published_at = Time.current if published_at.nil? || published_at < Time.current
         self.deadline = published_at + duration.days
       end
@@ -187,6 +185,7 @@ class Project < ActiveRecord::Base
   end
 
   def save_primary_details(project_creator)
+    generate_permalink!
     self.owner = project_creator
     self.step = 1
     save
@@ -213,20 +212,13 @@ class Project < ActiveRecord::Base
   end
 
   def thumbnail
-    images[0].picture.url(:thumb) if images.present?
-    #FIXME_AB: what if images were not present. You haven't handle this here, and also not in short_description partial. 
-  end
-
-  def set_step
-    if rewards.present?
-      self.step = 4
-    elsif duration.present?
-      self.step = 3
-    elsif story.present?
-      self.step = 2
+    if images.present?
+      images[0].attachment.url(:thumb)
     else
-      self.step = 1
+      '/images/thumb/missing.png'
     end
+    #FIXME_AB: what if images were not present. You haven't handle this here, and also not in short_description partial. 
+    #FIXED: Added images missing case
   end
 
   def youtube_video?

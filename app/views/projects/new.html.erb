@@ -1,13 +1,3 @@
-<%- if @project.images.empty? -%>
-  <%- @image = @project.images.build -%>
-<%- else -%>
-  <%- @image = @project.images -%>
-<%- end -%>
-<%- if @project.location.nil? -%>
-  <%- @location = @project.build_location -%>
-<%- else -%>
-  <%- @location = @project.location -%>
-<%- end -%>
 <div class="page-header">
   <h1><%=t '.title', :default => 'New Project' %></h1>
 </div>

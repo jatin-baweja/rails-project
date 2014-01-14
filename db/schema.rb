@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140103110041) do
+ActiveRecord::Schema.define(version: 20140113112519) do
 
   create_table "accounts", force: true do |t|
     t.string   "customer_id"
@@ -61,12 +61,12 @@ ActiveRecord::Schema.define(version: 20140103110041) do
   add_index "delayed_jobs", ["priority", "run_at"], name: "delayed_jobs_priority", using: :btree
 
   create_table "images", force: true do |t|
-    t.string   "picture_file_name"
-    t.string   "picture_content_type"
-    t.integer  "picture_file_size"
-    t.datetime "picture_updated_at"
+    t.string   "attachment_file_name"
+    t.string   "attachment_content_type"
+    t.integer  "attachment_file_size"
+    t.datetime "attachment_updated_at"
     t.integer  "project_id"
-    t.boolean  "primary",              default: false
+    t.boolean  "primary",                 default: false
     t.datetime "created_at"
     t.datetime "updated_at"
   end
@@ -87,11 +87,14 @@ ActiveRecord::Schema.define(version: 20140103110041) do
     t.integer  "parent_id"
     t.string   "subject"
     t.integer  "project_id"
-    t.integer  "sender_id"
-    t.integer  "receiver_id"
     t.boolean  "unread",      default: true, null: false
     t.time     "deleted_at"
+    t.integer  "sender_id"
+    t.integer  "receiver_id"
   end
+
+  add_index "messages", ["receiver_id"], name: "index_messages_on_receiver_id", using: :btree
+  add_index "messages", ["sender_id"], name: "index_messages_on_sender_id", using: :btree
 
   create_table "pledges", force: true do |t|
     t.integer  "project_id"
