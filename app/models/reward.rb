@@ -32,8 +32,6 @@ class Reward < ActiveRecord::Base
     end
   end
 
-  #FIXME_AB: I am not very sure why we need both quantity and remaining_quantity
-  #FIXED: Project creator might need to know how much quantity he needs to make for a certain reward after project is fully funded
   def remaining_is_less_than_or_equal_to_quantity
     if remaining_quantity.present? && remaining_quantity > quantity
       errors.add :remaining_quantity, 'should be less than or equal to quantity'

@@ -1,8 +1,6 @@
 <div class="highlight high470">
   <%- backers_count = project.backers.count -%>
   <h2 id="backer-count"><%= backers_count %></h2>
-  <% #FIXME_AB: Duplicate query project.backers.count -%>
-  <% #FIXED: Added to a variable %>
   <p><%= "backer".pluralize(backers_count) %></p>
   <h2 id="goal-required"><%= number_to_currency(project.goal) %></h2>
   <p>funding required</p>

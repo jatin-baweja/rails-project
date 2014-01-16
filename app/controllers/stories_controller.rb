@@ -10,8 +10,6 @@ class StoriesController < ApplicationController
     else
       @story = @project.story
     end
-    #FIXME_AB: Form doesn't intimate about the required fields
-    #FIXED: Required Fields intimated
   end
 
   def create

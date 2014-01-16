@@ -6,8 +6,6 @@ class ContactsController < ApplicationController
   before_action :check_accessibility, only: [:import_instructions, :get_gmail_contacts, :gmail_callback, :send_email]
   before_action :check_project_state, only: [:import_instructions, :get_gmail_contacts]
 
-  #FIXME_AB: In view you have a check that the project should be approved. But not in the controller
-  #FIXED: Added check to controller
   def import_instructions
   end
 
@@ -40,8 +38,6 @@ class ContactsController < ApplicationController
   private
 
     def set_project_from_session
-      #FIXME_AB: Instead of saving permalink in the session you can just save the project id. Would be more memory efficient 
-      #FIXED: Using project id
       unless (@project = Project.find_by(id: session[:promotion_project_id]))
         redirect_to root_path, "Project Not Found"
       end

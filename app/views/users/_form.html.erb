@@ -1,9 +1,5 @@
-<% #FIXME_AB: I have a strong feeling that we can extract out this as a helper or partial so that it can be used at other places. And we don't have to repeat it. -%>
-<% #FIXED: Extracted as a helper %>
 <%= get_errors(@user) %>
 <%= form_for @user, :html => { :class => 'form-horizontal' } do |f| %>
-<% #FIXME_AB: You can also use html5 required attribute to make a field required. -%>
-<% #FIXED: Using html5 required attribute %>
 <div class="row">
   <div class="span5">
 

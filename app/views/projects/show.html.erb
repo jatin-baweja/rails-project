@@ -17,14 +17,10 @@
       <ul class="nav pull-right">
         <li class="no-link"><%= @project.location_name %></li>
         <% if logged_in? && (@project.owner?(current_user)) %>
-        <% #FIXME_AB: should not this condition also be on the controller side?  -%>
-        <% #FIXED: Put condition on controller side %>
           <% if @project.draft? || @project.submitted? %>
             <%= menu_divider %>
             <li><%= link_to "Edit Project", edit_project_path(@project)  %></li>
           <% elsif @project.approved? %>
-          <% #FIXME_AB: to promote project project needed to be approved, this is checked in the view only. not checked on controller side -%>
-          <% #FIXED: Checked on controller side as well %>
             <%= menu_divider %>
             <li><%= link_to "Promote Project", contacts_import_instructions_project_path(@project) %></li>
           <% end %>

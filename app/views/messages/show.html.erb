@@ -7,8 +7,6 @@
   <% if @message.replies.present? %>
     <% @message.replies.each do |message| %>
       <% if message.present? && message.id.present? %>
-      <% #FIXME_AB: following line is written twice in the same file -%>
-        <% #FIXED: Added helper method %>
         <%= render_content_partial_for(message) %>
         <hr>
       <% end %>

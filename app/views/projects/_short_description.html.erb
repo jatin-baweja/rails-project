@@ -1,8 +1,5 @@
 <div class="highlight high300">
   <div class="highlight-inner">
-    <% #FIXME_AB: What if project.thumbnail returned nil? -%>
-    <% #FIXED: Handled empty image case in thumbnail method %>
-    <% Rails.logger.debug "#"*80 -%>
     <%= image_tag project.thumbnail, class: 'project-thumbnail' %>
     <h5 class='text-center'><%= link_to project.title, project_path(project) %></h5>
     <p><%= truncate(project.summary, length: 125) %></p>

@@ -217,8 +217,6 @@ class Project < ActiveRecord::Base
     else
       '/images/thumb/missing.png'
     end
-    #FIXME_AB: what if images were not present. You haven't handle this here, and also not in short_description partial. 
-    #FIXED: Added images missing case
   end
 
   def youtube_video?
