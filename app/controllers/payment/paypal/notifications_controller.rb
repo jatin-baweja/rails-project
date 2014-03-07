@@ -3,7 +3,7 @@ class Payment::Paypal::NotificationsController < ApplicationController
   skip_before_action :authorize, only: [:create]
 
   def create
-    Transaction.create(pledge_id: params[:invoice], status: 'uncharged', payment_mode: 'paypal', transaction_id: params[:txn_id])
+    Transaction.create(pledge_id: params[:invoice], status: 'authorized', payment_mode: 'paypal', transaction_id: params[:txn_id])
     render :nothing => true
   end
 
