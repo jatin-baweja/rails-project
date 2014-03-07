@@ -34,9 +34,6 @@ function AjaxMenuButton(buttonId, containerId, heading, appendPath) {
                 $subContainer.show();
                 //Parse response data from ajax
                 that.displayData(responseData, $subContainer);
-            },
-            error: function(responseData, returnStatus, xhr) {
-                alert('Server gave the following response:\n' + responseData.status + ' : ' + responseData.statusText);
             }
         });
     });
@@ -66,9 +63,6 @@ function AjaxMessageLink(linkClass, containerId) {
                 $subContainer.show();
                 //Parse response data from ajax
                 that.displayData(responseData, $subContainer);
-            },
-            error: function(responseData, returnStatus, xhr) {
-                alert('Server gave the following response:\n' + responseData.status + ' : ' + responseData.statusText);
             }
         });
     });
