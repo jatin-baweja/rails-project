@@ -11,6 +11,7 @@ set :use_sudo, false
 set :user, :deploy
 set :stages, %w(production staging)
 set :keep_releases, 5
+set :shared_children, shared_children + %w{public/images}
 
 default_run_options[:pty] = true
 
