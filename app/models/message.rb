@@ -40,7 +40,7 @@ class Message < ActiveRecord::Base
     else
       for_project = project
     end
-    MessageNotifier.sent(sender, receiver, for_project, self).deliver
+    MessageNotifier.delay.sent(sender, receiver, for_project, self)
   end
 
   def set_parent_params
