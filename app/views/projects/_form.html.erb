@@ -1,3 +1,4 @@
+<% @project.errors.delete(:"images.attachment") if @project.errors.present? %>
 <%= get_errors(@project) %>
 <%= form_for @project, :url => form_path, :html => { :class => 'form-horizontal' } do |f| %>
   <div class="control-group">
