@@ -44,7 +44,7 @@ GEM
     atomic (1.1.14)
     bcrypt-ruby (3.0.1)
     builder (3.1.4)
-    capistrano (2.15.0)
+    capistrano (2.15.4)
       highline
       net-scp (>= 1.0.0)
       net-sftp (>= 2.0.0)
@@ -258,7 +258,7 @@ DEPENDENCIES
   actionpack-action_caching
   annotate (>= 2.5.0)
   bcrypt-ruby (~> 3.0.0)
-  capistrano (= 2.15)
+  capistrano (= 2.15.4)
   ckeditor
   coffee-rails (~> 4.0.0)
   debugger
