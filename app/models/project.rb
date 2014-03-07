@@ -35,7 +35,7 @@ class Project < ActiveRecord::Base
     project.validates :goal, :duration, :published_at, presence: true
     project.validates :goal, numericality: { only_integer: true, greater_than_or_equal_to: 1 }, allow_blank: true
     project.validates :duration, numericality: { only_integer: true, greater_than_or_equal_to: 1, less_than_or_equal_to: PAYMENT_HOLDING_PERIOD }, allow_blank: true
-    project.validate :future_publish_date
+    # project.validate :future_publish_date
   end
   
   validates_associated :story, if: -> { second_step? || step_not_set? }
