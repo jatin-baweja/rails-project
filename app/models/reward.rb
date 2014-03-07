@@ -21,7 +21,7 @@ class Reward < ActiveRecord::Base
   validates :minimum_amount, numericality: { only_integer: true, greater_than_or_equal_to: 1 }, allow_blank: true
   validates :remaining_quantity, numericality: { only_integer: true, greater_than_or_equal_to: 1 }, allow_blank: true
   validate :remaining_is_less_than_or_equal_to_quantity
-  validate :estimated_delivery_date
+  # validate :estimated_delivery_date
   validates :quantity, numericality: { only_integer: true, greater_than_or_equal_to: 0 }, allow_blank: true
 
   belongs_to :project
