@@ -53,6 +53,11 @@ class ProjectsController < ApplicationController
   end
 
   def edit
+    if @project.images.empty?
+      @image = @project.images.build
+    else
+      @image = @project.images
+    end
     @project.edit! if !@project.draft?
   end
 
