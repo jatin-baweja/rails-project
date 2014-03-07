@@ -2,7 +2,7 @@ require 'bundler/capistrano'
 require 'capistrano/ext/multistage'
 require 'thinking_sphinx/capistrano'
 
-set :repository,  "git@github.com:jatin-baweja/rails-project.git"
+set :repository, "git@github.com:jatin-baweja/rails-project.git"
 set :scm, :git
 set :deploy_via, :remote_cache
 set :git_enable_submodules, 1

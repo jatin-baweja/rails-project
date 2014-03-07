@@ -68,7 +68,7 @@ gem 'uglifier', '>= 1.3.0'
 gem 'coffee-rails', '~> 4.0.0'
 
 # See https://github.com/sstephenson/execjs#readme for more supported runtimes
-# gem 'therubyracer', platforms: :ruby
+gem 'therubyracer', platforms: :ruby
 
 # Use Bootstrap for css
 gem 'twitter-bootstrap-rails', :git => 'git://github.com/seyhunak/twitter-bootstrap-rails.git'
@@ -103,7 +103,7 @@ gem 'bcrypt-ruby', '~> 3.0.0'
 # gem 'unicorn'
 
 # Use Capistrano for deployment
-gem 'capistrano', '2.15'
+gem 'capistrano', '2.15.4'
 
 # Use debugger
 # gem 'debugger', group: [:development, :test]
