@@ -16,6 +16,8 @@ class StoriesController < ApplicationController
     if @project.save_story(project_params)
       redirect_to info_project_path(@project)
     else
+      @story = @project.build_story(project_params)
+      @story.valid?
       render action: :new
     end
   end
