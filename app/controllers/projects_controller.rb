@@ -2,7 +2,7 @@ class ProjectsController < ApplicationController
   include Projects::Callbacks
 
   before_action :set_project, only: [:show, :destroy, :backers, :new_message, :edit, :update, :info, :create_info]
-  skip_before_action :authorize, only: [:show, :index, :this_week, :category, :location]
+  skip_before_action :authorize, only: [:show, :index, :this_week, :category, :location, :backers]
   before_action :validate_owner, only: [:edit, :update, :destroy]
   before_action :check_accessibility, only: [:show]
   before_action :set_location, only: [:create]
