@@ -261,6 +261,7 @@ DEPENDENCIES
   capistrano (= 2.15.4)
   ckeditor
   coffee-rails (~> 4.0.0)
+  daemons
   debugger
   delayed_job_active_record
   factory_girl_rails

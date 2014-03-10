@@ -27,6 +27,9 @@ gem 'actionpack-action_caching'
 # Use gem for delayed job
 gem 'delayed_job_active_record'
 
+# Daemons Gem for delayed_job
+gem 'daemons'
+
 # Use state machine
 gem 'aasm', '~> 3.0.1'
 
