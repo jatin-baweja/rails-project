@@ -14,19 +14,19 @@ class ProjectsController < ApplicationController
   end
 
   def index
-    @projects = Project.includes(:images).live.order(:title).page(params[:page]).per_page(PER_PAGE)
+    @projects = Project.includes(:images).live.order(updated_at: :desc).page(params[:page]).per_page(PER_PAGE)
   end
 
   def category
     if params[:category].present? && @category = Category.find_by_permalink(params[:category])
-      @projects = @category.projects.includes(:images).live.order(:title).page(params[:page]).per_page(PER_PAGE)
+      @projects = @category.projects.includes(:images).live.order(updated_at: :desc).page(params[:page]).per_page(PER_PAGE)
     end
     render action: :index
   end
 
   def location
     if params[:location].present? && @location = Location.find_by_permalink(params[:location])
-      @projects = @location.projects.includes(:images).live.order(:title).page(params[:page]).per_page(PER_PAGE)
+      @projects = @location.projects.includes(:images).live.order(updated_at: :desc).page(params[:page]).per_page(PER_PAGE)
     end
     render action: :index
   end
