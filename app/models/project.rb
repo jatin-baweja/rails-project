@@ -49,7 +49,7 @@ class Project < ActiveRecord::Base
   has_many :messages
   belongs_to :location, validate: false
   has_many :images, inverse_of: :project
-  has_many :pledges
+  has_many :pledges, -> { joins(:transaction) }
   has_many :backers, -> { uniq },through: :pledges, source: :user
 
   accepts_nested_attributes_for :rewards, update_only: true

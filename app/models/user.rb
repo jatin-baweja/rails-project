@@ -33,7 +33,7 @@ class User < ActiveRecord::Base
   has_many :owned_projects, class_name: "Project", foreign_key: "owner_id"
   has_many :backed_projects, -> { uniq }, through: :pledges, source: :project
   has_one :account
-  has_many :pledges
+  has_many :pledges, -> { joins(:transaction) }
   has_many :sent_messages, class_name: 'Message', foreign_key: 'sender_id'
   has_many :received_messages, class_name: 'Message', foreign_key: 'receiver_id'
 
