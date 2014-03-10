@@ -24,6 +24,7 @@
 class Project < ActiveRecord::Base
   include ThinkingSphinx::Scopes
   after_save ThinkingSphinx::RealTime.callback_for(:project)
+  after_destroy ThinkingSphinx::RealTime.callback_for(:project)
 
   with_options if: -> { first_step? || step_not_set? } do |project|
     project.validates :title, uniqueness: { case_sensitive: false }, length: { maximum: 60 }
