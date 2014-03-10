@@ -126,6 +126,7 @@ $(document).ready(function() {
             messageBox = this.appendMessageContainer(container);
             this.appendMessage(messageBox, message);
         }.bind(this));
+        this.appendForm(container, responseData);
     }
     messageLinks.appendBackButton = function(container) {
         return $("<a href='javascript:void(0)' onclick='\$(\"#messages-button\").click();'>Back</a>").appendTo(container);
@@ -146,6 +147,25 @@ $(document).ready(function() {
     }
     messageLinks.appendContent = function(container, message) {
         return $("<p>" + message['content'] + " </p>").appendTo(container);
+    }
+    messageLinks.appendForm = function(container, message) {
+        var $newForm = $("<form method='post' id='new_message' class='new_message' action='/messages/" + message['id'] + "/create' data-remote='true' accept-charset='UTF-8'>");
+        this.appendHiddenFields($newForm);
+        this.appendMessageTextBox($newForm);
+        this.appendReplyButton($newForm);
+        return $newForm.appendTo(container);
+    }
+    messageLinks.appendHiddenFields = function(container) {
+        var $hiddenInputDiv = $("<div style='margin:0;padding:0;display:inline'><div>");
+        $("<input type='hidden' value='✓' name='utf8'>").appendTo($hiddenInputDiv);
+        $("<input type='hidden' value='" + $('meta[name=\'csrf-token\']').attr('content') + "' name='authenticity_token'>").appendTo($hiddenInputDiv);
+        return $hiddenInputDiv.appendTo(container);
+    }
+    messageLinks.appendMessageTextBox = function(container) {
+        return $("<textarea name='message[content]' id='message_content'></textarea>").appendTo(container);
+    }
+    messageLinks.appendReplyButton = function(container) {
+        return $("<input type='submit' value='Reply' name='commit' onclick='\$(\"#messages-button\").click();'>").appendTo(container);
     }
 });
 $(window).load(function(){
