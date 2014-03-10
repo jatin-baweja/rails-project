@@ -3,7 +3,7 @@ class SearchesController < ApplicationController
   before_action :search_parameter_available
 
   def search
-    @projects = Project.been_approved.active.search Riddle::Query.escape(params[:q]), :page => params[:page], :per_page => 15
+    @projects = Project.been_approved.active.search Riddle::Query.escape(params[:q]), :page => params[:page], :per_page => PER_PAGE
     render template: 'projects/index'
   end
 
