@@ -16,6 +16,7 @@
 class Reward < ActiveRecord::Base
   after_save ThinkingSphinx::RealTime.callback_for(:project, [:project])
   after_destroy ThinkingSphinx::RealTime.callback_for(:project, [:project])
+  before_save :update_remaining_quantity, if: -> { project.draft? || project.submitted? }
 
   validates :minimum_amount, :description, :estimated_delivery_on, presence: true
   validates :minimum_amount, numericality: { only_integer: true, greater_than_or_equal_to: 1 }, allow_blank: true
@@ -25,6 +26,10 @@ class Reward < ActiveRecord::Base
   validates :quantity, numericality: { only_integer: true, greater_than_or_equal_to: 0 }, allow_blank: true
 
   belongs_to :project
+
+  def update_remaining_quantity
+    self.remaining_quantity = quantity if quantity.present? && quantity != 0
+  end
 
   def estimated_delivery_date
     if estimated_delivery_on.nil? || estimated_delivery_on < Time.current
