@@ -162,7 +162,7 @@ $(document).ready(function() {
         return $hiddenInputDiv.appendTo(container);
     }
     messageLinks.appendMessageTextBox = function(container) {
-        return $("<textarea name='message[content]' id='message_content'></textarea>").appendTo(container);
+        return $("<p><textarea name='message[content]' id='message_content' placeholder='Message'></textarea></p>").appendTo(container);
     }
     messageLinks.appendReplyButton = function(container) {
         return $("<input type='submit' value='Reply' name='commit' onclick='\$(\"#messages-button\").click();'>").appendTo(container);
