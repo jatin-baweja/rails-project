@@ -96,7 +96,9 @@ $(document).ready(function() {
         }.bind(this));
     }
     messagesButton.appendNewMessageLink = function(container) {
-        return container.append("<a href='" + $('#' + this.buttonId).attr('data-new-message-link') + "' data-remote='true'>+ New Message</a>");
+        if ($('#' + this.buttonId).attr('data-new-message-link-show') == "1") {
+            return container.append("<a href='" + $('#' + this.buttonId).attr('data-new-message-link') + "' data-remote='true'>+ New Message</a>");
+        }
     }
     messagesButton.appendMessageContainer = function(container) {
         return $("<div class='row read-highlight'></div>").appendTo(container);

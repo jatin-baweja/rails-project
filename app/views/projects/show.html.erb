@@ -9,7 +9,7 @@
         <li id="description-button"><a class="linkable">Description</a></li>
         <% if logged_in? && (current_user.admin? || (@project.owner?(current_user)) ) %>
           <%= menu_divider %>
-          <li id="messages-button" data-new-message-link="<%= new_message_project_url(@project) %>"><a class="linkable">Messages</a></li>
+          <li id="messages-button" data-new-message-link="<%= new_message_project_url(@project) %>" data-new-message-link-show="<%= current_user.admin? ? "1" : "0" %>"><a class="linkable">Messages</a></li>
         <% end %>
         <%= menu_divider %>
         <li id="pledges-button"><a class="linkable">Pledges</a></li>
