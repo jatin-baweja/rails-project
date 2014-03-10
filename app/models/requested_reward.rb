@@ -21,7 +21,7 @@ class RequestedReward < ActiveRecord::Base
   after_create :update_reward_quantity
 
   def update_reward_quantity
-    reward.update(remaining_quantity: (reward.remaining_quantity - quantity)) if reward.remaining_quantity
+    reward.update!(remaining_quantity: (reward.remaining_quantity - quantity)) if reward.remaining_quantity
   end
 
   def requested_rewards_total
