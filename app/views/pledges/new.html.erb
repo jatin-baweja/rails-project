@@ -5,7 +5,9 @@
     <h5 class="text-center">By <%= @project.owner.name %></h5>
   </div>
 <div class="row">
-<%= get_errors(@pledge) %>
+<% @pledge.requested_rewards.each_with_index do |requested_reward, index| %>
+  <%= get_errors(requested_reward, "<h2>The following errors prohibited this pledge from being saved:</h2>") %>
+<% end %>
   <div id="new-message" class="span8 offset1">
     <%= form_for @pledge, url: create_pledge_project_path(@project), html: { class: 'form-horizontal' } do |pledge| %>
       <div class="control-group">

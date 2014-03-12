@@ -20,12 +20,20 @@ class Reward < ActiveRecord::Base
 
   validates :minimum_amount, :description, :estimated_delivery_on, presence: true
   validates :minimum_amount, numericality: { only_integer: true, greater_than_or_equal_to: 1 }, allow_blank: true
-  validates :remaining_quantity, numericality: { only_integer: true, greater_than_or_equal_to: 0 }, allow_blank: true
   validate :remaining_is_less_than_or_equal_to_quantity
   # validate :estimated_delivery_date
   validates :quantity, numericality: { only_integer: true, greater_than_or_equal_to: 0 }, allow_blank: true
+  validate :remaining_quantity_positive
 
   belongs_to :project
+  has_one :requested_reward, inverse_of: :reward
+
+  def remaining_quantity_positive
+    if remaining_quantity < 0
+      requested_reward.errors.add :base, "Selected quantity should be less than remaining quantity"
+      raise ActiveRecord::RecordNotSaved, requested_reward
+    end
+  end
 
   def update_remaining_quantity
     self.remaining_quantity = quantity if quantity.present? && quantity != 0

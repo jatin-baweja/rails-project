@@ -18,9 +18,7 @@ class PledgesController < ApplicationController
     else
       redirect_to payment_stripe_charges_new_card_path(project: @project.id, pledge: @pledge.id)
     end
-  rescue ActiveRecord::RecordInvalid
-    render action: :new
-  rescue ActiveRecord::RecordNotSaved
+  rescue ActiveRecord::RecordNotSaved, ActiveRecord::RecordInvalid
     render action: :new
   end
 

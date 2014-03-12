@@ -16,7 +16,7 @@ class RequestedReward < ActiveRecord::Base
   validates_presence_of :pledge
   validate :requested_rewards_total
   belongs_to :pledge, inverse_of: :requested_rewards
-  belongs_to :reward
+  belongs_to :reward, inverse_of: :requested_reward
 
   after_create :update_reward_quantity
 
